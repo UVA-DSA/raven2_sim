@@ -1,14 +1,13 @@
 ======================================
 Summary and licensing information
 ======================================
-This code is for RAVEN II surgical simulator. It is based on the open-source RAVEN II control software, developed by the University of Washington Biorobotics lab at: https://github.com/uw-biorobotics/raven2/tree/indigo. It enables running RAVEN control software with no robotic hardware attached.
+This code is for RAVEN II surgical simulator. It is based on the open-source RAVEN II control software, developed by the University of Washington Biorobotics lab at: https://github.com/uw-biorobotics/raven2/tree/indigo and the first version of simulator developed at the University of Illinois at: https://github.com/CSLDepend/raven2_sim.
 
-A Python script (Real_Packet_Generator_Surgeon.py) mimicks the network packets sent from the surgeon console based on a previously collected data from the trajectory of a basic surgical task. A 3D visualization tool for ROS (rviz package) is used for 3D animation of the robotic motions. 
+It enables running RAVEN control software with no robotic hardware attached. A Python script (Real_Packet_Generator_Surgeon.py) mimicks the network packets sent from the surgeon console based on a previously collected data from the trajectory of a basic surgical task. A 3D visualization tool for ROS (rviz package) is used for 3D animation of the robotic motions. 
 For more information, please see: http://web.engr.illinois.edu/~alemzad1/papers/MedicalCPS_2015.pdf
 http://arxiv.org/abs/1504.07135v1
 
-Copyright (C) 2015 University of Illinois Board of Trustees, DEPEND Research Group
-Homa Alemzadeh, Daniel Chen, Abishek Krishnamoorthy (rviz), and Xiao Li (dynamic models) 
+Copyright (C) 2017 Homa Alemzadeh, University of Virginia
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
