@@ -346,10 +346,12 @@ class Raven():
         else:
             print usage
             sys.exit(2)
-        self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
         # Call rostopic to log the data from this RAVEN into latest_run.csv        
         self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
         time.sleep(0.2);
+        self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
+       
+        
 
         # Call Dynamic Simulator
         if self.mode == "dyn_sim" or self.mode == "detect":
