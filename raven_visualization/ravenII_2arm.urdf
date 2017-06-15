@@ -12,7 +12,7 @@
    <visual>
      <origin xyz="0 0 0" rpy="0 0 0" />
      <geometry>
-       <box size=".001 .001 .001" />
+       <box size="0.001 0.001 0.001" />
      </geometry>
      <material name="Cyan">
        <color rgba="0 255 255 1.0"/>
@@ -20,13 +20,28 @@
    </visual>
   </link>
 
+  <link name = "box_link"> 
+    <visual>
+      <origin xyz = "0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.1 0.1 0.1" />
+      </geometry>
+      <material name ="Obnoxious Red">
+	<color rgba="255 0 0 1.0" />
+      </material>
+
+    </visual>
+
+  </link>
+
   <!-- LEFT ARM LINKS -->
   <link name="base_link_L">
     <visual>
       <geometry>
-        <mesh filename="package://raven_visualization/Raven_files/left_arm/base_w_motors.dae"/>
+        <!-- <mesh filename="package://raven_visualization/Raven_files/left_arm/base_w_motors.dae"/> Maybe a simpler one?-->
+	<box size="0.43 0.25 0.32" />
       </geometry>
-    <origin xyz="0 0 0" rpy="-1.57075 1.57075 -1.57075"/>
+    <origin xyz="0 0 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
     </visual>
   </link>
 
@@ -93,10 +108,11 @@
  <link name="base_link_R">
     <visual>
       <geometry>
-        <mesh filename="package://raven_visualization/Raven_files/right_arm/base_w_motors.dae"/>
+       <!-- <mesh filename="package://raven_visualization/Raven_files/right_arm/base_w_motors.dae"/> -->
+       <box size="0.43 0.25 0.32" />
       </geometry>
     <!--origin xyz="0 0 -1" rpy="0 1.57075 0"/-->
-    <origin xyz="0 0 1" rpy="3.1415 -1.57075 0"/>
+    <origin xyz="0 0 -0.43" rpy="3.1415 -1.57075 0"/>
     </visual>
   </link>
 
@@ -162,6 +178,15 @@
     <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
     </visual>
   </link>
+
+  <!-- BOX JOINT (I guess?) -->
+  <joint name= "box_joint" type ="fixed">
+    <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    <origin rpy="0 0 0" xyz="0.0 0.00 0"/>
+    <parent link="0_link"/>
+    <child link="box_link"/>
+
+  </joint>
 
 
   <!-- LEFT ARM JOINTS -->
