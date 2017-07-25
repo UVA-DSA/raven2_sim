@@ -89,7 +89,7 @@ class Raven():
         self.mfi_changed = 0
         self.return_code = 0 #0 is normal, 1 is error
         self.curr_inj = -1
-        self.rviz_enabled = 0
+        self.rviz_enabled = 1
         self.result_folder = ''
         self.exp_status = '' # expriment status: 'running' or 'done'
 
