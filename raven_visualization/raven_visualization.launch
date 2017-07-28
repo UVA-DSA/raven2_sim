@@ -6,7 +6,7 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>	
 
-<env name = "GAZEBO_MODEL_PATH" value="$(find raven_visualization)/Raven_files/left_arm:$(find raven_visualization)/Raven_files/right_arm:$(find raven_visualization):$(find raven_visualization)/Raven_files" />
+<env name = "GAZEBO_MODEL_PATH" value="$(find raven_visualization)/Raven_files" />
 
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
