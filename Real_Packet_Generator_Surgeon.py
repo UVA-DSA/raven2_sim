@@ -58,9 +58,9 @@ raven_home = splits[0]
 teleop_home = raven_home+'/teleop_data'
 print '\nRaven Home Found to be: '+ raven_home
 
-fast_surgeon = 1
+fast_surgeon = 0
 if fast_surgeon:
-   MAX_PACKETS = 3000
+   MAX_PACKETS = 5000
    FREQ = 0.001
 else: 
    MAX_PACKETS = 3000
