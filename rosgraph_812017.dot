@@ -1,0 +1,111 @@
+digraph graphname {
+	graph [bb="0,0,506,178",
+		compound=True,
+		rank=same,
+		rankdir=LR,
+		ranksep=0.2
+	];
+	node [label="\N"];
+	subgraph cluster_robot_state_publisher {
+		graph [bb="263,91,457,166",
+			compound=True,
+			label=robot_state_publisher,
+			lheight=0.21,
+			lp="360,154.5",
+			lwidth=1.64,
+			rank=same,
+			rankdir=LR,
+			ranksep=0.2,
+			style=bold
+		];
+		n__robot_state_publisher		 [URL=_robot_state_publisher,
+			height=0.5,
+			label="/robot_state_publisher",
+			pos="360,117",
+			shape=ellipse,
+			tooltip="/robot_state_publisher",
+			width=2.4734];
+	}
+	subgraph cluster_rostopic_14196_1501609475306 {
+		graph [bb="222,8,498,83",
+			compound=True,
+			label=rostopic_14196_1501609475306,
+			lheight=0.21,
+			lp="360,71.5",
+			lwidth=2.49,
+			rank=same,
+			rankdir=LR,
+			ranksep=0.2,
+			style=bold
+		];
+		n__rostopic_14196_1501609475306		 [URL=_rostopic_14196_1501609475306,
+			height=0.5,
+			label="/rostopic_14196_1501609475306",
+			pos="360,34",
+			shape=ellipse,
+			tooltip="/rostopic_14196_1501609475306",
+			width=3.5927];
+	}
+	subgraph cluster_r2_control {
+		graph [bb="8,12,124,87",
+			compound=True,
+			label=r2_control,
+			lheight=0.21,
+			lp="66,75.5",
+			lwidth=0.79,
+			rank=same,
+			rankdir=LR,
+			ranksep=0.2,
+			style=bold
+		];
+		n__r2_control		 [URL=_r2_control,
+			height=0.5,
+			label="/r2_control",
+			pos="66,38",
+			shape=ellipse,
+			tooltip="/r2_control",
+			width=1.3902];
+	}
+	subgraph cluster_gazebo {
+		graph [bb="19,95,113,170",
+			compound=True,
+			label=gazebo,
+			lheight=0.21,
+			lp="66,158.5",
+			lwidth=0.54,
+			rank=same,
+			rankdir=LR,
+			ranksep=0.2,
+			style=bold
+		];
+		n__gazebo		 [URL=_gazebo,
+			height=0.5,
+			label="/gazebo",
+			pos="66,121",
+			shape=ellipse,
+			tooltip="/gazebo",
+			width=1.0652];
+	}
+	t__joint_states	 [URL=topic_3A_joint_states,
+		height=0.5,
+		label="/joint_states",
+		pos="173,106",
+		shape=box,
+		tooltip="topic:/joint_states",
+		width=1.1389];
+	t__joint_states -> n__robot_state_publisher	 [penwidth=1,
+		pos="e,274.5,111.98 214.14,108.39 228.98,109.27 246.49,110.31 264.12,111.36"];
+	t__ravenstate	 [URL=topic_3A_ravenstate,
+		height=0.5,
+		label="/ravenstate",
+		pos="173,38",
+		shape=box,
+		tooltip="topic:/ravenstate",
+		width=1.0417];
+	t__ravenstate -> n__rostopic_14196_1501609475306	 [penwidth=1,
+		pos="e,232.05,36.745 210.55,37.21 214.18,37.131 217.99,37.049 221.94,36.963"];
+	n__r2_control -> t__joint_states	 [penwidth=1,
+		pos="e,143.93,87.823 91.089,53.601 104.25,62.123 120.82,72.852 135.53,82.379"];
+	n__r2_control -> t__ravenstate	 [penwidth=1,
+		pos="e,135.46,38 116.12,38 119.17,38 122.24,38 125.28,38"];
+}

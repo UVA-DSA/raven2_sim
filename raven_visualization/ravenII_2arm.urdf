@@ -8,29 +8,68 @@
 
 <robot name="raven_2">
 
+  <gazebo> 
+    <static value = "true"/>
+  </gazebo>
+
   <link name="0_link">
-   <visual>
-     <origin xyz="0 0 0" rpy="0 0 0" />
-     <geometry>
-       <box size="0.001 0.001 0.001" />
-     </geometry>
-     <material name="Cyan">
-       <color rgba="0 255 255 1.0"/>
-     </material>
-   </visual>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.01 0.01 0.01" />
+      </geometry>
+      <material name="Cyan">
+	<color rgba="0 255 255 1.0"/>
+      </material>
+    </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
+
+    <collision>
+      <origin xyz="2 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01" />
+      </geometry>
+    </collision>
+
   </link>
 
   <link name = "box_link"> 
     <visual>
       <origin xyz = "0 0 0" rpy="0 0 0" />
       <geometry>
-	<box size="0.1 0.1 0.1" />
+	<box size="0.01 0.01 0.01" />
       </geometry>
       <material name ="Obnoxious Red">
 	<color rgba="255 0 0 1.0" />
       </material>
 
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
 
   </link>
 
@@ -43,6 +82,20 @@
       </geometry>
     <origin xyz="0 0 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
     </visual>
+
+    <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass value = "1"/>
+        <inertia
+	  ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+	  />
+      </inertial>
+
   </link>
 
   <link name="link1_L">
@@ -51,6 +104,20 @@
         <mesh filename="package://raven_visualization/Raven_files/left_arm/link1_w_cover.dae"/>
       </geometry>
     </visual>
+    <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass value = "1" />
+        <inertia
+          ixx = "1"
+          ixy= "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+        />
+    </inertial>
+
+
   </link>
 
   <link name="link2_L">
@@ -59,6 +126,20 @@
         <mesh filename="package://raven_visualization/Raven_files/left_arm/link2.dae"/>
       </geometry>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
+
   </link>
 
   <link name="link3_L">
@@ -67,6 +148,19 @@
         <mesh filename="package://raven_visualization/Raven_files/left_arm/link3.dae"/>
       </geometry>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="instrument_shaft_L">
@@ -75,6 +169,19 @@
         <mesh filename="package://raven_visualization/Raven_files/left_arm/instrument_shaft.dae"/>
       </geometry>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="wrist_L">
@@ -83,6 +190,19 @@
         <mesh filename="package://raven_visualization/Raven_files/left_arm/wrist.dae"/>
       </geometry>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="grasper1_L">
@@ -92,6 +212,20 @@
       </geometry>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
     </visual>
+    
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
+
   </link>
 
   <link name="grasper2_L">
@@ -101,6 +235,19 @@
       </geometry>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
 
@@ -114,6 +261,19 @@
     <!--origin xyz="0 0 -1" rpy="0 1.57075 0"/-->
     <origin xyz="0 0 -0.43" rpy="3.1415 -1.57075 0"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="link1_R">
@@ -123,6 +283,19 @@
       </geometry>
     <origin xyz="1 0 0" rpy="0 0 0"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="link2_R">
@@ -132,6 +305,19 @@
       </geometry>
     <origin xyz="1 0 0" rpy="0 0 0"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="link3_R">
@@ -141,6 +327,19 @@
       </geometry>
     <origin xyz="1 0 0" rpy="0 0 0"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="instrument_shaft_R">
@@ -150,6 +349,19 @@
       </geometry>
     <origin xyz="1 0 0" rpy="0 0 0"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="wrist_R">
@@ -159,6 +371,19 @@
       </geometry>
     <origin xyz="1 0 0" rpy="0 0 0"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="grasper1_R">
@@ -168,6 +393,19 @@
       </geometry>
     <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <link name="grasper2_R">
@@ -177,6 +415,19 @@
       </geometry>
     <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
     </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "1"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
   </link>
 
   <!-- BOX JOINT (I guess?) -->

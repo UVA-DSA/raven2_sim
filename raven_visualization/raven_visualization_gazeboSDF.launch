@@ -23,13 +23,13 @@
   <!--param name="robot_description" command="$(find xacro)/xacro inorder '$(find rrbot_description)/urdf/rrbot.xacro'"  -->
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
-    args="-urdf -model RavenII -z 1 -file '$(find raven_visualization)/ravenII_2arm.urdf'"/>
+  <node name="sdf_spawner" pkg="gazebo_ros" type="spawn_model"
+    args="-sdf -model RavenII -z 1 -file '$(find raven_visualization)/model.sdf'"/>
 
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
 
-	<arg name="model" default="$(find raven_visualization)/ravenII_2arm.urdf"/>
+	<arg name="model" default="$(find raven_visualization)/model.sdf"/>
 	<param name="robot_description" textfile="$(arg model)" />
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 
