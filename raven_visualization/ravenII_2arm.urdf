@@ -9,7 +9,7 @@
 <robot name="raven_2">
 
   <gazebo> 
-    <static value = "true"/>
+    <static value = "false"/>
   </gazebo>
 
   <link name="0_link">
@@ -574,5 +574,13 @@
     <child link="grasper2_R"/>
   </joint>
 
+
+<!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="0_link"/>
+  </joint>
 
 </robot>
