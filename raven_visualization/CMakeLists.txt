@@ -29,4 +29,17 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-rosbuild_add_executable(joint_publisher src/joint_publisher.cpp)
+# Depend on system install of Gazebo
+find_package(gazebo REQUIRED)
+
+link_directories(${GAZEBO_LIBRARY_DIRS})
+include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
+
+add_library(gazebo_JSTranslator src/gazebo_jointstate_plugin/gazebo_JSTranslator.cpp)
+target_link_libraries(gazebo_JSTranslator ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+catkin_package(
+  DEPENDS 
+    roscpp 
+    gazebo_ros 
+)
