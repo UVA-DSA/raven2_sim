@@ -10,6 +10,9 @@
 
   <gazebo> 
     <static value = "false"/>
+    <plugin name="gazebo_JSTranslator" filename="/home/raven/raven_2/raven_visualization/lib/libgazebo_JSTranslator.so"></plugin>
+
+
   </gazebo>
 
   <link name="0_link">
@@ -582,5 +585,8 @@
     <parent link="world"/>
     <child link="0_link"/>
   </joint>
+
+
+
 
 </robot>

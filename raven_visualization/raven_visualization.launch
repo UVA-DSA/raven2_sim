@@ -8,6 +8,8 @@
 
 <env name = "GAZEBO_MODEL_PATH" value="$(find raven_visualization)/Raven_files" />
 
+<env name = "GAZEBO_PLUGIN_PATH" value="$(find raven_visualization)/lib"/>
+
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -29,8 +31,11 @@
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
 
-	<arg name="model" default="$(find raven_visualization)/ravenII_2arm.urdf"/>
-	<param name="robot_description" textfile="$(arg model)" />
-	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <arg name="model" default="$(find raven_visualization)/ravenII_2arm.urdf"/>
+  <param name="robot_description" textfile="$(arg model)" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+
+
 
 </launch>
