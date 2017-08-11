@@ -35,7 +35,7 @@ find_package(gazebo REQUIRED)
 link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 
-add_library(gazebo_JSTranslator src/gazebo_jointstate_plugin/gazebo_JSTranslator.cpp)
+add_library(gazebo_JSTranslator src/gazebo_plugins/gazebo_JSTranslator.cpp)
 target_link_libraries(gazebo_JSTranslator ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 catkin_package(

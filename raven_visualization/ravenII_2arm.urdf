@@ -74,6 +74,13 @@
           />
     </inertial>
 
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01" />
+      </geometry>
+    </collision>
+
   </link>
 
   <!-- LEFT ARM LINKS -->
@@ -120,6 +127,12 @@
         />
     </inertial>
 
+    <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/link1_w_cover.dae" />
+      </geometry>
+    </collision>
+
 
   </link>
 
@@ -143,6 +156,12 @@
           />
     </inertial>
 
+    <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/link2.dae" />
+      </geometry>
+    </collision>
+
   </link>
 
   <link name="link3_L">
@@ -164,7 +183,14 @@
           izz = "1"
           />
     </inertial>
+
+    <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/link3.dae" />
+      </geometry>
+    </collision>
   </link>
+
 
   <link name="instrument_shaft_L">
     <visual>
@@ -185,6 +211,13 @@
           izz = "1"
           />
     </inertial>
+
+    <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/instrument_shaft.dae"/>
+      </geometry>
+    </collision>    
+
   </link>
 
   <link name="wrist_L">
@@ -206,6 +239,12 @@
           izz = "1"
           />
     </inertial>
+
+     <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/wrist.dae"/>
+      </geometry>
+    </collision> 
   </link>
 
   <link name="grasper1_L">
@@ -229,6 +268,12 @@
           />
     </inertial>
 
+    <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/grasper_1.dae"/>
+      </geometry>
+    </collision> 
+
   </link>
 
   <link name="grasper2_L">
@@ -251,6 +296,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision>
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/left_arm/grasper_2.dae"/>
+      </geometry>
+    </collision> 
   </link>
 
 
@@ -277,6 +328,14 @@
           izz = "1"
           />
     </inertial>
+
+    <collision>
+      <geometry>
+         <box size="0.43 0.25 0.32" />
+	 <origin xyz="0 0 -0.43" rpy="3.1415 -1.57075 0"/>
+
+      </geometry>
+    </collision> 
   </link>
 
   <link name="link1_R">
@@ -299,6 +358,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/link1_w_cover.dae"/>
+      </geometry>
+    </collision>
   </link>
 
   <link name="link2_R">
@@ -321,6 +386,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/link2.dae"/>
+      </geometry>
+    </collision>
   </link>
 
   <link name="link3_R">
@@ -343,6 +414,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/link3.dae"/>
+      </geometry>
+    </collision>
   </link>
 
   <link name="instrument_shaft_R">
@@ -365,6 +442,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/instrument_shaft.dae"/>
+      </geometry>
+    </collision>
   </link>
 
   <link name="wrist_R">
@@ -387,6 +470,13 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/wrist.dae"/>
+      </geometry>
+    </collision>
+
   </link>
 
   <link name="grasper1_R">
@@ -409,6 +499,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/grasper_1.dae"/>
+      </geometry>
+    </collision>
   </link>
 
   <link name="grasper2_R">
@@ -431,6 +527,12 @@
           izz = "1"
           />
     </inertial>
+
+    <collision> 
+      <geometry>
+        <mesh filename="package://raven_visualization/Raven_files/right_arm/grasper_2.dae"/>
+      </geometry>
+    </collision>
   </link>
 
   <!-- BOX JOINT (I guess?) -->
