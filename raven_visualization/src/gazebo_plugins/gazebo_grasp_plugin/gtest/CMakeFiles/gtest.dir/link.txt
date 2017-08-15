@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC    -shared -Wl,-soname,libgtest.so -o libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/gtest/src -lpthread -Wl,-rpath,/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/gtest/src 

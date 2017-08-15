@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: gazebo_grasp_plugin
+Description: Description of gazebo_grasp_plugin
+Version: 1.0.1
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib -lgazebo_grasp_fix
+Requires: gazebo_ros geometry_msgs roscpp std_msgs

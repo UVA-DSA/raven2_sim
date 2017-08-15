@@ -1,0 +1,8 @@
+prefix=/home/raven/raven_2/raven_visualization/raven2_moveit_config/devel
+
+Name: raven2_moveit_config
+Description: Description of raven2_moveit_config
+Version: 0.3.0
+Cflags: 
+Libs: -L/home/raven/raven_2/raven_visualization/raven2_moveit_config/devel/lib 
+Requires: 

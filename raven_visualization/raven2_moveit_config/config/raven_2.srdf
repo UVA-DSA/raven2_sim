@@ -1,0 +1,191 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="raven_2">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="left_arm">
+        <joint name="shoulder_L" />
+        <joint name="elbow_L" />
+        <joint name="insertion_L" />
+        <joint name="tool_roll_L" />
+        <joint name="wrist_joint_L" />
+        <chain base_link="link1_L" tip_link="instrument_shaft_L" />
+    </group>
+    <group name="right_arm">
+        <joint name="shoulder_R" />
+        <joint name="elbow_R" />
+        <joint name="insertion_R" />
+        <joint name="tool_roll_R" />
+        <joint name="wrist_joint_R" />
+        <chain base_link="link1_R" tip_link="instrument_shaft_R" />
+    </group>
+    <group name="left_gripper">
+        <link name="wrist_L" />
+        <link name="grasper1_L" />
+        <link name="grasper2_L" />
+    </group>
+    <group name="right_gripper">
+        <link name="wrist_R" />
+        <link name="grasper1_R" />
+        <link name="grasper2_R" />
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="home_position_right" group="right_arm">
+        <joint name="elbow_R" value="0" />
+        <joint name="insertion_R" value="0" />
+        <joint name="shoulder_R" value="1.5" />
+        <joint name="tool_roll_R" value="0" />
+        <joint name="wrist_joint_R" value="0" />
+    </group_state>
+    <group_state name="home_position_left" group="left_arm">
+        <joint name="elbow_L" value="0" />
+        <joint name="insertion_L" value="0" />
+        <joint name="shoulder_L" value="1.5" />
+        <joint name="tool_roll_L" value="0.012" />
+        <joint name="wrist_joint_L" value="0" />
+    </group_state>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="left_eef" parent_link="instrument_shaft_L" group="left_gripper" />
+    <end_effector name="right_eef" parent_link="instrument_shaft_R" group="right_gripper" />
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="v_base_to_world" type="planar" parent_frame="odom_combined" child_link="0_link" />
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="0_link" link2="base_link_L" reason="Adjacent" />
+    <disable_collisions link1="0_link" link2="base_link_R" reason="Adjacent" />
+    <disable_collisions link1="0_link" link2="box_link" reason="Adjacent" />
+    <disable_collisions link1="0_link" link2="grasper1_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="grasper1_R" reason="Never" />
+    <disable_collisions link1="0_link" link2="grasper2_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="grasper2_R" reason="Never" />
+    <disable_collisions link1="0_link" link2="instrument_shaft_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="0_link" link2="link1_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="link1_R" reason="Never" />
+    <disable_collisions link1="0_link" link2="link2_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="link2_R" reason="Never" />
+    <disable_collisions link1="0_link" link2="link3_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="link3_R" reason="Never" />
+    <disable_collisions link1="0_link" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="0_link" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="base_link_R" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="box_link" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="grasper1_L" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="grasper2_L" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="link1_L" reason="Adjacent" />
+    <disable_collisions link1="base_link_L" link2="link1_R" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="base_link_L" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="box_link" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="grasper1_R" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="grasper2_R" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="instrument_shaft_L" reason="Default" />
+    <disable_collisions link1="base_link_R" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="link1_L" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="link1_R" reason="Adjacent" />
+    <disable_collisions link1="base_link_R" link2="link2_L" reason="Default" />
+    <disable_collisions link1="base_link_R" link2="link2_R" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="link3_R" reason="Never" />
+    <disable_collisions link1="base_link_R" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="grasper1_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="grasper2_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="instrument_shaft_L" reason="Default" />
+    <disable_collisions link1="box_link" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="link1_L" reason="Never" />
+    <disable_collisions link1="box_link" link2="link1_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="link2_L" reason="Never" />
+    <disable_collisions link1="box_link" link2="link2_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="link3_L" reason="Never" />
+    <disable_collisions link1="box_link" link2="link3_R" reason="Never" />
+    <disable_collisions link1="box_link" link2="wrist_L" reason="Default" />
+    <disable_collisions link1="box_link" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="grasper1_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="grasper2_L" reason="Default" />
+    <disable_collisions link1="grasper1_L" link2="grasper2_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="instrument_shaft_L" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="link1_L" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="link1_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="link2_L" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="link2_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="link3_L" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="grasper1_L" link2="wrist_L" reason="Adjacent" />
+    <disable_collisions link1="grasper1_L" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="grasper2_L" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="grasper2_R" reason="Default" />
+    <disable_collisions link1="grasper1_R" link2="instrument_shaft_L" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="link1_L" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="link1_R" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="link2_L" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="link3_L" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="link3_R" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="grasper1_R" link2="wrist_R" reason="Adjacent" />
+    <disable_collisions link1="grasper2_L" link2="grasper2_R" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="instrument_shaft_L" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="link1_L" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="link1_R" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="link2_L" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="link2_R" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="link3_L" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="grasper2_L" link2="wrist_L" reason="Adjacent" />
+    <disable_collisions link1="grasper2_L" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="instrument_shaft_L" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="link1_L" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="link2_L" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="link3_L" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="link3_R" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="grasper2_R" link2="wrist_R" reason="Adjacent" />
+    <disable_collisions link1="instrument_shaft_L" link2="instrument_shaft_R" reason="Never" />
+    <disable_collisions link1="instrument_shaft_L" link2="link1_R" reason="Never" />
+    <disable_collisions link1="instrument_shaft_L" link2="link2_L" reason="Never" />
+    <disable_collisions link1="instrument_shaft_L" link2="link2_R" reason="Never" />
+    <disable_collisions link1="instrument_shaft_L" link2="link3_L" reason="Adjacent" />
+    <disable_collisions link1="instrument_shaft_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="instrument_shaft_L" link2="wrist_L" reason="Adjacent" />
+    <disable_collisions link1="instrument_shaft_L" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="instrument_shaft_R" link2="link1_L" reason="Never" />
+    <disable_collisions link1="instrument_shaft_R" link2="link1_R" reason="Never" />
+    <disable_collisions link1="instrument_shaft_R" link2="link2_L" reason="Never" />
+    <disable_collisions link1="instrument_shaft_R" link2="link3_L" reason="Never" />
+    <disable_collisions link1="instrument_shaft_R" link2="link3_R" reason="Adjacent" />
+    <disable_collisions link1="instrument_shaft_R" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="instrument_shaft_R" link2="wrist_R" reason="Adjacent" />
+    <disable_collisions link1="link1_L" link2="link1_R" reason="Never" />
+    <disable_collisions link1="link1_L" link2="link2_L" reason="Adjacent" />
+    <disable_collisions link1="link1_L" link2="link2_R" reason="Never" />
+    <disable_collisions link1="link1_L" link2="link3_L" reason="Never" />
+    <disable_collisions link1="link1_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="link1_L" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="link1_L" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="link1_R" link2="link2_L" reason="Never" />
+    <disable_collisions link1="link1_R" link2="link2_R" reason="Adjacent" />
+    <disable_collisions link1="link1_R" link2="link3_L" reason="Never" />
+    <disable_collisions link1="link1_R" link2="link3_R" reason="Never" />
+    <disable_collisions link1="link1_R" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="link1_R" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="link2_L" link2="link2_R" reason="Never" />
+    <disable_collisions link1="link2_L" link2="link3_L" reason="Adjacent" />
+    <disable_collisions link1="link2_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="link2_L" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="link2_L" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="link2_R" link2="link3_L" reason="Never" />
+    <disable_collisions link1="link2_R" link2="link3_R" reason="Adjacent" />
+    <disable_collisions link1="link2_R" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="link3_L" link2="link3_R" reason="Never" />
+    <disable_collisions link1="link3_L" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="link3_L" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="link3_R" link2="wrist_L" reason="Never" />
+    <disable_collisions link1="link3_R" link2="wrist_R" reason="Never" />
+    <disable_collisions link1="wrist_L" link2="wrist_R" reason="Never" />
+</robot>

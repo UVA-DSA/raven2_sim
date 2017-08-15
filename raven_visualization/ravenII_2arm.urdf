@@ -12,10 +12,39 @@
     <static value = "false"/>
     <plugin name="gazebo_JSTranslator" filename="package://raven_visualization/lib/libgazebo_JSTranslator.so"></plugin>
 
+    <!-- This plugin's from one Jennifer Buehler. It's a slightly customized version of the Gripper plugin from Gazebo that optimizes the grasper physics so that the engine doesn't wig out.-->
+
+    <plugin name="gazebo_grasp_fix" filename="package://raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib/libgazebo_grasp_fix.so">
+
+      <arm>
+           <arm_name>left_arm</arm_name>
+           <palm_link> wrist_L  </palm_link>
+           <gripper_link> grasper1_L </gripper_link>
+           <gripper_link> grasper2_L </gripper_link>
+      </arm>
+      <arm>
+           <arm_name>right_arm</arm_name>
+           <palm_link> wrist_R  </palm_link>
+           <gripper_link> grasper1_R </gripper_link>
+           <gripper_link> grasper2_R </gripper_link>
+      </arm>
+
+
+       <forces_angle_tolerance>100</forces_angle_tolerance>
+       <update_rate>4</update_rate>
+       <grip_count_threshold>4</grip_count_threshold>
+       <max_grip_count>8</max_grip_count>
+       <release_tolerance>0.005</release_tolerance>
+       <disable_collisions_on_attach>false</disable_collisions_on_attach>
+       <contact_topic>__default_topic__</contact_topic>
+
+    </plugin>
+
 
   </gazebo>
 
   <link name="0_link">
+
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -90,7 +119,7 @@
         <!-- <mesh filename="package://raven_visualization/Raven_files/left_arm/base_w_motors.dae"/> Maybe a simpler one?-->
 	<box size="0.43 0.25 0.32" />
       </geometry>
-    <origin xyz="0 0 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
+    <origin xyz="0 -0.43 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
     </visual>
 
     <inertial>
@@ -108,7 +137,13 @@
 
   </link>
 
+  <gazebo reference= "link1_L">
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+
   <link name="link1_L">
+
+
     <visual>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/link1_w_cover.dae"/>
@@ -133,10 +168,15 @@
       </geometry>
     </collision>
 
-
+    
   </link>
 
+<gazebo reference="link2_L">
+      <turnGravityOff>true</turnGravityOff>
+    </gazebo>
+
   <link name="link2_L">
+    
     <visual>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/link2.dae"/>
@@ -163,6 +203,11 @@
     </collision>
 
   </link>
+
+
+<gazebo reference="link3_L">
+  <turnGravityOff>true</turnGravityOff>
+</gazebo>
 
   <link name="link3_L">
     <visual>
@@ -191,8 +236,12 @@
     </collision>
   </link>
 
-
+<gazebo reference="instrument_shaft_L">
+      <turnGravityOff>true</turnGravityOff>
+    </gazebo>
   <link name="instrument_shaft_L">
+    
+
     <visual>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/instrument_shaft.dae"/>
@@ -220,7 +269,12 @@
 
   </link>
 
+ <gazebo reference="wrist_L">
+      <turnGravityOff>true</turnGravityOff>
+    </gazebo>
   <link name="wrist_L">
+   
+
     <visual>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/wrist.dae"/>
@@ -247,6 +301,10 @@
     </collision> 
   </link>
 
+
+<gazebo reference="grasper1_L">
+      <turnGravityOff>true</turnGravityOff>
+    </gazebo>
   <link name="grasper1_L">
     <visual>
       <geometry>
@@ -276,7 +334,12 @@
 
   </link>
 
+<gazebo reference="grasper2_L">
+      <turnGravityOff> true </turnGravityOff>
+    </gazebo>
   <link name="grasper2_L">
+    
+
     <visual>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/grasper_2.dae"/>
@@ -306,6 +369,8 @@
 
 
  <!-- RIGHT ARM LINKS -->
+
+
  <link name="base_link_R">
     <visual>
       <geometry>
@@ -338,6 +403,10 @@
     </collision> 
   </link>
 
+
+  <gazebo reference="link1_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="link1_R">
     <visual>
       <geometry>
@@ -366,6 +435,9 @@
     </collision>
   </link>
 
+ <gazebo reference="link2_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="link2_R">
     <visual>
       <geometry>
@@ -394,6 +466,10 @@
     </collision>
   </link>
 
+
+  <gazebo reference="link3_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="link3_R">
     <visual>
       <geometry>
@@ -422,6 +498,9 @@
     </collision>
   </link>
 
+ <gazebo reference="instrument_shaft_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="instrument_shaft_R">
     <visual>
       <geometry>
@@ -450,6 +529,9 @@
     </collision>
   </link>
 
+ <gazebo reference="wrist_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="wrist_R">
     <visual>
       <geometry>
@@ -479,6 +561,9 @@
 
   </link>
 
+ <gazebo reference="grasper1_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="grasper1_R">
     <visual>
       <geometry>
@@ -507,6 +592,9 @@
     </collision>
   </link>
 
+<gazebo reference="grasper2_R">
+      <turnGravityOff> true </turnGravityOff>
+  </gazebo>
   <link name="grasper2_R">
     <visual>
       <geometry>
