@@ -82,7 +82,7 @@ right_arm:
     - PRMstarkConfigDefault
   projection_evaluator: joints(shoulder_R,elbow_R)
   longest_valid_segment_fraction: 0.05
-left_gripper:
+right_gripper_1:
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
@@ -95,9 +95,7 @@ left_gripper:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(wrist_joint_L,grasper_joint_1_L)
-  longest_valid_segment_fraction: 0.05
-right_gripper:
+left_gripper_1:
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
@@ -110,5 +108,29 @@ right_gripper:
     - TRRTkConfigDefault
     - PRMkConfigDefault
     - PRMstarkConfigDefault
-  projection_evaluator: joints(wrist_joint_R,grasper_joint_1_R)
-  longest_valid_segment_fraction: 0.05
+right_gripper_2:
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault
+left_gripper_2:
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault

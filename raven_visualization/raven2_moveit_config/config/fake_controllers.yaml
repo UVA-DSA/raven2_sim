@@ -13,13 +13,15 @@ controller_list:
       - insertion_R
       - tool_roll_R
       - wrist_joint_R
-  - name: fake_left_gripper_controller
+  - name: fake_right_gripper_1_controller
     joints:
-      - wrist_joint_L
-      - grasper_joint_1_L
-      - grasper_joint_2_L
-  - name: fake_right_gripper_controller
-    joints:
-      - wrist_joint_R
       - grasper_joint_1_R
+  - name: fake_left_gripper_1_controller
+    joints:
+      - grasper_joint_1_L
+  - name: fake_right_gripper_2_controller
+    joints:
       - grasper_joint_2_R
+  - name: fake_left_gripper_2_controller
+    joints:
+      - grasper_joint_2_L
