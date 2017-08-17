@@ -21,6 +21,12 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
+if (CMAKE_COMPILER_IS_GNUCXX)
+    # message ("CMAKE_COMPILER_IS_GNUCXX")
+    set(CMAKE_CXX_FLAGS_INIT "${CMAKE_CXX_FLAGS_INIT} -g -Wall -ansi -pedantic")
+    set (CMAKE_CXX_STANDARD 11)
+endif()
+
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)

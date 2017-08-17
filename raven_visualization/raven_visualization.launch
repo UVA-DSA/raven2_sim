@@ -26,7 +26,7 @@
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
-    args="-urdf -model RavenII -z 1 -R 3.14159 -file '$(find raven_visualization)/ravenII_2arm.urdf'"/>
+    args="-urdf -model RavenII -z 1 -file '$(find raven_visualization)/ravenII_2arm.urdf'"/>
 
 
 <!-- <node name= "table_spawner" pkg="gazebo_ros" type="spawn_model"args="-urdf -model DemoTable -z 0.83 -file '$(find raven_visualization)/floating_table.urdf'" /> -->
