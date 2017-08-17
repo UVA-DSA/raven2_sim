@@ -16,9 +16,12 @@ SET(CMAKE_TARGET_LINKED_INFO_FILES
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
   "include"
-  "/opt/ros/indigo/include"
-  "/usr/include/gazebo-2.2"
-  "/usr/include/sdformat-1.4"
+  "/opt/ros/jade/include"
+  "/usr/include/gazebo-5.4"
+  "/usr/include/sdformat-2.3"
+  "/usr/include/OGRE"
+  "/usr/include/OGRE/Terrain"
+  "/usr/include/OGRE/Paging"
   )
 SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
 SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

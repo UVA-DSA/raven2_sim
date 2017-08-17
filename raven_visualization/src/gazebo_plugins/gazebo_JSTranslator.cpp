@@ -74,7 +74,7 @@ public:
   */
 
   void jointStatesCallback(const sensor_msgs::JointState::ConstPtr& msg){
-    ROS_INFO("Received joint state msg." );
+    //ROS_INFO("Received joint state msg." );
 
     //Create the service request.
     gazebo_msgs::SetModelConfiguration srv;
@@ -83,21 +83,21 @@ public:
     srv.request.urdf_param_name = "robot_description";
     
     //Debug Info: Size of name list in msg, etc.
-    ROS_INFO("DEBUG:Size of msg name list : %d", (int)msg->name.size());
+    //ROS_INFO("DEBUG:Size of msg name list : %d", (int)msg->name.size());
 
     for(int i = 0; i < msg->name.size(); i++){
       srv.request.joint_names.push_back(msg->name[i]);
       srv.request.joint_positions.push_back(msg->position[i]);
 
       //Debug Info
-      ROS_INFO("DEBUG: Added joint name %s to srv: %s", msg->name[i].c_str(), srv.request.joint_names[i].c_str());
-      ROS_INFO("DEBUG: Added joint position %f to srv: %f", msg->position[i], srv.request.joint_positions[i]);
+      //ROS_INFO("DEBUG: Added joint name %s to srv: %s", msg->name[i].c_str(), srv.request.joint_names[i].c_str());
+      // ROS_INFO("DEBUG: Added joint position %f to srv: %f", msg->position[i], srv.request.joint_positions[i]);
 
     }
     //Call the SetModelConfiguration service.
    
     if(ModelConfigClient.call(srv)){
-      ROS_INFO("DEBUG: Success : %d", srv.response.success);
+      //ROS_INFO("DEBUG: Success : %d", srv.response.success);
       
     }
 

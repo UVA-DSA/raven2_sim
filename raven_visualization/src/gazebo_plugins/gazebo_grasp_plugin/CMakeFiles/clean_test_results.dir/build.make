@@ -46,7 +46,7 @@ CMAKE_BINARY_DIR = /home/raven/raven_2/raven_visualization/src/gazebo_plugins/ga
 include CMakeFiles/clean_test_results.dir/progress.make
 
 CMakeFiles/clean_test_results:
-	/usr/bin/python /opt/ros/indigo/share/catkin/cmake/test/remove_test_results.py /home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/test_results
+	/usr/bin/python /opt/ros/jade/share/catkin/cmake/test/remove_test_results.py /home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/test_results
 
 clean_test_results: CMakeFiles/clean_test_results
 clean_test_results: CMakeFiles/clean_test_results.dir/build.make

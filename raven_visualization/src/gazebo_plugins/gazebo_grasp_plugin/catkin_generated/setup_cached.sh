@@ -11,4 +11,4 @@ export CMAKE_PREFIX_PATH="/home/raven/raven_2/raven_visualization/src/gazebo_plu
 export LD_LIBRARY_PATH="/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/share/common-lisp"
-export ROS_PACKAGE_PATH="/home/raven/raven_2/raven_visualization/src/gazebo-pkgs/gazebo_grasp_plugin:/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin:/opt/ros/indigo/share:/opt/ros/indigo/stacks"
+export ROS_PACKAGE_PATH="/home/raven/raven_2/raven_visualization/src/gazebo-pkgs/gazebo_grasp_plugin:/home/raven/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin:/opt/ros/jade/share:/opt/ros/jade/stacks"
