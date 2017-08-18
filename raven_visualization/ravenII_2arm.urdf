@@ -84,7 +84,7 @@
         <!-- <mesh filename="package://raven_visualization/Raven_files/left_arm/base_w_motors.dae"/> Maybe a simpler one?-->
 	<box size="0.43 0.25 0.32" />
       </geometry>
-    <origin xyz="0 -0.43 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
+    <origin xyz="0 0 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
     </visual>
 
     <inertial>
