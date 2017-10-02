@@ -76,7 +76,7 @@ class Raven():
         self.traj = trajectory
         self.raven_home = raven_home
         self.shelve_file = raven_home + "/run.shelve"
-        self.surgeon_simulator = 1
+        self.surgeon_simulator = 0
         self.defines_changed = 0
         self.mfi_changed = 0
         self.defines_src_file = raven_home + "/include/raven/defines.h"
@@ -128,7 +128,10 @@ class Raven():
                     line = line.lstrip('//')
             elif line.startswith('//#define detector'):
                 if self.mode == 'detect': 
-                    line = line.lstrip('//')          
+                    line = line.lstrip('//')    
+	    elif line.startswith ('//#define autosim'):
+		if self.mode =='atsm':
+		    line = line.lstrip('//')
             src_fp.write(line)
         src_fp.close()
         bkup_fp.close()
@@ -562,7 +565,7 @@ raven_home = splits[0]
 golden_home = raven_home+'/golden_run'
 print '\nRaven Home Found to be: '+ raven_home
 #rsp_func()
-usage = "Usage: python run.py <sim|dyn_sim|rob|detect}> <1:packet_gen|0:gui> <none|mfi:start#|mfi2:start#> <traj2|traj3>"
+usage = "Usage: python run.py <sim|dyn_sim|rob|detect|atsm}> <1:packet_gen|0:gui> <none|mfi:start#|mfi2:start#> <traj2|traj3>"
 
 # Parse the arguments
 try:
@@ -580,6 +583,8 @@ elif mode == "rob":
     print "Run Real Robot"
 elif mode == "detect": 
     print "Run Real Robot with Dynamic Model Detector"
+elif mode == "atsm":
+    print "Run the robot in autonomous"
 else:
     print usage
     sys.exit(2)

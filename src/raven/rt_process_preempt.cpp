@@ -355,6 +355,7 @@ static void *rt_process(void* )
       {
   		// Calculate Raven control
   		controlRaven(&device0, &currParams);
+		//std::cout <<"enter1" <<std::endl;
       }
       //////////////// END SURGICAL ROBOT CODE ///////////////////////////
 

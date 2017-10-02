@@ -64,8 +64,12 @@ int raven_motor_position_control(struct device *device0, struct param_pass *curr
 int raven_homing(struct device *device0, struct param_pass *currParams, int begin_homing=0);
 int applyTorque(struct device *device0, struct param_pass *currParams);
 int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *currParams);
+int joint();
 
 extern int initialized; //Defined in rt_process_preempt.cpp
+//****************************************** "adding new array for joint initialization"
+
+//******************************************
 
 /**
 *  \brief Implements control for one loop cycle.
@@ -93,24 +97,30 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
     int ret = 0;
     //Desired control mode
     t_controlmode controlmode = (t_controlmode)currParams->robotControlMode;
-
+    //std::cout <<"step1" <<std::endl;
     //Initialization code
 
     initRobotData(device0, currParams->runlevel, currParams);
-
+    //std::cout <<"step2" <<std::endl;
     //Compute Mpos & Velocities
     stateEstimate(device0); 
-
+    //std::cout <<"step3" <<std::endl;
 	// commented debug output
     /*log_msg("User desired end-effector positions: Arm %d(%d,%d,%d)\n Arm %d(%d,%d,%d)\n",
                 device0->mech[0].type,  device0->mech[0].pos_d.x, device0->mech[0].pos_d.y,device0->mech[0].pos_d.z,device0->mech[1].type,  device0->mech[1].pos_d.x, device0->mech[1].pos_d.y,device0->mech[1].pos_d.z); */
 
     //Foward Cable Coupling
     fwdCableCoupling(device0, currParams->runlevel);
-
+    //std::cout <<"step4" <<std::endl;
     //Forward kinematics
     r2_fwd_kin(device0, currParams->runlevel);
+    //std::cout <<"step5" <<std::endl;
+// code insertion to hardcode controlmode
+//************************************************* 
+    //controlmode = homing_mode;
+    controlmode = multi_dof_sinusoid;
 
+//****************************************************
     switch (controlmode){
 
         //CHECK ME: what is the purpose of this mode?
@@ -133,6 +143,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
         	break;
         }
         //Cartesian Space Control is called to control the robot in cartesian space
+	//This is where I might have to insert code, however I should not be need packet_gen
         case cartesian_space_control:
 #ifdef packet_gen
                 //log_msg("RT_PROCESS) Cartesian space control");         
@@ -151,14 +162,18 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
             break;
         //Runs homing mode
         case homing_mode:
+		
 	        static int hom = 0;
         	if (hom==0){
         		log_msg("Entered homing mode");
         		hom = 1;
+		
         	}
             initialized = false;
+
             //initialized = robot_ready(device0) ? true:false;
 #ifndef simulator
+//#if !defined(simulator) || !defined (autosim)
             ret = raven_homing(device0, currParams);
 
             set_posd_to_pos(device0);
@@ -166,8 +181,17 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 
             if (robot_ready(device0))
             {
-                currParams->robotControlMode = cartesian_space_control;
-                newRobotControlMode = cartesian_space_control;
+		//code change begins for autosim
+                //currParams->robotControlMode = cartesian_space_control;
+                //newRobotControlMode = cartesian_space_control;
+		//code change ends for autosim , must uncomment this
+		//**********************************************************************************
+		currParams->robotControlMode = multi_dof_sinusoid;
+		newRobotControlMode = multi_dof_sinusoid;
+		  //  std::cout <<"homingmode" <<std::endl;
+		//**********************************************************************************
+		// no change due to change of this
+
 	        /*log_msg("Homing Done: end-effector positions: (%d,%d,%d)/(%d,%d,%d)\n",
 		device0->mech[0].pos.x, device0->mech[0].pos.y, device0->mech[0].pos.z,
 	        device0->mech[1].pos.x, device0->mech[1].pos.y, device0->mech[1].pos.z);*/
@@ -181,8 +205,10 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 		}		
 		if (currParams->last_sequence == 1)
 		{			
-            currParams->robotControlMode = cartesian_space_control;
-   	        newRobotControlMode = cartesian_space_control;
+		//code also changed here from cartesian_space_control to multi_dof_sinusoid           
+	 currParams->robotControlMode = multi_dof_sinusoid;
+   	        newRobotControlMode = multi_dof_sinusoid;
+		//std::cout <<"homingmode" <<std::endl;
 		}
 #endif
             break;
@@ -194,6 +220,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 	//Apply sinusoidal trajectory to all joints
         case multi_dof_sinusoid:
             initialized = false;
+     	    //std::cout <<"homingmode" <<std::endl;
             ret = raven_sinusoidal_joint_motion(device0, currParams);
             break;
 
@@ -206,6 +233,9 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 	//log_file("_______________________________________________\n");   
 #endif
     return ret;
+//	case trajopt:
+
+//	break;
 }
 
 /**
@@ -307,7 +337,7 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
     //const float f_magnitude[8] = {10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999, 30 DEG2RAD, 30 DEG2RAD, 30 DEG2RAD, 30 DEG2RAD};
 
 
-
+/*
     // If we're not in pedal down or init.init then do nothing.
     if (! ( currParams->runlevel == RL_INIT && currParams->sublevel == SL_AUTO_INIT ))
     {
@@ -324,15 +354,18 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
                 _joint->tau_d = 0;
             }
         }
+	std::cout <<"not working" <<std::endl;
         return 0;
     }
-
+*/
 
 
 
     // Wait for amplifiers to power up
     if (gTime - delay < 800)
         return 0;
+//*********************** calling the function newJoint();
+//******************
 
     // Set trajectory on all the joints
     for (int i=0; i < NUM_MECH; i++)
@@ -340,6 +373,7 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
         for (int j = 0; j < MAX_DOF_PER_MECH; j++)
         {
             struct DOF * _joint =  &(device0->mech[i].joint[j]);
+
             int sgn = 1;
 
             if (device0->mech[i].type == GREEN_ARM)
@@ -349,14 +383,15 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
             if (!controlStart)
                 start_trajectory(_joint, (_joint->jpos + sgn*f_magnitude[j]), f_period[j]);
 
-            // Get trajectory update
+            // Get trajectory update-********* commented out***
 			update_sinusoid_position_trajectory(_joint);
+			std::cout<<"entered sinusoid"<<std::endl;
         }
     }
 
     //Inverse Cable Coupling
     invCableCoupling(device0, currParams->runlevel);
-
+    std::cout<<"entered inv_coupling"<<std::endl;
     // Do PD control on all the joints
     for (int i=0; i < NUM_MECH; i++)
     {
@@ -377,6 +412,7 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
     controlStart = 1;
     return 0;
 }
+
 
 
 /**
@@ -528,7 +564,7 @@ int raven_joint_velocity_control(struct device *device0, struct param_pass *curr
         {
             for (int j = 0; j < MAX_DOF_PER_MECH; j++)
             {
-                struct DOF * _joint =  &(device0->mech[i].joint[j]);
+                struct DOF * _joint =  &(device0->mech[i].joint[j]); //initiazed and passed for every joint
 
                 if (device0->mech[i].type == GOLD_ARM)
                 {

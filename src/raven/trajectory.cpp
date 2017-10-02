@@ -32,9 +32,10 @@
 #include "log.h"
 #include "utils.h"
 #include "defines.h"
-
+int count =0;
 extern unsigned long int gTime;
-
+float joint_val [2][9];	
+int i=0;
 // Store trajectory parameters
 /**    Holds trajectory paramters
  *
@@ -82,21 +83,96 @@ struct _trajectory trajectory[MAX_MECH*MAX_DOF_PER_MECH];
 */
 int start_trajectory(struct DOF* _joint, float _endPos, float _period)
 {
-    trajectory[_joint->type].startTime = trajectory[_joint->type].startTime.now();
-    trajectory[_joint->type].startPos = _joint->jpos;
-    trajectory[_joint->type].startVel = _joint->jvel;
-    _joint->jpos_d = _joint->jpos;
-    _joint->jvel_d = _joint->jvel;
+	joint_val [0][0] = 29.9499568939;
+	joint_val [0][1] = 90.4525146484;
+	joint_val [0][2] = 22.9035243988;
+	joint_val [0][3] = 0;
+	joint_val [0][4] = 11.5578584671;
+	joint_val [0][5] = 7.2847337723;
+	joint_val [0][6] = 82.4116973877;
+	joint_val [0][7] = 56.6583213806;
+	
+							
 
+	joint_val [1][0] = 29.9730834961;
+	joint_val [1][1] = 90.3447113037;
+	joint_val [1][2] = 22.9268455505;
+	joint_val [1][3] = 0;
+	joint_val [1][4] = -4.5915288925;
+	joint_val [1][5] = -3.7058007717;
+	joint_val [1][6] = 45.6687583923;
+	joint_val [1][7] = 45.258266449;
+	
+    //dstart_trajectory();
+    float j=0;
+    if (count>=8){
+  	i=1;
+	
+
+	j = joint_val[i][count-8];
+    }
+    else {
+	i=0;
+	j = joint_val[i][count];
+    }
+
+    
+    trajectory[_joint->type].startTime = trajectory[_joint->type].startTime.now();
+    //trajectory[_joint->type].startPos = _joint->jpos;
+    trajectory[_joint->type].startPos = j DEG2RAD;
+    trajectory[_joint->type].startVel = _joint->jvel;
+    
+    //_joint->jpos_d = _joint->jpos;
+    _joint->jpos_d = j DEG2RAD;
+    _joint->jvel_d = _joint->jvel;
+    count++;
     trajectory[_joint->type].magnitude = _endPos - _joint->jpos;
+  
+  
     trajectory[_joint->type].period = _period;
+      std::cout<<_joint->jpos<<std::endl;
 //    log_msg("starting trajectory on joint %d to magnitude: %0.3f (%0.3f - %0.3f), period:%0.3f",
 //        _joint->type,
 //        trajectory[_joint->type].magnitude,
 //        _endPos, _joint->jpos,
 //        trajectory[_joint->type].period);
+	
     return 0;
 }
+
+int dstart_trajectory(){
+
+	joint_val [0][0] = 29.9499568939;
+	joint_val [0][1] = 90.4525146484;
+	joint_val [0][2] = 22.9035243988;
+	joint_val [0][3] = 0;
+	joint_val [0][4] = 11.5578584671;
+	joint_val [0][5] = 7.2847337723;
+	joint_val [0][6] = 82.4116973877;
+	joint_val [0][7] = 56.6583213806;
+
+
+	joint_val [1][0] = 29.9499568939;
+	joint_val [1][1] = 90.4525146484;
+	joint_val [1][2] = 22.9035243988;
+	joint_val [1][3] = 0;
+	joint_val [1][4] = 11.5578584671;
+	joint_val [1][5] = 7.2847337723;
+	joint_val [1][6] = 82.4116973877;
+	joint_val [1][7] = 56.6583213806;
+	joint_val [1][8] = 56.6583213806;
+    
+//    log_msg("starting trajectory on joint %d to magnitude: %0.3f (%0.3f - %0.3f), period:%0.3f",
+//        _joint->type,
+//        trajectory[_joint->type].magnitude,
+//        _endPos, _joint->jpos,
+//        trajectory[_joint->type].period);
+return 0;
+
+}
+
+
+
 /**
 *  initialize trajectory parameters.
 *
@@ -195,6 +271,7 @@ int update_linear_sinusoid_velocity_trajectory(struct DOF* _joint)
 
     if (_joint->type      == SHOULDER_GOLD)
         _joint->jvel_d = maxspeed[0] * (1-cos( 2*M_PI * (1/f_period) * t.toSec()));
+	 
 
     else if (_joint->type == ELBOW_GOLD)
         _joint->jvel_d = maxspeed[1] * (1-cos( 2*M_PI * (1/f_period) * t.toSec()));
@@ -230,6 +307,8 @@ int update_sinusoid_position_trajectory(struct DOF* _joint)
     else
         _joint->jpos_d = -f_magnitude * sin( 2*M_PI * t.toSec() / f_period) + traj->startPos;
 
+	//std::cout <<"jpos_d" <<std::endl;
+	//std::cout <<_joint->jpos_d <<std::endl;
     return 0;
 }
 
