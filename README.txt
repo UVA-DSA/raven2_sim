@@ -27,7 +27,7 @@ How to run
 ======================================
 Setting up the repository:
 0. Clone the repository:
-   "git clone https://github.com/CSLDepend/raven2_sim.git"
+   "git clone https://github.com/UVA-DSA/raven2_sim.git"
 1. Rename the folder name from "raven2_sim" to "raven_2"
 2. Change the ROS_PACKAGE_PATH environment variable to the location of raven_2 folder. For example:
    "export ROS_PACKAGE_PATH=/home/raven/raven_2:/home/raven/raven_2/raven_visualization:/opt/ros/indigo/share:/opt/ros/indigo/stacks"
