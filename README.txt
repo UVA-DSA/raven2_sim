@@ -7,7 +7,7 @@ It enables running RAVEN control software with no robotic hardware attached. A P
 For more information, please see: http://web.engr.illinois.edu/~alemzad1/papers/MedicalCPS_2015.pdf
 http://arxiv.org/abs/1504.07135v1
 
-Copyright (C) 2017 Homa Alemzadeh, Dependable Systems and Analytics Group, University of Virginia
+Copyright (C) 2017 Dependable Systems and Analytics Group, University of Virginia
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
