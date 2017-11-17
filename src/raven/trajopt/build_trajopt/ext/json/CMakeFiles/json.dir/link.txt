@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -O3 -DNDEBUG  -shared -Wl,-soname,libjson.so -o ../../lib/libjson.so CMakeFiles/json.dir/src/lib_json/json_reader.cpp.o CMakeFiles/json.dir/src/lib_json/json_value.cpp.o CMakeFiles/json.dir/src/lib_json/json_writer.cpp.o 

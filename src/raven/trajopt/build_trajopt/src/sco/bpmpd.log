@@ -1,0 +1,65 @@
+ 
+Process: presolv
+ROWSNG:    7 columns,    7 rows removed
+Presolv done...
+ 
+Process: scaling
+Pass 0. Average def. 1.000000000e+00
+Scaling done...
+ 
+Process: aggregator
+      0 rows     dependent
+      0 row/cols eliminated,       0 fill-in created.
+      0 nonzeros eliminated
+Aggregator done...
+ 
+Time for presolv, scaling and aggregator:     0.00 sec.
+Number of rows       :       0
+Number of columns    :      63
+Free variables       :       0
+No. of A nonzeros    :       0
+No. of Q nonzeros    :       0
+Largest column count :       0
+Obj. scaled 2.00e-01
+ 
+Number of dense rows       :     0    0.0%
+Largest sparse col. length :     0    0.0%
+Problem has no dense columns
+Analysing quadratic objective
+Number of independent bloks:     0
+Largest increased density  :     0
+ 
+Building ordering    list    time:     0.00 sec
+Ordering on Quadratic Objective   
+Building ordering    list    time:     0.00 sec
+Symbolic factorisation       time:     0.00 sec
+Sub-diagonal nonzeros in aat     :        0
+Sub-diagonal nonzeros in L       :        0
+Total symbolic phase         time:     0.00 sec
+NONZEROS         :           0
+OPERATIONS       :           0
+Supernodes       :           0              0
+Supernodal cols. :           0              0
+Dense window     :           0
+Centrality correction Power: 1
+Iterative refinement  Power: 0
+FIRSTFACTOR TIME :        0.00 sec
+ 
+It-PC   P.Inf   D.Inf  U.Inf   Actions           P.Obj           D.Obj  Barpar
+------------------------------------------------------------------------------
+ 0-00   0e+00   1e+04  3e+03  0   0   0   1.1569874e+08  -1.0117385e+09  0e+00
+ 1-11   0e+00   7e+00  1e+00  0   0   0   7.1552443e+03  -8.5522043e+06  2e+04
+ 2-10   0e+00   7e-03  1e-03  0   0   0  -9.8437291e+01  -2.2957816e+04  2e-01
+ 3-11   0e+00   3e-05  7e-06  0   0   0  -9.9193899e+01  -2.4196351e+02  7e-04
+ 4-11   0e+00   2e-11  2e-16  0   0   0  -1.0786173e+02  -1.1703521e+02  1e-01
+ 5-11   0e+00   2e-11  2e-16  0   0   0  -1.0853319e+02  -1.0886701e+02  2e-03
+ 6-11   0e+00   1e-11  2e-16  0   0   0  -1.0855207e+02  -1.0855984e+02  2e-05
+ 7-11   0e+00   2e-15  2e-16  0   0   0  -1.0855218e+02  -1.0855220e+02  8e-09
+ 8-11   0e+00   5e-15  2e-16  0   0   0  -1.0855218e+02  -1.0855218e+02  0e+00
+ 
+Stopping Criteria:Small infeasibility and duality gap
+ABSOLUTE infeas.   Primal  :  0.000e+00    Dual         :   4.693756947e-15
+PRIMAL :  Relative infeas. :  1.075e-20    Objective    :  -1.085521784e+02
+DUAL   :  Relative infeas. :  4.694e-15    Objective    :  -1.085521784e+02
+Complementarity gap        :  1.436e-13    Duality gap  :   0.000000000e+00
+Solver time        0.00 sec.

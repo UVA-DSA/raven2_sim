@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -DNDEBUG   CMakeFiles/bpmpd_caller.dir/bpmpd_caller.cpp.o  -o ../../bin/bpmpd_caller -rdynamic ../../../3rdpartylib/bpmpd_linux64.a 
