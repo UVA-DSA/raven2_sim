@@ -49,11 +49,25 @@
 #include "local_io.h"
 #include "update_device_state.h"
 #include "parallel.h"
+//added include for python reader
+#include <python2.7/Python.h>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <assert.h>
+#include <stdlib.h>
+
+
 
 #ifdef packetgen
 extern int done_homing;
 #endif
 extern int NUM_MECH; //Defined in rt_process_																								preempt.cpp
+int counter = 0;
+int t_start = 0;
+double new_Array[10][8]={0.0};
 extern unsigned long int gTime; //Defined in rt_process_preempt.cpp
 extern struct DOF_type DOF_types[]; //Defined in DOF_type.h
 extern t_controlmode newRobotControlMode; //Defined in struct.h
@@ -64,11 +78,13 @@ int raven_motor_position_control(struct device *device0, struct param_pass *curr
 int raven_homing(struct device *device0, struct param_pass *currParams, int begin_homing=0);
 int applyTorque(struct device *device0, struct param_pass *currParams);
 int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *currParams);
+int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currParams, double (&myArray)[10][8]);
 int joint();
 
-extern int initialized; //Defined in rt_process_preempt.cpp
-//****************************************** "adding new array for joint initialization"
 
+extern int initialized; //Defined in rt_process_preempt.cpp
+//****************************************** "adding newcode for python integration"
+std::ifstream data ("/home/uva-dsa1/Downloads/trajopt/python_examples/traj_data.csv");
 //******************************************
 
 /**
@@ -93,8 +109,11 @@ extern int initialized; //Defined in rt_process_preempt.cpp
 *  -Applying arbitrary torque
 *
 */
-int controlRaven(struct device *device0, struct param_pass *currParams){   
+int controlRaven(struct device *device0, struct param_pass *currParams){ 
+
     int ret = 0;
+    
+    
     //Desired control mode
     t_controlmode controlmode = (t_controlmode)currParams->robotControlMode;
     //std::cout <<"step1" <<std::endl;
@@ -117,16 +136,17 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
     //std::cout <<"step5" <<std::endl;
 // code insertion to hardcode controlmode
 //************************************************* 
-    //controlmode = homing_mode;
-    controlmode = multi_dof_sinusoid;
-
+    //controlmode = trajopt;
+    //controlmode = multi_dof_sinusoid;
+    controlmode = trajopt;
+    //controlmode = cartesian_space_control; 
 //****************************************************
     switch (controlmode){
 
         //CHECK ME: what is the purpose of this mode?
         case no_control:
         {
-		    initialized = false;
+		    //initialized = false;
             
             struct DOF *_joint = NULL;
             struct mechanism* _mech = NULL;
@@ -186,8 +206,8 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
                 //newRobotControlMode = cartesian_space_control;
 		//code change ends for autosim , must uncomment this
 		//**********************************************************************************
-		currParams->robotControlMode = multi_dof_sinusoid;
-		newRobotControlMode = multi_dof_sinusoid;
+		//currParams->robotControlMode = multi_dof_sinusoid;
+		//newRobotControlMode = multi_dof_sinusoid;
 		  //  std::cout <<"homingmode" <<std::endl;
 		//**********************************************************************************
 		// no change due to change of this
@@ -206,8 +226,8 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 		if (currParams->last_sequence == 1)
 		{			
 		//code also changed here from cartesian_space_control to multi_dof_sinusoid           
-	 currParams->robotControlMode = multi_dof_sinusoid;
-   	        newRobotControlMode = multi_dof_sinusoid;
+	 currParams->robotControlMode = cartesian_space_control;
+   	        newRobotControlMode = cartesian_space_control;
 		//std::cout <<"homingmode" <<std::endl;
 		}
 #endif
@@ -223,19 +243,69 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
      	    //std::cout <<"homingmode" <<std::endl;
             ret = raven_sinusoidal_joint_motion(device0, currParams);
             break;
+            
+	case trajopt:
+	    //csv_read();
+ 	if (counter == 0){
+	    csv_read();
+	    /*std::ifstream theFile ("/home/uva-dsa1/Downloads/trajopt/python_examples/traj_data.csv");
+	    std::string         line;
+            std::getline(theFile, line);
+            
+            int row=0;
+            int col=0;
+           
+          while(std::getline(theFile,line))
+	    { 
+	    std::stringstream   lineStream(line);
+            std::string         cell;
+            while(std::getline(lineStream, cell, ','))
+            {
+                    
+                double n = ::atof(cell.c_str());
+                if (col==3){
+                //std::cout<<new_Array[row][col]<<std::endl;  
+                	col=col+1;
+                }
+                new_Array[row][col]=n;
+        	//std::cout<<new_Array[row][col]<<std::endl;        
+        	
+            col=col+1;
+            }
+            
+                    
+            
+            std::cout<<row<<std::endl;
+            row=row+1;;
+            col=0;
+            
+
+            if (!lineStream && cell.empty())
+            {
+                // If there was a trailing comma then add an empty element.
+                              //  std::cout <<" cell" << '\n';
+                //m_data.push_back("");
+            }
+        }*/
+        //ret=raven_trajopt_joint_motion(device0, currParams, new_Array);
+        }
+            counter = 1;
+	    ret=raven_trajopt_joint_motion(device0, currParams, new_Array);
+
+	    
+	    break;
 
         default:
             ROS_ERROR("Error: unknown control mode in controlRaven (rt_raven.cpp)");
             ret = -1;
             break;
     }
+	
 #ifdef save_logs
 	//log_file("_______________________________________________\n");   
 #endif
     return ret;
-//	case trajopt:
 
-//	break;
 }
 
 /**
@@ -252,6 +322,14 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 *  5. calls TorqueToDAC() to apply write torque value's on DAC
 * 
 */
+
+
+/*********************Code for csv starts**************************/
+
+
+
+
+/*********************Code for csv ends*************************/
 int raven_cartesian_space_command(struct device *device0, struct param_pass *currParams){
     struct DOF *_joint = NULL;
     struct mechanism* _mech = NULL;
@@ -391,7 +469,7 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
 
     //Inverse Cable Coupling
     invCableCoupling(device0, currParams->runlevel);
-    std::cout<<"entered inv_coupling"<<std::endl;
+    //std::cout<<"entered inv_coupling"<<std::endl;
     // Do PD control on all the joints
     for (int i=0; i < NUM_MECH; i++)
     {
@@ -607,8 +685,67 @@ int raven_joint_velocity_control(struct device *device0, struct param_pass *curr
 
     return 0;
 }
+int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currParams, double (&new_Array)[10][8]){
+ static int controlStart = 0;
+    static unsigned long int delay=0;
+    //const float f_period[8] = {6, 7, 10, 9999999, 10, 5, 10, 6};
+    const float f_period[8] = {6, 7, 4, 9999999, 10, 5, 10, 6};
+    const float f_magnitude[8] = {10 DEG2RAD, 0 DEG2RAD, 0, 9999999, 0 DEG2RAD, 0 DEG2RAD, 0 DEG2RAD, 0 DEG2RAD};
+ 
+
+    // Set trajectory on all the joints
+    for (int i=0; i < NUM_MECH; i++)
+    {
+        for (int j = 0; j < MAX_DOF_PER_MECH; j++)
+        {
+            struct DOF * _joint =  &(device0->mech[i].joint[j]);
+
+            int sgn = 1;
+
+            if (device0->mech[i].type == GREEN_ARM)
+                sgn = -1;
+
+            // initialize trajectory
+            if (!controlStart){
+                start_trajectory(_joint, (_joint->jpos + sgn*f_magnitude[j]), f_period[j]);
+		}
+		
+            // Get trajectory update-********* commented out***
+		//start_trajopt(_joint,new_Array[t_start][j]);
+		//csv_read();
+		//start_trajopt(_joint,j);
+		trajopt_with_node(_joint,j);
+		//std::cout<<t_start<<std::endl;
+        }
+    }
+    
+    
+   
+    
 
 
+    //Inverse Cable Coupling
+    invCableCoupling(device0, currParams->runlevel);
+    //std::cout<<"entered inv_coupling"<<std::endl;
+    // Do PD control on all the joints
+    for (int i=0; i < NUM_MECH; i++)
+    {
+        for (int j = 0; j < MAX_DOF_PER_MECH; j++)
+        {
+            struct DOF * _joint =  &(device0->mech[i].joint[j]);
 
+            // Do PD control
+            mpos_PD_control(_joint);
+//            if (is_toolDOF(_joint))
+//            	_joint->tau_d = 0;
+        }
+    }
+
+
+    TorqueToDAC(device0);
+
+    controlStart = 1;
+    return 0;
+}
 
 

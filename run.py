@@ -92,6 +92,7 @@ class Raven():
         self.rviz_enabled = 1
         self.result_folder = ''
         self.exp_status = '' # expriment status: 'running' or 'done'
+        self.raven_test = raven_home + "/test_raven.py"
 
         inj = injection.split(':')
         self.injection = inj[0]
@@ -321,13 +322,20 @@ class Raven():
         sock.bind((UDP_IP,UDP_PORT))
 
         # Setup Variables
-  
+        
         ravenTask = "xterm -hold -e 'roslaunch raven_2 raven_2.launch'"
         #ravenTask = "xterm -hold -e 'LD_PRELOAD=/home/raven/homa_wksp/malicious_wrapper/malicious_wrapper.so roslaunch raven_2 raven_2.launch'"
         visTask = 'xterm -e roslaunch raven_visualization raven_visualization.launch'
         pubTask = 'roslaunch raven_visualization raven_state_publisher.launch'
         dynSimTask = 'xterm -e "cd ./Li_DYN && make -j && ./two_arm_dyn"'
         rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv'
+        trajtask = 'python ' + self.raven_test
+        proc=subprocess.call('pwd')
+        time.sleep(1)
+        #new_terminals=os.listdir('/dev/pts')
+        #term=os.path.join('/dev/pts',1)
+        
+
         if (self.surgeon_simulator == 1):
             packetTask = 'xterm -e python '+self.raven_home+'/Real_Packet_Generator_Surgeon.py '+ self.mode + ' '+ self.traj 
             #print(packetTask)
@@ -553,7 +561,10 @@ class Raven():
             os.system("python parse_plot.py 0 -1 "+self.traj)
 
 # Main code starts here
+#code added
 
+
+#code adding ended
 # Init Logger
 logger = logging.getLogger(__name__)
 initLogger(logger, 'mfi.log')

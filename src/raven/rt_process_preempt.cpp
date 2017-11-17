@@ -38,7 +38,7 @@
  *
  *  Configures and starts the RAVEN control RT process.
  */
-
+#include <listener.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/mman.h> // Needed for mlockall()
@@ -57,7 +57,7 @@
 #include <sys/stat.h> //Needed for umask
 
 #include <ros/ros.h>     // Use ROS
-
+#include "trajectory.h"
 #include "rt_process_preempt.h"
 #include "console_process.h"
 #include "rt_raven.h"
@@ -65,6 +65,11 @@
 #include "network_layer.h"
 #include "parallel.h"
 #include "reconfigure.h"
+#include "std_msgs/String.h"
+#include "std_msgs/Float32MultiArray.h"
+#include "std_msgs/MultiArrayDimension.h"
+#include <visualization_msgs/Marker.h>
+
 
 using namespace std;
 
@@ -76,7 +81,6 @@ using namespace std;
 #define MS  (1000 * US)
 #define SEC (1000 * MS)
 
-
 //Global Variables
 unsigned long int gTime;
 int initialized=0;     // State initialized flag
@@ -84,7 +88,8 @@ int soft_estopped=0;   // Soft estop flag- indicate desired software estop.
 int    deviceType = SURGICAL_ROBOT;//PULLEY_BOARD;
 struct device device0 ={0};  //Declaration Moved outside rt loop for access from console thread
 int    mech_gravcomp_done[2]={0};
-
+//float traj_Array [6]; //previously 120
+int subCount = 0;
 #ifdef packetgen
 int NUM_MECH=2;   // Define NUM_MECH as a C variable, not a c++ variable
 int done_homing = 0;
@@ -99,6 +104,7 @@ char err_str[1024];
 int logging = 0;
 int no_pack_cnt = 0;
 int inject_mode;
+
 #endif
 
 #ifdef skip_init_button
@@ -257,6 +263,8 @@ static void *rt_process(void* )
   {
       //printf("RealTime @= %lx\n", gTime);
       // Initiate USB Read
+      //ros::NodeHandle n;
+      //ros::Subscriber sub = n.subscribe("send matrix", 1, matrixcb);
 #ifndef simulator
       initiateUSBGet(&device0);
 #endif
@@ -355,7 +363,6 @@ static void *rt_process(void* )
       {
   		// Calculate Raven control
   		controlRaven(&device0, &currParams);
-		//std::cout <<"enter1" <<std::endl;
       }
       //////////////// END SURGICAL ROBOT CODE ///////////////////////////
 
@@ -612,13 +619,42 @@ int init_ros(int argc, char **argv)
   ros::NodeHandle n;
 #ifdef save_logs
   n.getParam("inject",inject_mode);
+  
 #endif
   //    rosrt::init();
   init_ravenstate_publishing(n);
   init_ravengains(n, &device0);
-
+  ros::Subscriber sub = n.subscribe("sent_matrix", 1, matrixcb);
+  
   return 0;
 }
+
+
+/**
+*Code for subscriber node
+*Need to modify for trajopt
+*/
+
+void chatterCallback(const std_msgs::Float32MultiArray::ConstPtr& msg){
+	//ROS_INFO("I heard: " + subCount);
+	float traj_Array [6]; //previously 120
+	float dstride0 = msg->layout.dim[0].stride;
+	float dstride1 = msg->layout.dim[1].stride;
+	float h = msg->layout.dim[0].size;
+	float w = msg->layout.dim[1].size;
+	
+	for (int i=0; i<6; i++){ //previous limit 120
+			traj_Array[i] = msg->data[i];
+			//ROS_INFO("mat(1,1) = %f\r\n",traj_Array[i]);
+	}
+	std::cout<<"I heard: "<<subCount<<std::endl;
+	//if (subCount<100){
+	subscriber_Read(traj_Array);
+	//}
+
+	subCount++;
+}
+
 
 /**
 * Main entry point for the raven RT control system.
@@ -628,6 +664,45 @@ int init_ros(int argc, char **argv)
 */
 int main(int argc, char **argv)
 {
+
+    ros::init(argc, argv, "listener");
+ 	ros::NodeHandle n;
+	ROS_INFO("subscribe-----------------------------------------------------------------------");
+	ros::Subscriber sub = n.subscribe("trajopt", 20, chatterCallback);
+	
+	//adding new environment
+	
+	ros::Publisher vis_pub = n.advertise<visualization_msgs::Marker>( "visualization_marker", 0 );
+	visualization_msgs::Marker marker;
+	marker.header.frame_id = "base_link";
+	marker.header.stamp = ros::Time();
+	marker.ns = "my_namespace";
+	marker.id = 0;
+	marker.type = visualization_msgs::Marker::MESH_RESOURCE;
+	marker.action = visualization_msgs::Marker::ADD;
+	marker.pose.position.x = 1;
+	marker.pose.position.y = 1;
+	marker.pose.position.z = 1;
+	marker.pose.orientation.x = 0.0;
+	marker.pose.orientation.y = 0.0;
+	marker.pose.orientation.z = 0.0;
+	marker.pose.orientation.w = 1.0;
+	marker.scale.x = 1;
+	marker.scale.y = 0.1;
+	marker.scale.z = 0.1;
+	marker.color.a = 1.0; // Don't forget to set the alpha!
+	marker.color.r = 0.0;
+	marker.color.g = 1.0;
+	marker.color.b = 0.0;
+  
+	marker.mesh_resource = "/home/uva-dsa1/raven_2/src/raven/trajopt/data/onehole.dae";
+	//marker.mesh_resource = "package://src/raven/trajopt/data/onehole.dae";
+	vis_pub.publish( marker );
+	std::cout<<marker<<std::endl;
+ 	
+	//no more adding
+	
+	
   // set ctrl-C handler (override ROS b/c it's slow to cancel)
   signal( SIGINT,&sigTrap);
 

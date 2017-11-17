@@ -7,7 +7,7 @@ Panels:
       - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
-    Splitter Ratio: 0.588679
+    Splitter Ratio: 0.588679016
   - Class: rviz/Time
     Experimental: false
     Name: Time
@@ -25,16 +25,23 @@ Panels:
     Property Tree Widget:
       Expanded: ~
       Splitter Ratio: 0.5
-    Tree Height: 356
+    Tree Height: 363
   - Class: rviz/Displays
     Help Height: 81
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /TF1
+        - /Global Options1
+        - /Status1
+        - /Grid1
+        - /RobotModel1
+        - /RobotModel1/Links1
         - /TF1/Frames1
+        - /TF1/Tree1
+        - /RobotModel2
+        - /RobotModel2/Links1
       Splitter Ratio: 0.5
-    Tree Height: 356
+    Tree Height: 220
 Visualization Manager:
   Class: ""
   Displays:
@@ -44,7 +51,7 @@ Visualization Manager:
       Color: 160; 160; 164
       Enabled: true
       Line Style:
-        Line Width: 0.03
+        Line Width: 0.0299999993
         Value: Lines
       Name: Grid
       Normal Cell Count: 0
@@ -168,6 +175,34 @@ Visualization Manager:
           Value: true
         base_link_R:
           Value: true
+        grasper1_L:
+          Value: true
+        grasper1_R:
+          Value: true
+        grasper2_L:
+          Value: true
+        grasper2_R:
+          Value: true
+        instrument_shaft_L:
+          Value: true
+        instrument_shaft_R:
+          Value: true
+        link1_L:
+          Value: true
+        link1_R:
+          Value: true
+        link2_L:
+          Value: true
+        link2_R:
+          Value: true
+        link3_L:
+          Value: true
+        link3_R:
+          Value: true
+        wrist_L:
+          Value: true
+        wrist_R:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: false
@@ -176,11 +211,128 @@ Visualization Manager:
       Tree:
         0_link:
           base_link_L:
-            {}
+            link1_L:
+              link2_L:
+                link3_L:
+                  instrument_shaft_L:
+                    wrist_L:
+                      grasper1_L:
+                        {}
+                      grasper2_L:
+                        {}
           base_link_R:
-            {}
+            link1_R:
+              link2_R:
+                link3_R:
+                  instrument_shaft_R:
+                    wrist_R:
+                      grasper1_R:
+                        {}
+                      grasper2_R:
+                        {}
       Update Interval: 0
       Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        0_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_link_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_link_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        grasper1_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        grasper1_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        grasper2_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        grasper2_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        instrument_shaft_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        instrument_shaft_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link1_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link1_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link2_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link2_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link3_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        link3_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_L:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_R:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -203,38 +355,41 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.949426
+      Distance: 1.87399852
       Enable Stereo Rendering:
-        Stereo Eye Separation: 0.06
+        Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.0815642
-        Y: -0.0166364
-        Z: 0.0324322
+        X: -0.0815642029
+        Y: -0.0166363996
+        Z: 0.0324321985
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.0500000007
+      Invert Z Axis: false
       Name: Current View
-      Near Clip Distance: 0.01
-      Pitch: 0.404797
+      Near Clip Distance: 0.00999999978
+      Pitch: 0.404796988
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.56999
+      Yaw: 1.56999004
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: false
+    collapsed: true
   Height: 882
   Help:
     collapsed: false
-  Hide Left Dock: false
+  Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000012c000002cdfc020000000bfb0000001200530065006c0065006300740069006f006e0000000043000002cd0000006700fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000800480065006c00700000000043000002cd0000007900fffffffb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000043000002cd0000006700fffffffb000000100044006900730070006c0061007900730000000043000002cd000000e300fffffffb000000100044006900730070006c0061007900730000000043000002cd000000e300ffffff000000010000010f000002c4fc0200000002fb0000000a005600690065007700730100000028000002c40000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004c00000003efc0100000002fb0000000800540069006d00650100000000000004c00000023a00fffffffb0000000800540069006d00650100000000000004500000000000000000000004c0000002cd00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000156000002dafc020000000bfb0000001200530065006c0065006300740069006f006e0000000043000002cd0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000800480065006c00700000000043000002cd0000006e00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073000000003a0000016d0000005c00fffffffb000000100044006900730070006c00610079007300000001ad00000167000000c600fffffffb000000100044006900730070006c00610079007300000001ad00000167000000c600ffffff000000010000010f000002c4fc0200000002fb0000000a005600690065007700730100000028000002c40000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004c00000003efc0100000002fb0000000800540069006d00650100000000000004c00000024400fffffffb0000000800540069006d00650100000000000004500000000000000000000004c0000002da00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
     collapsed: false
   Tool Properties:
-    collapsed: false
+    collapsed: true
   Width: 1216
   X: 137
   Y: 72

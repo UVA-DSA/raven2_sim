@@ -27,6 +27,7 @@
 
 #include "struct.h"
 
+
 // Setup and teardown of trajectory generation
 //int start_trajectory(struct DOF*);
 int start_trajectory(struct DOF*, float=0, float=0);
@@ -41,3 +42,7 @@ int update_linear_sinusoid_velocity_trajectory(struct DOF*);
 int update_sinusoid_position_trajectory(struct DOF*);
 int update_linear_sinusoid_position_trajectory(struct DOF*);
 int update_position_trajectory(struct DOF*);
+int start_trajopt(struct DOF* _joint, double i);
+int csv_read();
+int subscriber_Read(float (&new_Array)[6]); //previously 120
+int trajopt_with_node (struct DOF* _joint, double i);

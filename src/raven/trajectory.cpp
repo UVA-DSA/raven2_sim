@@ -32,10 +32,27 @@
 #include "log.h"
 #include "utils.h"
 #include "defines.h"
+
+#include <string>
+#include <sstream>
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <assert.h>
+#include <stdlib.h>
+#include <listener.h>
+int reqCount = 0;
+int readCount = 0;
 int count =0;
+double Array[4000][8]={0.0};
+double subArray[8]= {0.0};
 extern unsigned long int gTime;
 float joint_val [2][9];	
 int i=0;
+int c=0;
+bool isSub = false;
+bool prompt = false;
+
 // Store trajectory parameters
 /**    Holds trajectory paramters
  *
@@ -102,6 +119,7 @@ int start_trajectory(struct DOF* _joint, float _endPos, float _period)
 	joint_val [1][5] = -3.7058007717;
 	joint_val [1][6] = 45.6687583923;
 	joint_val [1][7] = 45.258266449;
+
 	
     //dstart_trajectory();
     float j=0;
@@ -120,6 +138,8 @@ int start_trajectory(struct DOF* _joint, float _endPos, float _period)
     trajectory[_joint->type].startTime = trajectory[_joint->type].startTime.now();
     //trajectory[_joint->type].startPos = _joint->jpos;
     trajectory[_joint->type].startPos = j DEG2RAD;
+    //std::cout<<"trajectory[_joint->type].startPos"<<std::endl;
+    //std::cout<<trajectory[_joint->type].startPos<<std::endl;
     trajectory[_joint->type].startVel = _joint->jvel;
     
     //_joint->jpos_d = _joint->jpos;
@@ -130,7 +150,7 @@ int start_trajectory(struct DOF* _joint, float _endPos, float _period)
   
   
     trajectory[_joint->type].period = _period;
-      std::cout<<_joint->jpos<<std::endl;
+      //std::cout<<_joint->jpos<<std::endl;
 //    log_msg("starting trajectory on joint %d to magnitude: %0.3f (%0.3f - %0.3f), period:%0.3f",
 //        _joint->type,
 //        trajectory[_joint->type].magnitude,
@@ -356,6 +376,142 @@ int update_position_trajectory(struct DOF* _joint)
     }
 
     return 0;
+}
+
+int start_trajopt(struct DOF* _joint, double i){
+     struct _trajectory* traj = &(trajectory[_joint->type]);
+    _joint->jpos_d = Array[c][(int)i] + traj->startPos;
+    //_joint->jpos_d = Array[c][(int)i];// 
+    
+    //std::cout<<_joint->jpos_d<< " " << Array[c][(int)i]<< " "<<c<<" "<<i<<std::endl;
+    if (i==7 && c<4000){
+    c++;
+    
+    //std::cout<<"incementing"<<std::endl;
+    }
+    else if(c==4000){
+    c=0;
+    }
+    return 1;
+}
+
+int csv_read(){
+ 	    std::ifstream theFile ("/home/uva-dsa1/Downloads/trajopt/python_examples/traj_data_raven.csv");
+	    std::string         line;
+            std::getline(theFile, line);
+            
+            int row=0;
+            int col=0;
+           
+          while(std::getline(theFile,line))
+	    { 
+	    std::stringstream   lineStream(line);
+            std::string         cell;
+            while(std::getline(lineStream, cell, ','))
+            {
+                    
+                double n = ::atof(cell.c_str());
+                if (col==3){
+                //std::cout<<Array[row][col]<<std::endl;  
+                	col=col+1;
+                }
+                Array[row][col]=n;
+                if (col==6){
+                Array[row][col]-=M_PI/4;
+                //std::cout<<Array[row][col]<<std::endl;        
+                col=col+1;
+                Array[row][col]+=M_PI/2;             
+                Array[row][col]=-Array[row][col];   
+                }
+                //Array[row][col]=n;
+        	//std::cout<<Array[row][col]<<std::endl;        
+        	
+            col=col+1;
+            }
+            
+                    
+            //std::cout<<"row"<<std::endl;            
+            //std::cout<<row<<std::endl;
+            row=row+1;;
+            col=0;
+            
+
+            if (!lineStream && cell.empty())
+            {
+                // If there was a trailing comma then add an empty element.
+                              //  std::cout <<" cell" << '\n';
+                //m_data.push_back("");
+            }
+        }
+        //ros::init(argc, argv, "listener");
+  		//ros::NodeHandle n;
+  		//ROS_INFO("subscribe");
+        //ros::Subscriber sub = n.subscribe("send matrix", 1, matrixcb);
+ return 1;
+}
+
+int subscriber_Read(float (&new_Array)[6]){
+	std::cout<<"requirement met "<<reqCount<<std::endl; 
+	reqCount++;
+	isSub = true;
+	int k=0;
+	std::string s;
+	if (prompt == true){
+
+
+	for(int j=0	; j<8; j++){
+		
+		if (j==3){
+		//ROS_INFO("data = %f\r\n",subArray[i][j]);
+		j=j+1;
+		}
+		subArray[j] = new_Array[k];
+		if (j==6){
+		
+		//subArray[i][j] -=M_PI/4;
+		//ROS_INFO("data = %f\r\n",subArray[i][j]);
+		j++;
+		//subArray[i][j]+=M_PI/2;
+		//subArray[i][j] = -subArray[i][j];
+		subArray[j] = subArray[j-1];
+		}
+		//ROS_INFO("data = %f\r\n",subArray[i][j]);
+		
+		
+		k++;
+}
+	std::cout<<"prompting done"<<std::endl;
+
+	
+}
+prompt = false;
+return 1;
+}
+
+int trajopt_with_node (struct DOF* _joint, double i){
+	if ((int) i ==2 && isSub ==true){
+		subArray[(int) i] = 22.9035243988 DEG2RAD;
+
+	}
+     struct _trajectory* traj = &(trajectory[_joint->type]);
+    _joint->jpos_d = subArray[(int)i];
+   
+
+    if(i==7){
+
+    prompt = true;
+    if (prompt ==true && isSub ==true){
+    	std::cout<<"requirement met after "<<readCount<<std::endl;
+    	readCount = 0;
+    }
+    if (prompt == true && isSub == false){
+    	readCount++;
+    }
+    
+        isSub=false;
+    }
+    return 1;
+
 }
 
 
