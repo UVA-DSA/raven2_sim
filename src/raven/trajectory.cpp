@@ -454,18 +454,29 @@ int subscriber_Read(float (&new_Array)[6]){
 	std::cout<<"requirement met "<<reqCount<<std::endl; 
 	reqCount++;
 	isSub = true;
+	bool debridement = false;
 	int k=0;
 	std::string s;
+	subArray[6] = 0;
+	if ((reqCount/20)%2 ==0){
+		debridement = true;
+	}
 	if (prompt == true){
-
-
+	
 	for(int j=0	; j<8; j++){
 		
 		if (j==3){
-		//ROS_INFO("data = %f\r\n",subArray[i][j]);
+		
 		j=j+1;
 		}
-		subArray[j] = new_Array[k];
+		subArray[j] = new_Array[k];		
+
+		
+
+
+		
+
+
 		if (j==6){
 		
 		//subArray[i][j] -=M_PI/4;
@@ -473,9 +484,13 @@ int subscriber_Read(float (&new_Array)[6]){
 		j++;
 		//subArray[i][j]+=M_PI/2;
 		//subArray[i][j] = -subArray[i][j];
-		subArray[j] = subArray[j-1];
+		if (debridement == false){
+		subArray[j] = subArray[j-1] = M_PI/4;
 		}
-		//ROS_INFO("data = %f\r\n",subArray[i][j]);
+		else {
+		subArray[j] = subArray[j-1] = 0;
+		}
+		}
 		
 		
 		k++;
@@ -490,7 +505,9 @@ return 1;
 
 int trajopt_with_node (struct DOF* _joint, double i){
 	if ((int) i ==2 && isSub ==true){
-		subArray[(int) i] = 22.9035243988 DEG2RAD;
+		//subArray[(int) i] = 22.9035243988 DEG2RAD;
+		std::cout<<"i=2: "<< subArray[(int) i]<<" ideal value: "<< 22.9 DEG2RAD<<std::endl;
+		subArray[(int) i] = subArray[(int) i];
 
 	}
      struct _trajectory* traj = &(trajectory[_joint->type]);

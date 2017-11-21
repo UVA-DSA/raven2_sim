@@ -14,7 +14,7 @@ import rospy
 from std_msgs.msg import Float32MultiArray
 from std_msgs.msg import MultiArrayDimension
 import trajoptpy.kin_utils as ku
-
+tissue_position = []
 pubCount = 0
 n_steps = 20
 count = 0
@@ -25,7 +25,7 @@ env.Load('/home/uva-dsa1/raven_2/src/raven/trajopt/data/table.xml')
 
 trajoptpy.SetInteractive(args.interactive) # pause every iteration, until you press 'p'. Press escape to disable further plotting
 current_pose = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	66.2951507568]
-
+drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
 num_tissues = 3
 joint_start = []
 joint_target = []
@@ -36,22 +36,23 @@ def setParams(joint_start, joint_target):
 	global robot
 	
 	global count
-	if (count==4):
+	if (count==6):
 		print 'joint_start :{} joint_taget : {}' .format(joint_start, joint_target)
 	
 	#print robot
 	#print robot.GetManipulators()[1].GetEndEffectorTransform()#[0].GetArmIndices()
-	
+	#joint_start[2]= joint_start[2]/1000
+	joint_target[2]= joint_target[2]/1000
+	print "joint_target[2] : {}" .format(joint_target[2])
 	for i in range (len(joint_target)):
 		joint_target[i]= math.radians(joint_target[i])
 		joint_start[i]= math.radians(joint_start[i])
 	
 	#print joint_start
 
-	joint_start[2]= joint_start[2]/1000
-	joint_target[2]= joint_target[2]/1000
-	if (count==6):
-		print 'joint_start :{} joint_taget : {}' .format(joint_start, joint_target)
+	#joint_start[2]= joint_start[2]/1000
+	#joint_target[2]= joint_target[2]/1000
+	
 	count=count+1
 	print 'count: {}' .format(count)
 
@@ -63,6 +64,7 @@ def run_trajopt(joint_target):
 	global robot, pubCount
 	#print 'entered trajopt'
 	global current_pose
+	
 	request = {
 	"basic_info" : {
 		"n_steps" : n_steps,
@@ -149,7 +151,11 @@ def run_trajopt(joint_target):
 
 	for num in range (n_steps):
 		for j in range (traj.layout.dim[1].size):
+			
 			traj.data[j] = result.GetTraj()[num][j] #traj.data.append(result.GetTraj()); #20*num + i   i*6+ '
+			if (j==2):
+				traj.data[j]=traj.data[j]*1000
+				print traj.data[j]
 			#print "offset : {} data :{}" .format(i*6+ j,traj.data[i*6 + j])
 			#print traj.data[offset + i + dstride1*j]
 			if (rospy.is_shutdown()):
@@ -160,29 +166,23 @@ def run_trajopt(joint_target):
 		rospy.loginfo("pubCount: {}".format(pubCount))
 		pubCount= pubCount + 1
 		rate.sleep()
-		if (num>=19):
-			break
+		
 def main():
-	global current_pose
-	drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	66.2951507568]
-	joint_target = [27.1548213959,	88.848487854,	22.617143631,	6.5820627213,	0.1315095425,	64.2381439209]
-	joint_target_2 = [30, 90, 22.9183120728, -35, 115.000007629, 120]
+	global current_pose, tissue_position
+
 	for i in range(num_tissues):
-		joint_target = [7.1548213959,	78.848487854,	22.617143631,	76.5820627213,	-71.1315095425,	0]
-		setParams(current_pose, joint_target)
-		drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
-		setParams(current_pose, drop_point)
-		rospy.sleep(1)
-		joint_target_2 = [37, 90, 22.9183120728, -55, -45.000007629, 0]
-		setParams(current_pose, joint_target_2)
-		drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
-		setParams(current_pose, drop_point)
-		rospy.sleep(1)
-		joint_target_1 = [67.8020744324,	88.3662567139,	22.5955276489,	-157.0666623116,	53.0164585114,	0]
-		setParams(current_pose, joint_target_1)
-		drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
-		setParams(current_pose, drop_point)
-		rospy.sleep(1)
+				
+		tissue_position = [[7.1548213959,	78.848487854,	25.617143631,	76.5820627213,	-71.1315095425,	0],
+							[37, 90, 28.9183120728, -55, -45.000007629, 0],
+							[67.8020744324,	88.3662567139,	23.5955276489,	-157.0666623116,	53.0164585114,	0],
+							[27.8020744324,	88.3662567139,	25.5955276489,	-57.0666623116,	33.0164585114,	0]]
+		for k in range(len(tissue_position)):
+			setParams(current_pose, tissue_position[k])
+			rospy.sleep(0.5)
+			drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
+			setParams(current_pose, drop_point)
+			rospy.sleep(1)
+
 if __name__ == '__main__':
 	
 	main()
