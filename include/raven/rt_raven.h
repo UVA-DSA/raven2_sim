@@ -32,3 +32,5 @@
 /** prototype for controlRaven()
  */
 int controlRaven(struct robot_device*, struct param_pass*);
+int getManipulator(int *m);
+

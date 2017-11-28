@@ -70,7 +70,7 @@
 #include "std_msgs/MultiArrayDimension.h"
 #include <visualization_msgs/Marker.h>
 
-
+int armCounter = 0;
 using namespace std;
 
 // Defines
@@ -650,6 +650,15 @@ void chatterCallback(const std_msgs::Float32MultiArray::ConstPtr& msg){
 	std::cout<<"I heard: "<<subCount<<std::endl;
 	//if (subCount<100){
 	subscriber_Read(traj_Array);
+	if ((subCount/40)%2==0){
+		armCounter = 1;
+		getManipulator(&armCounter);
+	}
+	else{
+		armCounter = 0;
+		getManipulator(&armCounter);
+	}	
+	
 	//}
 
 	subCount++;

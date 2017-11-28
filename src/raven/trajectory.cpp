@@ -52,7 +52,7 @@ int i=0;
 int c=0;
 bool isSub = false;
 bool prompt = false;
-
+double right_Array []  = {0.12487519075059172, 1.376165723271058, 0.44710350131724533, 1.3366091424554938, -1.2414790434303904, 0.0, 0.0};
 // Store trajectory parameters
 /**    Holds trajectory paramters
  *
@@ -503,16 +503,15 @@ prompt = false;
 return 1;
 }
 
-int trajopt_with_node (struct DOF* _joint, double i){
-	if ((int) i ==2 && isSub ==true){
-		//subArray[(int) i] = 22.9035243988 DEG2RAD;
-		std::cout<<"i=2: "<< subArray[(int) i]<<" ideal value: "<< 22.9 DEG2RAD<<std::endl;
-		subArray[(int) i] = subArray[(int) i];
-
-	}
+int trajopt_with_node (struct DOF* _joint, double i, int manip_type){
      struct _trajectory* traj = &(trajectory[_joint->type]);
+     if (manip_type ==1){
+    	_joint->jpos_d = right_Array[(int)i]; 
+     }
+     else{
+     
     _joint->jpos_d = subArray[(int)i];
-   
+   }
 
     if(i==7){
 

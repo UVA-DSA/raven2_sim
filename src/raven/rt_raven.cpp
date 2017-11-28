@@ -71,7 +71,7 @@ double new_Array[10][8]={0.0};
 extern unsigned long int gTime; //Defined in rt_process_preempt.cpp
 extern struct DOF_type DOF_types[]; //Defined in DOF_type.h
 extern t_controlmode newRobotControlMode; //Defined in struct.h
-
+bool odd = false;
 int raven_cartesian_space_command(struct device *device0, struct param_pass *currParams);
 int raven_joint_velocity_control(struct device *device0, struct param_pass *currParams);
 int raven_motor_position_control(struct device *device0, struct param_pass *currParams);
@@ -80,7 +80,7 @@ int applyTorque(struct device *device0, struct param_pass *currParams);
 int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *currParams);
 int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currParams, double (&myArray)[10][8]);
 int joint();
-
+int manipulator = 0;
 
 extern int initialized; //Defined in rt_process_preempt.cpp
 //****************************************** "adding newcode for python integration"
@@ -694,8 +694,10 @@ int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currPa
  
 
     // Set trajectory on all the joints
+
     for (int i=0; i < NUM_MECH; i++)
     {
+      	    	
         for (int j = 0; j < MAX_DOF_PER_MECH; j++)
         {
             struct DOF * _joint =  &(device0->mech[i].joint[j]);
@@ -714,7 +716,7 @@ int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currPa
 		//start_trajopt(_joint,new_Array[t_start][j]);
 		//csv_read();
 		//start_trajopt(_joint,j);
-		trajopt_with_node(_joint,j);
+		trajopt_with_node(_joint,j, i);
 		//std::cout<<t_start<<std::endl;
         }
     }
@@ -728,8 +730,10 @@ int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currPa
     invCableCoupling(device0, currParams->runlevel);
     //std::cout<<"entered inv_coupling"<<std::endl;
     // Do PD control on all the joints
-    for (int i=0; i < NUM_MECH; i++)
-    {
+    //for (int i=0; i < NUM_MECH; i++)
+    //{
+    	int	i = manipulator;
+    	
         for (int j = 0; j < MAX_DOF_PER_MECH; j++)
         {
             struct DOF * _joint =  &(device0->mech[i].joint[j]);
@@ -739,7 +743,7 @@ int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currPa
 //            if (is_toolDOF(_joint))
 //            	_joint->tau_d = 0;
         }
-    }
+    //}
 
 
     TorqueToDAC(device0);
@@ -748,4 +752,8 @@ int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currPa
     return 0;
 }
 
-
+int getManipulator(int *m){
+	manipulator = *m;
+	std::cout<<"manipulator: "<<manipulator<<std::endl;
+	return 0;
+}

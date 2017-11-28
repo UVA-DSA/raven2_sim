@@ -45,4 +45,4 @@ int update_position_trajectory(struct DOF*);
 int start_trajopt(struct DOF* _joint, double i);
 int csv_read();
 int subscriber_Read(float (&new_Array)[6]); //previously 120
-int trajopt_with_node (struct DOF* _joint, double i);
+int trajopt_with_node (struct DOF* _joint, double i, int manip_type);
