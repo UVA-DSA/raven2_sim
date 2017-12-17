@@ -292,7 +292,9 @@ int r2_fwd_kin(struct device *d0, int runlevel)
 		/// execute FK
 //cout<<lo_thetas[0]*r2d<<endl;
 		fwd_kin(lo_thetas, arm, xf);
-
+		//std::cout<<"pos x :" <<d0->mech[1].pos_d.x <<" pos y :"<< d0->mech[1].pos_d.y<< "pos z:" <<d0->mech[1].pos_d.z
+		//<<" ori_d.yaw :" <<d0->mech[1].ori_d.yaw <<" ori_d.pitch :"<< d0->mech[1].ori_d.pitch<< " ori_d.roll: "<<d0->mech[1].ori_d.roll<<std::endl;
+		 //samin's addition, should be removed
 		d0->mech[m].pos.x = xf.getOrigin()[0] * (1000.0*1000.0);
 		d0->mech[m].pos.y = xf.getOrigin()[1] * (1000.0*1000.0);
 		d0->mech[m].pos.z = xf.getOrigin()[2] * (1000.0*1000.0);
@@ -480,6 +482,7 @@ int r2_inv_kin(struct device *d0, int runlevel)
 	struct position    * pos_d;
     ik_solution iksols[2] = {{},{}};
 	double gangles[2]={0,0};
+	
 #ifdef save_logs
 	for (int m=0; m<NUM_MECH; m++)
 	{
@@ -510,6 +513,7 @@ int r2_inv_kin(struct device *d0, int runlevel)
 		}
 
 		ori_d = &(d0->mech[m].ori_d);
+
 		pos_d = &(d0->mech[m].pos_d);
 
 #ifdef save_logs
@@ -522,8 +526,9 @@ int r2_inv_kin(struct device *d0, int runlevel)
 		// copy R matrix
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
-				(xf.getBasis())[i][j] = ori_d->R[i][j];
 
+				(xf.getBasis())[i][j] = ori_d->R[i][j];
+				
 //for (int i = 0; i < 3; i++)
 		//	for (int j = 0; j < 3; j++)
 //cout<<pos_d->x<<" "<<pos_d->y<<" "<<pos_d->z<< endl;
@@ -700,6 +705,7 @@ int r2_inv_kin(struct device *d0, int runlevel)
 			for (int i=0; i<8; i++)
 			{
 				theta2joint(iksol[i], Js);
+				
 				/*log_msg("ik_joints[%d]:\t( %3f,\t %3f,\t %3f,\t %3f,\t %3f,\t %3f)",i,
 						Js[0] * r2d,
 						Js[1] * r2d,
@@ -1317,6 +1323,7 @@ void showInverseKinematicsSolutions(struct device *d0, int runlevel)
 {
 	log_msg("print_ik_plz");
 	printIK = 1;
+	
 	r2_inv_kin(d0, runlevel);
 	log_msg("kthxbai");
 }

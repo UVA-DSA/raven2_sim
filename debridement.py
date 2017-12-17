@@ -23,7 +23,8 @@ env = openravepy.Environment()
 env.StopSimulation()
 env.Load('/home/uva-dsa1/raven_2/src/raven/trajopt/data/raven_with_workspace.zae')
 #env.Load('/home/uva-dsa1/raven_2/src/raven/trajopt/data/table.xml')
-env.Load('/home/uva-dsa1/Downloads/openrave/src/data/mug1.dae')
+#env.Load('/home/uva-dsa1/Downloads/openrave/src/data/mug1.dae')
+#env.Load('/home/uva-dsa1/raven_2/raven_visualization/Raven_files/dome.dae')
 trajoptpy.SetInteractive(args.interactive) # pause every iteration, until you press 'p'. Press escape to disable further plotting
 current_pose = [31.8029937744,	88.3655548096,	.0225955314636,	-7.0923576355,	23.0211296082,	66.2951507568]
 #drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
@@ -127,7 +128,7 @@ def run_trajopt(joint_target=None, arm_type=None):
 	trajopt_pub = rospy.Publisher('trajopt',Float32MultiArray, queue_size=1)
 	rospy.init_node('trajopt', anonymous=True)
 	rate = rospy.Rate(1)
-	rate = rospy.Rate(24)
+	rate = rospy.Rate(10)
 
 	traj = Float32MultiArray()
 	traj.layout.dim.append(MultiArrayDimension())
@@ -198,7 +199,7 @@ def main():
 							[27.8020744324,	88.3662567139,	25.5955276489,	-57.0666623116,	33.0164585114,	0]]
 		for k in range(len(tissue_position)):
 			setParams(current_pose, tissue_position[k])
-			rospy.sleep(0.5)
+			rospy.sleep(1)
 			drop_point = [31.8029937744,	88.3655548096,	22.5955314636,	-7.0923576355,	23.0211296082,	84.2381439209]
 			setParams(current_pose, drop_point)
 			rospy.sleep(1)

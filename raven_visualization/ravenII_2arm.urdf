@@ -92,12 +92,13 @@
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
     </visual>
   </link>
-  <link name="grasper3_L">
+  <link name="dome">
     <visual>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/dome.dae"/>
       </geometry>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
+
     </visual>
   </link>
 
@@ -244,12 +245,12 @@
     <child link="grasper2_L"/>
   </joint>
   
-  <joint name="grasper_joint_3_L" type="revolute">
-    <axis xyz="0.5648    -0.1427   0.8128"/>
+  <joint name="dome" type="fixed">
+    <axis xyz="0    0   0"/>
     <limit effort="1000.0" lower="-2" upper="2" velocity=".5"/>
     <origin rpy="0 0 0" xyz="0.00680 0.00904 -0.00452"/>
-    <parent link="wrist_L"/>
-    <child link="grasper3_L"/>
+    <parent link="0_link"/>
+    <child link="dome"/>
   </joint>
 
 

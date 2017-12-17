@@ -146,7 +146,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
         //CHECK ME: what is the purpose of this mode?
         case no_control:
         {
-		    //initialized = false;
+		    initialized = false;
             
             struct DOF *_joint = NULL;
             struct mechanism* _mech = NULL;
@@ -154,7 +154,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 
             // Gravity compensation calculation
             getGravityTorque(*device0, *currParams);
-
+			showInverseKinematicsSolutions(device0, currParams->runlevel);
             while ( loop_over_joints(device0, _mech, _joint, i,j) )
                 _joint->tau_d = _joint->tau_g;  // Add gravity torque
 		
@@ -202,12 +202,12 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
             if (robot_ready(device0))
             {
 		//code change begins for autosim
-                //currParams->robotControlMode = cartesian_space_control;
-                //newRobotControlMode = cartesian_space_control;
+                currParams->robotControlMode = cartesian_space_control;
+                newRobotControlMode = cartesian_space_control;
 		//code change ends for autosim , must uncomment this
 		//**********************************************************************************
-		//currParams->robotControlMode = multi_dof_sinusoid;
-		//newRobotControlMode = multi_dof_sinusoid;
+		currParams->robotControlMode = cartesian_space_control;
+		newRobotControlMode = cartesian_space_control;
 		  //  std::cout <<"homingmode" <<std::endl;
 		//**********************************************************************************
 		// no change due to change of this
@@ -351,7 +351,7 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
 
     //Inverse kinematics
     r2_inv_kin(device0, currParams->runlevel);
-
+	
 	//Inverse Cable Coupling
     invCableCoupling(device0, currParams->runlevel);
 
@@ -380,14 +380,14 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
     //log_msg("changed tau_d to = %f\n",_joint->tau_d);
 
     TorqueToDAC(device0);
-	/*for (int i =0; i < 2; i++)
+	for (int i =0; i < 2; i++)
 	{  
 		printf("\nDACs -arm %d:\n%d,%d,%d\n", i, device0->mech[i].joint[SHOULDER].current_cmd,
 			  device0->mech[i].joint[ELBOW].current_cmd,
 			  device0->mech[i].joint[Z_INS].current_cmd);
 		printf("\nX,Y,Z -arm %d:\n%d,%d,%d\n", i, device0->mech[i].pos_d.x,device0->mech[i].pos_d.y,
 				  device0->mech[i].pos_d.z);
-	}*/
+	}
     return 0;
 }
 
@@ -691,8 +691,73 @@ int raven_trajopt_joint_motion(struct device *device0, struct param_pass *currPa
     //const float f_period[8] = {6, 7, 10, 9999999, 10, 5, 10, 6};
     const float f_period[8] = {6, 7, 4, 9999999, 10, 5, 10, 6};
     const float f_magnitude[8] = {10 DEG2RAD, 0 DEG2RAD, 0, 9999999, 0 DEG2RAD, 0 DEG2RAD, 0 DEG2RAD, 0 DEG2RAD};
- 
+    			
+    device0->mech[0].pos.x = -77720;
+    device0->mech[0].pos.y = -24877;
+    device0->mech[0].pos.z = 13990;    
 
+ 	device0->mech[0].pos_d.x = -83417;
+ 	device0->mech[0].pos_d.y = -24146;
+ 	device0->mech[0].pos_d.z = 12565;
+
+    device0->mech[1].pos.x = -77123;
+    device0->mech[1].pos.y =  26061;
+    device0->mech[1].pos.z =  13735; 
+    
+    device0->mech[1].pos_d.x = -77459;
+    device0->mech[1].pos_d.y =  26122;
+    device0->mech[1].pos_d.z =  13281; 
+    													
+
+ 
+ 	device0->mech[0].ori.R[0][0] = -0.9510387182;
+ 	device0->mech[0].ori.R[0][1] = -0.1886231899; 	
+	device0->mech[0].ori.R[0][2] = 0.2448400408; 	
+ 	device0->mech[0].ori.R[1][0] = -0.2750545144;
+ 	device0->mech[0].ori.R[1][1] =  0.1552284956; 	
+	device0->mech[0].ori.R[1][2] = -0.9488145709; 	
+ 	device0->mech[0].ori.R[2][0] = 0.1409622878;
+ 	device0->mech[0].ori.R[2][1] = -0.9697037935; 	
+	device0->mech[0].ori.R[2][2] = -0.1995099634; 	
+	
+ 	device0->mech[1].ori.R[0][0] = -0.9116768837;
+ 	device0->mech[1].ori.R[0][1] =  0.2278019935; 	
+	device0->mech[1].ori.R[0][2] =  0.3419817388; 	
+ 	device0->mech[1].ori.R[1][0] =  0.3754642904;
+ 	device0->mech[1].ori.R[1][1] =  0.1236857474; 	
+	device0->mech[1].ori.R[1][2] =  0.9185469151; 	
+ 	device0->mech[1].ori.R[2][0] =  0.1669485569;
+ 	device0->mech[1].ori.R[2][1] =  0.9658198953; 	
+	device0->mech[1].ori.R[2][2] = -0.1982929558; 		
+																	
+
+ 	device0->mech[0].ori_d.R[0][0] = -0.9560036063;
+ 	device0->mech[0].ori_d.R[0][1] = -0.1927275807;
+ 	device0->mech[0].ori_d.R[0][2] = 0.2211632133;
+ 	device0->mech[0].ori_d.R[1][0] = -0.2594256401;
+ 	device0->mech[0].ori_d.R[1][1] =  0.2034734488;
+ 	device0->mech[0].ori_d.R[1][2] = -0.9440852404;
+ 	device0->mech[0].ori_d.R[2][0] =  0.1369504184;
+ 	device0->mech[0].ori_d.R[2][1] = -0.9599242806;
+ 	device0->mech[0].ori_d.R[2][2] = -0.2445198298;
+ 	//-0.919321835	0.2268641293	0.3215276599	0.3710546494	0.2277181745	0.9002571106	0.1310183555	0.9469303489	-0.2935252786
+ 	device0->mech[1].ori_d.R[0][0] = -0.9163374305;
+ 	device0->mech[1].ori_d.R[0][1] =  0.2261437178;
+ 	device0->mech[1].ori_d.R[0][2] =  0.3304310739;
+ 	device0->mech[1].ori_d.R[1][0] =  0.3744864166;
+ 	device0->mech[1].ori_d.R[1][1] =  0.1919383854;
+ 	device0->mech[1].ori_d.R[1][2] =  0.9071491361;
+ 	device0->mech[1].ori_d.R[2][0] =  0.1417236775;
+ 	device0->mech[1].ori_d.R[2][1] =  0.9549967051;
+ 	device0->mech[1].ori_d.R[2][2] = -0.2605680823;
+ 	device0->mech[0].ori.grasp = 1.5700000525;
+ 	device0->mech[1].ori.grasp = 1.5700000525;
+
+ 	currParams->runlevel = RL_PEDAL_DN;
+ 		
+ 		
+	//r2_fwd_kin(device0, currParams->runlevel);
+	r2_inv_kin(device0, currParams->runlevel);
     // Set trajectory on all the joints
 
     for (int i=0; i < NUM_MECH; i++)

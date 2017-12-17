@@ -76,7 +76,7 @@ class Raven():
         self.traj = trajectory
         self.raven_home = raven_home
         self.shelve_file = raven_home + "/run.shelve"
-        self.surgeon_simulator = 0
+        self.surgeon_simulator = 0 #make it 0
         self.defines_changed = 0
         self.mfi_changed = 0
         self.defines_src_file = raven_home + "/include/raven/defines.h"

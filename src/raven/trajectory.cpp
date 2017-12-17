@@ -396,7 +396,7 @@ int start_trajopt(struct DOF* _joint, double i){
 }
 
 int csv_read(){
- 	    std::ifstream theFile ("/home/uva-dsa1/Downloads/trajopt/python_examples/traj_data_raven.csv");
+ 	    std::ifstream theFile ("/home/uva-dsa1/Downloads/JointPaths.csv");
 	    std::string         line;
             std::getline(theFile, line);
             
