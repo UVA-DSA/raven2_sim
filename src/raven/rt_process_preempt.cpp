@@ -85,7 +85,8 @@ int    deviceType = SURGICAL_ROBOT;//PULLEY_BOARD;
 struct device device0 ={0};  //Declaration Moved outside rt loop for access from console thread
 int    mech_gravcomp_done[2]={0};
 
-#ifdef packetgen
+
+#ifdef simulator // We might need to have this changed to pakcet_gen
 int NUM_MECH=2;   // Define NUM_MECH as a C variable, not a c++ variable
 int done_homing = 0;
 #else

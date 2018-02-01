@@ -49,7 +49,7 @@
 #include "local_io.h"
 #include "update_device_state.h"
 #include "parallel.h"
-
+extern int done_homing;
 #ifdef packetgen
 extern int done_homing;
 #endif
@@ -137,6 +137,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 #ifdef packet_gen
                 //log_msg("RT_PROCESS) Cartesian space control");         
 #endif		
+
         	ret = raven_cartesian_space_command(device0,currParams);
         	break;
         //Motor PD control runs PD control on motor position
@@ -173,6 +174,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 	        device0->mech[1].pos.x, device0->mech[1].pos.y, device0->mech[1].pos.z);*/
             }
 #else           
+#ifdef packetgen
 		if (currParams->last_sequence != 1)
 		{		
 			done_homing = 1; 
@@ -184,6 +186,13 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
             currParams->robotControlMode = cartesian_space_control;
    	        newRobotControlMode = cartesian_space_control;
 		}
+#else
+		done_homing = 1; 
+        	device0->runlevel = 3;
+		currParams->runlevel = RL_PEDAL_DN; 
+	        currParams->robotControlMode = cartesian_space_control;
+   	        newRobotControlMode = cartesian_space_control;
+#endif
 #endif
             break;
 	//Runs applyTorque() to set torque command (tau_d) to a joint for debugging purposes
@@ -228,7 +237,7 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
     int i=0,j=0;
 
     if (currParams->runlevel < RL_PEDAL_UP)
-    {
+    {  
 	return -1;
     }
     else if (currParams->runlevel < RL_PEDAL_DN)
@@ -240,7 +249,6 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
 #ifndef simulator
     parport_out(0x01);
 #endif
-
     //Inverse kinematics
     r2_inv_kin(device0, currParams->runlevel);
 

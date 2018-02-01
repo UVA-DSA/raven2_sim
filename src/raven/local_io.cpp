@@ -160,6 +160,7 @@ int receiveUserspace(void *u,int size)
  */
 void teleopIntoDS1(struct u_struct *us_t)
 {
+
     struct position p;
     int i, armidx, armserial;
     pthread_mutex_lock(&data1Mutex);
@@ -167,7 +168,6 @@ void teleopIntoDS1(struct u_struct *us_t)
     tf::Matrix3x3 rot_mx_temp;
 
     // TODO:: APPLY TRANSFORM TO INCOMING DATA
-
 
     for (i=0;i<NUM_MECH;i++)
     {
@@ -215,7 +215,7 @@ void teleopIntoDS1(struct u_struct *us_t)
 	else if(data1.rd[i].grasp<graspmin) data1.rd[i].grasp=graspmin;
 #else
 	// Set Position command
-  data1.xd[i].x = us_t->delx[armidx];
+  	data1.xd[i].x = us_t->delx[armidx];
 	data1.xd[i].y = us_t->dely[armidx];
 	data1.xd[i].z = us_t->delz[armidx];
 
@@ -267,19 +267,19 @@ void teleopIntoDS1(struct u_struct *us_t)
 #endif
 #endif
     }
-
     /// \question HK: why is this a hack?
     // HACK HACK HACK
     // HACK HACK HACK
     // HACK HACK HACK
     // HACK HACK HACK
     data1.last_sequence = us_t->sequence;
-
+//log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",armidx, data1.xd[0].x, data1.xd[0].y, data1.xd[0].z);
     // commented debug output
-        //log_msg("User desired end-effector positions: (%f,%f,%f)/(%f,%f,%f)",
-               //data1.xd[0].x, data1.xd[0].y, data1.xd[0].z,
-               //data1.xd[1].x, data1.xd[1].y, data1.xd[1].z);
+    //    log_msg("User desired end-effector positions: (%f,%f,%f)/(%f,%f,%f)",
+    //           data1.xd[0].x, data1.xd[0].y, data1.xd[0].z,
+    //           data1.xd[1].x, data1.xd[1].y, data1.xd[1].z);
     data1.surgeon_mode = us_t->surgeon_mode;
+
 
     //log_file("Data1 Surgeon Mode is %d\n",us_t->surgeon_mode);
 
@@ -332,6 +332,7 @@ int checkLocalUpdates()
 */
 struct param_pass * getRcvdParams(struct param_pass* d1)
 {
+
     // \TODO Check performance of trylock / default priority inversion scheme
     if (pthread_mutex_trylock(&data1Mutex)!=0)   //Use trylock since this function is called form rt-thread. return immediately with old values if unable to lock
         return d1;

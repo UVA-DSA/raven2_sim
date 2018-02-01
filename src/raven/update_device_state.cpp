@@ -51,7 +51,7 @@ const static double r2d = 180/M_PI; //radians to degrees
  */
 int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdParams, struct device *device0)
 {
-    //log_file("updateDeviceState %d", currParams->runlevel);///Added
+    log_msg("updateDeviceState %d", currParams->runlevel);///Added
     currParams->last_sequence = rcvdParams->last_sequence;
 
 #ifdef save_logs
@@ -83,7 +83,7 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
     }
 #endif
  
-    for (int i = 0; i < NUM_MECH; i++)
+    for (int i = 0; i < NUM_MECH; i++)//change num_mech to 0
     {
         currParams->xd[i].x = rcvdParams->xd[i].x;
         currParams->xd[i].y = rcvdParams->xd[i].y;
@@ -102,10 +102,11 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
     {
 
 #ifdef simulator 
-		if (currParams->last_sequence == 1)
+
+		if (currParams->last_sequence == 1) 
 		{
 			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
-		    for (int i = 0; i < NUM_MECH; i++)
+		    for (int i = 0; i < NUM_MECH; i++)//change num_mech to 0
 			{
 				for (int j = 0; j < 8; j++)
 				{
@@ -116,8 +117,10 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
 					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];			
 					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];			
 				}			
+
 			} 	    
 		}
+
 #endif
 #ifdef detector
 		if (currParams->last_sequence == 1)
@@ -138,12 +141,13 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
 		}
 #endif
         for (int i = 0; i < NUM_MECH; i++)
-        {
+        {	
+		//log_msg("NUM_MECH: %d", NUM_MECH);//to be removed
             device0->mech[i].pos_d.x = rcvdParams->xd[i].x;
             device0->mech[i].pos_d.y = rcvdParams->xd[i].y;
             device0->mech[i].pos_d.z = rcvdParams->xd[i].z;
             device0->mech[i].ori_d.grasp  = rcvdParams->rd[i].grasp;
-
+		//log_msg("Device State: Arm %d : User desired end-effector positions: (%d,%d,%d)", i, device0->mech[i].pos_d.x, device0->mech[i].pos_d.y, device0->mech[i].pos_d.z);  ////to be removed
             for (int j=0;j<3;j++)
                 for (int k=0;k<3;k++)
 	           device0->mech[i].ori_d.R[j][k]  = rcvdParams->rd[i].R[j][k];

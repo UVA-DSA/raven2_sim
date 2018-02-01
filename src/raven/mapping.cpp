@@ -42,6 +42,7 @@ const int USE_ITP = 1;
 */
 void fromITP(struct position *delpos, tf::Quaternion &delrot, int armserial)
 {
+
     const tf::Transform ITP2Gold ( tf::Matrix3x3 (0,0,-1,  -1,0,0,  0,1,0), tf::Vector3 (0,0,0) );
     const tf::Transform ITP2Green( tf::Matrix3x3 (0,0,-1,  1,0,0,  0,-1,0), tf::Vector3 (0,0,0) );
     tf::Transform incr (delrot, tf::Vector3(delpos->x, delpos->y, delpos->z));
@@ -59,4 +60,5 @@ void fromITP(struct position *delpos, tf::Quaternion &delrot, int armserial)
     delpos->x = (int)(incr.getOrigin()[0]);
     delpos->y = (int)(incr.getOrigin()[1]);
     delpos->z = (int)(incr.getOrigin()[2]);
+
 }
