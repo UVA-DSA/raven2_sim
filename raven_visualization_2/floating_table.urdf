@@ -1,0 +1,40 @@
+<robot name="table_Demo">
+
+<gazebo> 
+	<static value = "true"/>
+</gazebo>
+
+<gazebo reference="table">
+      <turnGravityOff>true</turnGravityOff>
+    </gazebo>
+  <link name="table">
+    <visual>
+      <geometry>
+	<box size="0.5 0.5 0.02" />
+      </geometry>
+    </visual>
+
+    <inertial>
+      <origin xyz = "0 0 0" rpy="0 0 0"/>
+      <mass value = "100"/>
+      <inertia
+          ixx = "1"
+          ixy = "0"
+          ixz = "0"
+          iyy = "1"
+          iyz = "0"
+          izz = "1"
+          />
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.5 0.5 0.02" />
+      </geometry>
+    </collision>
+
+
+
+  </link>
+</robot>

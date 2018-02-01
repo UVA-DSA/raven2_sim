@@ -1,0 +1,37 @@
+---How to Add Shapes to the Robot Model in RVIZ using URDF---
+--- By Robert Pierce
+
+Thankfully, adding a shape to the visualization isn't too difficult. The URDF
+file is essentially a description of a tree that consists of the various parts of a robot model.
+
+The generous Sina Nia Kosari and Lee White have provided us a complete description of the robot already, but we might want to add another shape. You'll notice certain tags that are repeated in a pretty regular way. An URDF shape typically goes like this:
+
+<link name="link_name"> --Define a shape called "link_name"
+      <visual> --Begin visualization description
+      	       <origin xyz="floatx floaty floatz" rpy="floatr floatp floaty" /> --Origin of the shape is at coordinates xyz, with roll, pitch, yaw being floatr, floatp, and floaty, respectively.
+
+	       <geometry> --Begin geometry description.
+	       		  --A few things can happen here. Either a basic shape is summoned, such as:
+			  <box size = "sizeX sizeY sizeZ" />
+			  --Or, you can specify a mesh to use as a resource.
+			  <mesh filename="package://path/to/file/filename.dae" />
+
+	       --End tags--
+	       </geometry>
+	       <material name ="material_name"> --Begin material description (color, texture...)
+	       		 <color rgba="red_val green_val blue_val alpha_val" /> --Color description
+		</material>
+
+      </visual> 
+</link>
+
+Now, URDF files are essentially tree structures with a single root link. The URDF parser that RVIZ uses gets angry when there are more than one root links, so every link that isn't the root link must be connected to the root link in some way. This is done through joints:
+
+  <joint name= "joint_name" type ="[fixed|revolute|prismatic|something else?]"> --Declares joint name and joint type.
+    <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/> --Defines limits such as rotation limits (in radians), velocity limits
+    <origin rpy="0 0 0" xyz="0.0 0.00 0"/> --Defines origin point. Probably also affects axis of rotation as well, so try setting this to some reasonable value.
+    <parent link="parent_link"/> --The really important bit. Connecting parent_link...
+    <child link="child_link"/> -- ... to child_link. If this isn't done, there will be a link with no parent, making an extra root link. DANGER, WILL ROBINSON!
+
+  </joint>
+

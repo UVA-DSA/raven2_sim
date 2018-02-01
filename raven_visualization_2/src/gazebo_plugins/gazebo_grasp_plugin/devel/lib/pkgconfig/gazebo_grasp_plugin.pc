@@ -1,0 +1,8 @@
+prefix=/home/homa/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel
+
+Name: gazebo_grasp_plugin
+Description: Description of gazebo_grasp_plugin
+Version: 1.0.1
+Cflags: -I/home/homa/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/include
+Libs: -L/home/homa/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib -lgazebo_grasp_fix
+Requires: gazebo_ros geometry_msgs roscpp std_msgs

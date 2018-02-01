@@ -1,0 +1,46 @@
+<package>
+
+  <name>raven_visualization</name>
+   <version>1.0.0</version>
+
+  <description>
+
+     raven_visualization
+
+  </description>
+  <author>sina</author>
+  <maintainer email="ivana@willowgarage.com">There's nobody! You're on your own!</maintainer>
+
+  <license>BSD</license>
+  <!-- <review status="unreviewed" notes=""/> -->
+  <url>http://ros.org/wiki/raven_visualization</url>
+  <!-- <depend package="roscpp"/> -->
+  <!-- <depend package="sensor_msgs"/> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+
+
+  <export>                            
+
+    <gazebo_ros                                                                 
+    gazebo_media_path="${prefix}/Raven_files/left_arm:${prefix}/Raven_files/right_arm"
+
+    gazebo_plugin_path="${prefix}/lib"    
+
+    gazebo_model_path="${prefix}/Raven_files/left_arm:${prefix}/Raven_files/right_arm"           
+    gazebo_resource_path="${prefix}"/>                    
+  </export>
+
+
+</package>
+
+

@@ -1,0 +1,27 @@
+controller_list:
+  - name: fake_left_arm_controller
+    joints:
+      - shoulder_L
+      - elbow_L
+      - insertion_L
+      - tool_roll_L
+      - wrist_joint_L
+  - name: fake_right_arm_controller
+    joints:
+      - shoulder_R
+      - elbow_R
+      - insertion_R
+      - tool_roll_R
+      - wrist_joint_R
+  - name: fake_right_gripper_1_controller
+    joints:
+      - grasper_joint_1_R
+  - name: fake_left_gripper_1_controller
+    joints:
+      - grasper_joint_1_L
+  - name: fake_right_gripper_2_controller
+    joints:
+      - grasper_joint_2_R
+  - name: fake_left_gripper_2_controller
+    joints:
+      - grasper_joint_2_L
