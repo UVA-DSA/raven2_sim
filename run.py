@@ -327,7 +327,6 @@ class Raven():
         rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv'
         if (self.surgeon_simulator == 1):
             packetTask = 'python '+self.raven_home+'/Real_Packet_Generator_Surgeon.py '+ self.mode + ' '+ self.traj + '> packet_gen.output'
-            #print(packetTask)
         else:
             packetTask = 'python '+self.raven_home+'/Packet_Generator.py > packet_gen.output'
 
