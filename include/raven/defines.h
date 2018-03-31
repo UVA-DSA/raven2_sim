@@ -29,7 +29,7 @@
 
 #include <math.h>
 
-// Homa's Macros
+// Simulator Macros
 //#define simulator // running with no hardware
 //#define dyn_simulator // run the dynamic models
 //#define packetgen  // use packet generator instead of GUI
