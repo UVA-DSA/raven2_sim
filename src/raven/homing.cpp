@@ -22,11 +22,30 @@
 *
 *   \file homing.cpp
 *
-*   Created 3-Nov-2011 by Hawkeye King
+*	\brief Based on concept by UCSC, a procedure is implemented for joint position
+*			 discovery from incremental encoders.
 *
-*      Based on concept by UCSC, I implement a procedure for joint position discovery from incremental encoders.
+*	\desc raven_homing called 1000 times per sec during INIT mode. Moves joints
+* 			to their limits (hard stop indicated by increased current) and then
+*			to their predefined "home" position.
+* 
+*	\fn These are the 5 functions in homing.cpp file. 
+*           Functions marked with "*" are called explicitly from other files.
+* 	       *(1) raven_homing	 	:uses (2)(3)(4)(5), utils.cpp (2)(3)(4)(6), inv_cable_coupling.cpp (1), 
+*                                                     trajectory.cpp (3), t_to_DAC_val.cpp (1), pid_control.cpp (1)(2)
+*       	(2) set_joints_known_pos	:uses (2)(3)(4)(5), utils.cpp (3)(4), state_estimate.cpp (2)(3),
+*                                                     inv_cable_coupling.cpp (1), fwd_cable_coupling.cpp (2)
+* 		(3) homing(joint)		:uses trajectory.cpp (1)(2)(7)(8)
+* 		(4) homing(joint,tool)
+* 		(5) check_homing_condition
+* 
+*	\author Hawkeye King
 *
+*       \date 3-Nov-2011
+*
+*	\ingroup Control
 */
+
 #include <stdlib.h>
 
 #include "trajectory.h"
@@ -42,6 +61,8 @@
 #include <iostream>
 
 
+#include <iostream>
+
 int set_joints_known_pos(struct mechanism* _mech, int tool_only);
 
 extern int NUM_MECH;
@@ -53,23 +74,26 @@ extern unsigned int soft_estopped;
 extern int serial_fd;
 #endif
 /**
-*  raven_homing()
+*   \fn int raven_homing(struct device *device0, struct param_pass *currParams, int begin_homing)
 *
-*   This function is called 1000 times per second during INIT mode
+*	\brief Move to hard stops in controlled way, "zero" the joint value, and then move to "home" position
 *
-*  \param device0           Which  (top level) device to home (usually only one device per system)
-*  \param currParams        Current parameters (for Run Level)
-*  \param begin_homing      Flag to start the homing process
-* \ingroup Control
+*	\desc This function is called 1000 times per second during INIT mode
+*		This function operates in two phases:
+*    -# Discover joint position by running to hard stop. Using PD control (I term zero'd) we move the
+*           joint at a smooth rate until current increases which indicates hitting hard mechanical stop.
+*    -# Move joints to "home" position.  In this phase the robot moves from the joint limits to a
+*			designated pose in the center of the workspace.
+* 
+*  	\param device0           Which  (top level) device to home (usually only one device per system)
+*   \param currParams        Current parameters (for Run Level)
+*   \param begin_homing      Flag to start the homing process
 *
-*  \brief  Move to hard stops in controled way, "zero" the joint value, and then move to "home" position
+*   \ingroup Control
 *
-*   This function operates in two phases:
-*    -# Discover joint position by running to hard stop.  Using PD control (I term zero'd) we move the joint at a smooth rate until
-*            current increases which indicates hitting hard mechanical stop.
-*    -# Move joints to "home" position.  In this phase the robot moves from the joint limits to a designated pose in the center of the workspace.
-*   \todo   Homing limits should be Amps not DAC units (see homing()  ).
-*   \todo   Eliminate or comment out Enders Game code!!
+*	\return 0
+*  
+*   \todo   Homing limits should be Amps not DAC units (see homing()).
 */
 int raven_homing(struct device *device0, struct param_pass *currParams, int begin_homing)
 {
@@ -111,7 +135,7 @@ int raven_homing(struct device *device0, struct param_pass *currParams, int begi
     }
 
     // Wait a short time for amps to turn on
-    if (gTime - delay < 500)
+    if (gTime - delay < 1000)
     {
         return 0;
     }
@@ -185,7 +209,7 @@ int raven_homing(struct device *device0, struct param_pass *currParams, int begi
             if ((  !tools_ready(_mech) &&
                    _mech->joint[TOOL_ROT].state==jstate_hard_stop &&
                    _mech->joint[WRIST   ].state==jstate_hard_stop &&
-                   _mech->joint[GRASP1  ].state==jstate_hard_stop )
+                   _mech->joint[GRASP1  ].state==jstate_hard_stop )  // \TODO check for grasp2 - bug?
                     ||
                 (  tools_ready( _mech ) &&
                    _mech->joint[SHOULDER].state==jstate_hard_stop &&
@@ -209,19 +233,22 @@ int raven_homing(struct device *device0, struct param_pass *currParams, int begi
 }
 
 /**
-*    set_joints_known_pos()
+*   \fn int set_joints_known_pos(struct mechanism* _mech, int tool_only)
 *
-*     \param _mech       which mechanism (gold/green)
-*     \param tool_only   flag which initializes only the tool/wrist joints
+*	\brief  Set joint angles to known values after hard stops are reached.
 *
-* \brief  Set joint angles to known values after hard stops are reached.
-*
-*       Set all the mechanism joints to known reference angles.
+*	\desc Set all the mechanism joints to known reference angles.
 *       Propagate the joint angle to motor position and encoder offset.
 *
-* \todo  Rationalize the sign changes on GREEN_ARM vs GOLD_ARM (see IFDEF below).
-* \todo  This MAYBE needs to be changed to support device specific parameter changes read from a config file or ROS service.
-* \ingroup Control
+*   \param _mech       which mechanism (gold/green)
+*   \param tool_only   flag which initializes only the tool/wrist joints
+*
+*	\ingroup Control
+*
+*	\return 0
+*
+* 	\todo  Rationalize the sign changes on GREEN_ARM vs GOLD_ARM (see IFDEF below).
+* 	\todo  This MAYBE needs to be changed to support device specific parameter changes read from a config file or ROS service.
 */
 int set_joints_known_pos(struct mechanism* _mech, int tool_only)
 {
@@ -298,7 +325,15 @@ int set_joints_known_pos(struct mechanism* _mech, int tool_only)
 				f_enc_val *= -1.0;
 			break;
     }
-
+#ifdef OPPOSE_GRIP
+	if (j == GRASP1){
+		f_enc_val *= -1;// switch encoder value for opposed grasp
+//		static int twice = 0;
+//		if (twice < 2){
+//			log_msg("homing enc_val swapped");
+//			twice++;
+		}
+#endif
 
 
 
@@ -308,6 +343,7 @@ int set_joints_known_pos(struct mechanism* _mech, int tool_only)
 
 
         getStateLPF(_joint, _mech->tool_type);
+        //getStateLPF(_joint, _mech->mech_tool.t_style);
     }
 
     fwdMechCableCoupling(_mech);
@@ -315,16 +351,17 @@ int set_joints_known_pos(struct mechanism* _mech, int tool_only)
 }
 
 /**
-*     homing()
+*	\fn void homing(struct DOF* _joint)
 *
-*   \param _joint    The joint being controlled.
+*	\brief Set trajectory behavior for each joint during the homing process.
 *
-* \brief   Set trajectory behavior for each joint during the homing process.
+*   \param _joint The joint being controlled.
 *
-*   \todo   Explain why sinusoid is used for homing???
+* 	\ingroup Control
 *
-*   \todo   Homing limits should be Amps not DAC units
+*	\return void
 *
+*   \todo  Homing limits should be Amps not DAC units
 *   \todo  Change square vs. diamond to a config-file based runtime system instead of #ifdef
 *
 *  \ingroup Control
@@ -376,6 +413,7 @@ void homing(struct DOF* _joint)
         case jstate_homing1:
             start_trajectory( _joint , DOF_types[_joint->type].home_position, 2.5 );
             _joint->state = jstate_homing2;
+            break;
 
         case jstate_homing2:
             // Move to start position
@@ -396,7 +434,19 @@ void homing(struct DOF* _joint)
     return;
 }
 
-//for tool joints
+/**
+*	\fn void homing(struct DOF* _joint, tool a_tool)
+*
+*	\brief Set trajectory behavior for each tool joint during the homing process.
+*
+*   \param _joint The joint being controlled.
+*	\param a_tool The tool being controlled.
+*
+* 	\ingroup Control
+*
+*	\return void
+*   \TODO refactor for tool class
+*/
 void homing(struct DOF* _joint, tool a_tool)
 {
     // duration for homing of each joint
@@ -420,25 +470,16 @@ void homing(struct DOF* _joint, tool a_tool)
     //check if scissors
     int scissor = ((a_tool.t_end == mopocu_scissor) || (a_tool.t_end == potts_scissor))? 1 : 0;
 
-//    float f_magnitude[MAX_MECH*MAX_DOF_PER_MECH] = {-10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999, 80 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD,
-//    		 	 	 	 	 	 	 	 	 	 	-10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999, 80 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD};
-
-    float f_magnitude[MAX_MECH*MAX_DOF_PER_MECH] =
-    			//GOLD_ARM
-    			{-10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999,
-    			80 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD,
-				//GREEN arm
-				-10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999,
-				80 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD};
-
+    float f_magnitude[MAX_MECH*MAX_DOF_PER_MECH] = {-10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999, 80 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD,
+    		 	 	 	 	 	 	 	 	 	 	-10 DEG2RAD, 10 DEG2RAD, 0.02, 9999999, 80 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD, 40 DEG2RAD};
 
     if(a_tool.t_style == square_raven){
-    	if(a_tool.mech_type == GOLD_ARM) f_magnitude[TOOL_ROT_GOLD] *=  -1;
-    	else if(a_tool.mech_type == GREEN_ARM) f_magnitude[TOOL_ROT_GREEN] *=  -1;
+    	if(a_tool.mech_type == GOLD_ARM) f_magnitude[TOOL_ROT_GOLD] =  -80 DEG2RAD;
+    	else if(a_tool.mech_type == GREEN_ARM) f_magnitude[TOOL_ROT_GREEN] =  -80 DEG2RAD;
     }
     if (scissor){
-    	if(a_tool.mech_type == GOLD_ARM) f_magnitude[GRASP2_GOLD] *=  -1;
-    	else if(a_tool.mech_type == GREEN_ARM) f_magnitude[GRASP2_GREEN] *=  -1;
+    	if(a_tool.mech_type == GOLD_ARM) f_magnitude[GRASP2_GOLD] = -40 DEG2RAD;
+    	else if(a_tool.mech_type == GREEN_ARM) f_magnitude[GRASP2_GREEN] = -40 DEG2RAD;
     }
 
 
@@ -467,6 +508,7 @@ void homing(struct DOF* _joint, tool a_tool)
         case jstate_homing1:
             start_trajectory( _joint , DOF_types[_joint->type].home_position, 2.5 );
             _joint->state = jstate_homing2;
+            break;
 
         case jstate_homing2:
             // Move to start position
@@ -487,7 +529,7 @@ void homing(struct DOF* _joint, tool a_tool)
     return;
 }
 
-
+// \TODO move to more appropriate location
 #ifdef RAVEN_II_SQUARE
 // RII_Square has higher limits on tool b/c there's more friction
 const int homing_max_dac[8] = {2500,  //shoulder
@@ -502,37 +544,41 @@ const int homing_max_dac[8] = {2500,  //shoulder
 #ifdef DV_ADAPTER
 const int homing_max_dac[8] = {2500,  //shoulder
                             2500,  //elbow
-                            1900,//2300,  //z-ins
+                            1400,//1900,//2300,  //z-ins
                             0,
                             2000,//2400,  //tool_rot // was 1400, lowered to reduce calibration error //I think this is labeled improperly - AL
-                            1800,//2400,  //wrist
-                            1900,//2100,  //grasp1
-                            1900};//2100};  // grasp2
+                            2400,//1800,  //wrist
+                            2000,//1900,//2100,  //grasp1
+                            2000};//1900};//2100};  // grasp2
 #else
 const int homing_max_dac[8] = {2500,  //shoulder
                             2500,  //elbow
-                            1900, //1900,  //z_ins
+                            1900, //2600,  //z_ins
                             0,
-                            2000,  //tool_rot  //rasised from 1400 alewis 3/4/14
-                            1800,  //wrist
-                            1900,  //grasp1 decreased from 1900
-                            1900};  // grasp2 decreased from 1900
+                            1900,//2000,  //tool_rot  //rasised from 1400 alewis 3/4/14
+                            1900,//1800,  //wrist
+                            2150,//1900,  //grasp1 decreased from 1900
+                            2150};//1900};  // grasp2 decreased from 1900
 #endif
 #endif
 
 
 /**
- *   check_homing_condition()
+ *  \fn int check_homing_condition(struct DOF *_joint)
  *
- *   \param _joint    A joint struct
+ * 	\brief Monitor joint currents to end the homing cycle at hard stop.
  *
- * \brief  Monitor joint currents to end the homing cycle at hard stop.
+ *  \desc Checks to see if a joint current is above a certain max value which indicates that the 
+ *			joint has reached it's mechanical limit.
  *
- *  Checks to see if a joint current is above a certain max value which indicates that the joint has reached it's mechanical limit.
+ *  \param _joint    A joint struct
  *
- *   \todo   Homing limits should be Amps not DAC units (see homing()  ).
+ * 	\ingroup Control
  *
- *  \ingroup Control
+ *	\return 1 if DAC output is greater than the maximum allowable
+ *			0 otherwise
+ *
+ *  \todo Homing limits should be Amps not DAC units (see homing()).
  */
 int check_homing_condition(struct DOF *_joint)
 {

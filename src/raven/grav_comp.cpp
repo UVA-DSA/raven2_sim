@@ -17,21 +17,30 @@
  * along with Raven 2 Control.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
+/** \file  grav_comp.cpp
+ *
  *  \brief Functions for calculating gravity torques
  *
- *  These functions will calculate gravity loads on each of the first 3 DOFs with predefined mass properties.
- *  However, arbitrary gravity vectors can be specified in the currParams data structure, which are then
- *  used in these calculations.
+ *  \desc  These functions will calculate gravity loads on each of the first 3 DOFs with predefined mass properties.
+ *         However, arbitrary gravity vectors can be specified in the currParams data structure, which are then
+ *         used in these calculations.
  *
- *  Re-written March 2013 by Andy Lewis and Hawkeye King
- *    Equations re-derived for UW Kinematics formulations for Raven II
- *    See Andy's MS thesis or ICRA '14 paper for technical details.
+ *  \fn    These are the 3 functions in grav_comp.cpp file. 
+ *         Functions marked with "*" are called explicitly from other files.
+ *             (1) getCurrentG
+ * 	      *(2) getGravityTorque			:uses (1)(3)
+ *             (3) getMotorTorqueFromJointTorque
+ * 
+ *  \log   Re-written March 2013 by Andy Lewis and Hawkeye King
+ *         Equations re-derived for UW Kinematics formulations for Raven II
+ *         See Andy's MS thesis or ICRA '14 paper for technical details.
+ * 
+ *  \author Hawkeye King
+ *          Andrew Lewis
  *
+ *  \date February 2013
  *
- *
- *
- *
+ *  \ingroup control
  */
 
 #include "grav_comp.h"
@@ -43,7 +52,7 @@ extern struct DOF_type DOF_types[];
 extern unsigned long int gTime;
 
 // Define COM's (units: meters)
-// Left arm values ???
+// Left arm values
 const static tf::Vector3 COM1_1_GL( 0.0065,   0.09775,	-0.13771); //meters
 const static tf::Vector3 COM2_2_GL( -0.002,	-0.18274,	-0.23053); //meters
 const static tf::Vector3 COM3_3_GL( 0,		0,			0		);//meters
@@ -67,9 +76,14 @@ const static double M3 = 0.231; // kg --> ? lb
 tf::Vector3 getCurrentG(struct device *d0, int m);
 void getMotorTorqueFromJointTorque(int, double, double, double, double&, double&, double&);
 
-/*
+/**
  * getCurrentG()
  * \brief Return the current gravity vector from whatever power knows it.
+ *
+ * \param device   the robot device that needs gravity compensation
+ * \param m		   the current mechanism (arm) being compensated
+ *
+ * \return gravity vector in m/s^2
  */
 tf::Vector3 getCurrentG(struct device *d0, int m)
 {
@@ -96,7 +110,7 @@ tf::Vector3 getCurrentG(struct device *d0, int m)
 	return tf::Vector3(xG0, yG0, zG0);
 }
 
-/*
+/**
  * getGravityTorque()
  * \brief Calculate and set the gravity torque for each of the first three joints on both arms
  *
@@ -107,6 +121,8 @@ tf::Vector3 getCurrentG(struct device *d0, int m)
  * \param &d0		the robot device
  * \param &params	the current robot parameters struct
  *
+ * \return void
+ *
  * 	 Calculate Torque: T_i = sum( j=i..3 , (M_j * G_i) x ^iCOM_j )
 		GT1 = (M1*G1) x ^1COM_1 + (M2*G1) x ^1COM_2 + (M3*G1) x ^1COM_3
 		GT2 = (M2*G2) x ^2COM_2 + (M3*G2) x ^2COM_3
@@ -114,7 +130,7 @@ tf::Vector3 getCurrentG(struct device *d0, int m)
  *
  *
  *    Notation:
- *    Txy    - Transform from frame 0 to frame 1
+ *    Txy    - Transform from frame x to frame y
  *    COMx_y - Center of mass of link x in link-frame y
  *    Gx     - Gravity vector represented in link-frame x
  *    GTx    - 3-vector of gravitational torque at joint x (z-component represents torque around joint)
@@ -127,14 +143,16 @@ void getGravityTorque(struct device &d0, struct param_pass &params)
 
 	struct mechanism *_mech;
 	tf::Vector3 G0;
-	static tf::Vector3 G0Static = tf::Vector3(-9.8, 0, 0);
+	//static tf::Vector3 G0Static = tf::Vector3(-9.8, 0, 0); //unused
 	tf::Vector3 COM1_1, COM2_2, COM3_3;
 
 	/// Do FK for each mechanism
 	for (int m=0; m<NUM_MECH; m++)
 	{
 		_mech = &(d0.mech[m]);
-		G0 = getCurrentG(&d0, m);
+		//G0 = G0Static;
+		G0 = getCurrentG(&d0, m); //uncomment this line to enable dynamic gravity vectors
+
 
 		if (_mech->type == GOLD_ARM_SERIAL)
 		{
@@ -164,18 +182,18 @@ void getGravityTorque(struct device &d0, struct param_pass &params)
 		R12 = T12.getBasis();
 		R23 = T23.getBasis();
 
-		///// Calculate COM in lower ink frames (closer to base)
+		///// Calculate COM in lower link frames (closer to base)
 		// Get COM3
 		tf::Vector3 COM3_2 = T23 * COM3_3;
 		tf::Vector3 COM3_1 = T12 * COM3_2;
-		tf::Vector3 COM3_0 = T01 * COM3_1;
+		//tf::Vector3 COM3_0 = T01 * COM3_1; //unused?
 
 		// Get COM2
-		tf::Vector3 COM2_1 = T12 * COM2_2;
-		tf::Vector3 COM2_0 = T01 * COM2_1;
+		tf::Vector3 COM2_1 = T12 * COM2_2; 
+		//tf::Vector3 COM2_0 = T01 * COM2_1; //unused?
 
 		// Get COM1
-		tf::Vector3 COM1_0 = T01 * COM1_1;
+		//tf::Vector3 COM1_0 = T01 * COM1_1; //unused?
 
 		///// Get gravity vector in each link frame
 		// Map G into Frame1
@@ -212,9 +230,11 @@ void getGravityTorque(struct device &d0, struct param_pass &params)
 		getMotorTorqueFromJointTorque(_mech->type, GZ1, GZ2, GZ3, MT1, MT2, MT3);
 
 		// Set motor g-torque
-		_mech->joint[SHOULDER].tau = MT1; 
-		_mech->joint[ELBOW   ].tau = MT2;
-		_mech->joint[Z_INS   ].tau = MT3;
+		_mech->joint[SHOULDER].tau_g = MT1;
+		_mech->joint[ELBOW   ].tau_g = MT2;
+		_mech->joint[Z_INS   ].tau_g = MT3;
+
+
 	}
 
 
@@ -234,16 +254,18 @@ void getGravityTorque(struct device &d0, struct param_pass &params)
  * \param 	&out_MT2	an output pointer for calculated motor torque 2
  * \param 	&out_MT3	an output pointer for calculated motor torque 3
  *
+ * \return void
  */
 
 // TODO: this function will need to be updated when cable coupling between first three axes is implemented as non-diagonal.
+// TODO: this should be in a different file, maybe motors.cpp?
 void getMotorTorqueFromJointTorque(int arm, double in_GZ1, double in_GZ2, double in_GZ3, double &out_MT1, double &out_MT2, double &out_MT3)
 {
 	// claculate motor torques from joint torques
 	// TODO:: add in additional cable-coupling terms
-	out_MT1 = in_GZ1 / GEAR_BOX_GP42_TR;
-	out_MT2 = in_GZ2 / GEAR_BOX_GP42_TR;
-	out_MT3 = in_GZ3 / GEAR_BOX_GP42_TR;
+	out_MT1 = in_GZ1 / SHOULDER_TR_GOLD_ARM * GEAR_BOX_GP42_TR;
+	out_MT2 = in_GZ2 / ELBOW_TR_GOLD_ARM * GEAR_BOX_GP42_TR;
+	out_MT3 = in_GZ3 / Z_INS_TR_GOLD_ARM * GEAR_BOX_GP42_TR;
 
 	return;
 }

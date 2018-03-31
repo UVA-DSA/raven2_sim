@@ -69,7 +69,7 @@ void stateMachine(struct device *device0, struct param_pass *currParams, struct 
         }
     }
 
-     // already in desired runlevel.  Exit.
+    // already in desired runlevel.  Exit.
     if ( *rl == rlDesired)
     {
         return;
@@ -100,4 +100,5 @@ void stateMachine(struct device *device0, struct param_pass *currParams, struct 
         initialized = FALSE;
         currParams->sublevel = 0;
     }
+
 }

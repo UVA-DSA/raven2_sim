@@ -387,7 +387,6 @@ int fwd_kin (double in_j[6], l_r in_arm, tf::Transform &out_xform)
 }
 
 
-
 /**\fn int getATransform (struct mechanism &in_mch, tf::Transform &out_xform, int frameA, int frameB)
  * \brief Runs the Raven II forward kinematics to determine the desired transform from frame A to frame B
  * \param in_mch - a reference of one arm
@@ -694,7 +693,7 @@ int r2_inv_kin(struct device *d0, int runlevel)
 					joints[3] * r2d,
 					joints[4] * r2d,
 					joints[5] * r2d,
-					d0->mech[m].joint[GRASP2].jpos  * r2d,
+					d0->mech[m].joint[GRASP1].jpos  * r2d,
 					d0->mech[m].joint[GRASP2].jpos * r2d
 			);
 			for (int i=0; i<8; i++)
@@ -763,6 +762,7 @@ int  __attribute__ ((optimize("0"))) inv_kin(tf::Transform in_T06, l_r in_arm, i
 	}
 
 	for (int i=0;i<8;i++)    iksol[i].arm = in_arm;
+
 
 	//  Step 1, Compute P5
 	tf::Transform  T60 = in_T06.inverse();
@@ -943,7 +943,7 @@ int apply_joint_limits(double *Js, double *Js_sat){
 		Js_sat[0] = DOF_types[SHOULDER].min_limit;
 		limited = 1;
 #ifndef no_logging
-		std::cout<<"eblow min limit reached  = "<<Js_sat[0]<<std::endl;
+		std::cout<<"shoulder min limit reached  = "<<Js_sat[0]<<std::endl;
 #endif
 	}
 	else if(Js[0] >= DOF_types[SHOULDER].max_limit)
@@ -951,25 +951,25 @@ int apply_joint_limits(double *Js, double *Js_sat){
 		Js_sat[0] = DOF_types[SHOULDER].max_limit;
 		limited = 1;
 #ifndef no_logging
-		std::cout<<"eblow max limit reached  = "<<Js_sat[0]<<std::endl;
+		std::cout<<"shoulder max limit reached  = "<<Js_sat[0]<<std::endl;
 #endif
 	}
 
-	if (Js[1] <= ELBOW_MIN_LIMIT)
+	if (Js[1] <= DOF_types[ELBOW].min_limit)
 	{
 		Js_sat[1] = ELBOW_MIN_LIMIT;
 		limited = 1;
 #ifndef no_logging
-		std::cout<<"eblow min limit reached  = "<<Js_sat[1]<<std::endl;
+		std::cout<<"elbow min limit reached  = "<<Js_sat[1]<<std::endl;
 #endif
 	}
 
-	else if(Js[1] >= ELBOW_MAX_LIMIT)
+	else if(Js[1] >= DOF_types[ELBOW].max_limit)
 	{
 		Js_sat[1] = ELBOW_MAX_LIMIT;
 		limited = 1;
 #ifndef no_logging
-		std::cout<<"eblow max limit reached  = "<<Js_sat[1]<<std::endl;
+		std::cout<<"elbow max limit reached  = "<<Js_sat[1]<<std::endl;
 #endif
 	}
 
@@ -990,18 +990,18 @@ int apply_joint_limits(double *Js, double *Js_sat){
 #endif
 	}
 
-	if (Js[3] <= -150.0 DEG2RAD)
+	if (Js[3] <= DOF_types[TOOL_ROT].min_limit)
 	{
-		Js_sat[3] = -150.0 DEG2RAD;
+		Js_sat[3] = DOF_types[TOOL_ROT].min_limit;
 		limited = 1;
 #ifndef no_logging
 		std::cout<<"rot min limit reached  = "<<Js_sat[3]<<std::endl;
 #endif
 	}
 
-	else if(Js[3] >= 150.0 DEG2RAD)
+	else if(Js[3] >= DOF_types[TOOL_ROT].max_limit)
 	{
-		Js_sat[3] = 150.0 DEG2RAD;
+		Js_sat[3] = DOF_types[TOOL_ROT].max_limit;
 		limited = 1;
 #ifndef no_logging
 		std::cout<<"rot max limit reached  = "<<Js_sat[3]<<std::endl;
@@ -1025,6 +1025,43 @@ int apply_joint_limits(double *Js, double *Js_sat){
 		std::cout<<"wrist max limit reached  = "<<Js_sat[4]<<std::endl;
 #endif
 	}
+	if (Js[5] <= DOF_types[GRASP1].min_limit)
+	{
+		Js_sat[5] = DOF_types[GRASP1].min_limit;
+		limited = 1;
+		std::cout<<"grasp1 min limit reached  = "<<Js_sat[5]<<std::endl;
+	}
+
+
+/*     The last element of Js is (probably) the angle of the midpoint between the graspers.
+	This isn't very useful for the joint saturation problem, so
+	we'll need to restructure this a little bit to get access to the
+	grasper joint angles -- Andy 4/16
+
+
+	else if(Js[5] >= DOF_types[GRASP1].max_limit)
+	{
+		Js_sat[5] = DOF_types[GRASP1].max_limit;
+		limited = 1;
+		std::cout<<"grasp1 max limit reached  = "<<Js_sat[5]<<std::endl;
+	}
+	if (Js[6] <= DOF_types[GRASP2].min_limit)
+	{
+		Js_sat[6] = DOF_types[GRASP2].min_limit;
+		limited = 1;
+		std::cout<<"grasp2 min limit reached  = "<<Js_sat[6]<<std::endl;
+	}
+	else if(Js[6] >= DOF_types[GRASP2].max_limit)
+	{
+		Js_sat[6] = DOF_types[GRASP2].max_limit;
+		limited = 1;
+		std::cout<<"grasp2 max limit reached  = "<<Js_sat[6]<<std::endl;
+	}
+*/
+
+
+
+	//todo add more saturation for graspers
 
 	//Js_sat[5] = Js[5];
 	/*
@@ -1097,8 +1134,7 @@ int check_solutions(double *in_thetas, ik_solution * iksol, int &out_idx, double
 		minerr = 0;
 		if (gTime %100 == 0 && iksol[minidx].arm == dh_left)
 		{
-				cout << "failed (err>eps) on j=\t\t(" << in_thetas[0] * r2d << ",\t" << in_thetas[1] *r2d << ",\t" << in_thetas[2] << ",\t" << in_thetas[3] * r2d << ",\t" << in_thetas[4] * r2d << ",\t" << in_thetas[5] * r2d << ")"<<endl;
-
+			cout << "failed (err>eps) on j=\t\t(" << in_thetas[0] * r2d << ",\t" << in_thetas[1] *r2d << ",\t" << in_thetas[2] << ",\t" << in_thetas[3] * r2d << ",\t" << in_thetas[4] * r2d << ",\t" << in_thetas[5] * r2d << ")"<<endl;
 			for (int idx=0;idx<8;idx++)
 			{
 				double s2err = 0;

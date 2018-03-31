@@ -19,9 +19,21 @@
 
 /**
 *  \file fwd_cable_coupling.cpp
-*  \brief Calculate the forward cable coupling from a motor space Pose,
-*         (m1, m2,m3) express the desired joint pose (th1, th2, d3)
-*  \author Hawkeye
+*
+*  	\brief  Calculate the forward cable coupling from a motor space Pose,
+*         	(m1, m2,m3) express the desired joint pose (th1, th2, d3)
+*
+* 	\desc	The fwdCableCoupling is called by function controlRaven in rt_raven.cpp file.
+*		To translate from motor position/velocity to joint position/velocity.
+*
+* 	\fn These are the 4 functions in fwd_cable_coupling.cpp file.
+*           Functions marked with "*" are called explicitly from other files.
+* 	       *(1) fwdCableCoupling		:uses (2)
+* 		(2) fwdMechCableCoupling
+* 	       *(3) fwdTorqueCoupling		:uses (4)
+* 		(4) fwdMechTorqueCoupling
+*
+*  	\author Hawkeye
 */
 
 #include "fwd_cable_coupling.h"
@@ -123,6 +135,7 @@ void fwdMechCableCoupling(struct mechanism *mech)
 	th2_dot = (1.0/tr2) * m2_dot;
 	d4_dot  = (1.0/tr4) * m4_dot;
 
+
 	// Tool degrees of freedom ===========================================
     int sgn = 0;
     switch(mech->mech_tool.t_style){
@@ -140,11 +153,17 @@ void fwdMechCableCoupling(struct mechanism *mech)
 		break;
     }
 
+	int sgn_6 = sgn;
+#ifdef OPPOSE_GRIP
+	sgn_6 *= -1;
+#endif
+
     float tool_coupling = mech->mech_tool.wrist_coupling;
     th3 = (1.0/tr3) * (m3 - sgn*m4/GB_RATIO);
     th5 = (1.0/tr5) * (m5 - sgn*m4/GB_RATIO);
-    th6 = (1.0/tr6) * (m6 - sgn*m4/GB_RATIO) - th5*tool_coupling;
+    th6 = (1.0/tr6) * (m6 - sgn_6*m4/GB_RATIO) - th5*tool_coupling;
     th7 = (1.0/tr7) * (m7 - sgn*m4/GB_RATIO) + th5*tool_coupling;
+
 
 	// Now have solved for th1, th2, d3, th4, th5, th6
 	mech->joint[SHOULDER].jpos 		= th1;// - mech->joint[SHOULDER].jpos_off;
@@ -158,6 +177,7 @@ void fwdMechCableCoupling(struct mechanism *mech)
 	mech->joint[SHOULDER].jvel 		= th1_dot;// - mech->joint[SHOULDER].jpos_off;
 	mech->joint[ELBOW].jvel 		= th2_dot;// - mech->joint[ELBOW].jpos_off;
 	mech->joint[Z_INS].jvel 		= d4_dot;//  - mech->joint[Z_INS].jpos_off;
+
 	return;
 }
 
@@ -183,6 +203,8 @@ void fwdTorqueCoupling(struct device *device0, int runlevel)
 
 /**
 * \fn void fwdMechTorqueCoupling(struct mechanism *mech)
+* \brief calculates joint position and velocity based on motor position and velocity
+*
 * \param mech
 * \return void
 */
@@ -251,28 +273,34 @@ void fwdMechTorqueCoupling(struct mechanism *mech)
 	d4_dot  = (1.0/tr4) * m4_dot;
 
 
+
+// TODO:: why is only the RAVEN tool referenced in this?
 	// Tool degrees of freedom ===========================================
-	if (mech->tool_type == TOOL_GRASPER_10MM)
-	{
+//	if (mech->tool_type == TOOL_GRASPER_10MM)
+//	{
 		int sgn = (mech->type == GOLD_ARM) ? 1 : -1;
+		int sgn_6 = sgn;
+#ifdef OPPOSE_GRIP
+		sgn_6 = -1 * sgn;
+#endif
 		th3 = (1.0/tr3) * (m3 - sgn*m4/GB_RATIO);
 		th5 = (1.0/tr5) * (m5 - sgn*m4/GB_RATIO);
-		th6 = (1.0/tr6) * (m6 - sgn*m4/GB_RATIO);
+		th6 = (1.0/tr6) * (m6 - sgn_6*m4/GB_RATIO);
 		th7 = (1.0/tr7) * (m7 - sgn*m4/GB_RATIO);
-	}
+//	}
 
 	// Now have solved for th1, th2, d3, th4, th5, th6
 	mech->joint[SHOULDER].jpos 	= th1;// - mech->joint[SHOULDER].jpos_off;
-	mech->joint[ELBOW].jpos 		= th2;// - mech->joint[ELBOW].jpos_off;
+	mech->joint[ELBOW].jpos 	= th2;// - mech->joint[ELBOW].jpos_off;
 	mech->joint[TOOL_ROT].jpos 	= th3;// - mech->joint[TOOL_ROT].jpos_off;
-	mech->joint[Z_INS].jpos 		= d4;//  - mech->joint[Z_INS].jpos_off;
-	mech->joint[WRIST].jpos 		= th5;// - mech->joint[WRIST].jpos_off;
-	mech->joint[GRASP1].jpos 		= th6;// - mech->joint[GRASP1].jpos_off;
-	mech->joint[GRASP2].jpos 		= th7;// - mech->joint[GRASP2].jpos_off;
+	mech->joint[Z_INS].jpos 	= d4;//  - mech->joint[Z_INS].jpos_off;
+	mech->joint[WRIST].jpos 	= th5;// - mech->joint[WRIST].jpos_off;
+	mech->joint[GRASP1].jpos 	= th6;// - mech->joint[GRASP1].jpos_off;
+	mech->joint[GRASP2].jpos 	= th7;// - mech->joint[GRASP2].jpos_off;
 
 	mech->joint[SHOULDER].jvel 	= th1_dot;// - mech->joint[SHOULDER].jpos_off;
-	mech->joint[ELBOW].jvel 		= th2_dot;// - mech->joint[ELBOW].jpos_off;
-	mech->joint[Z_INS].jvel 		= d4_dot;//  - mech->joint[Z_INS].jpos_off;
+	mech->joint[ELBOW].jvel 	= th2_dot;// - mech->joint[ELBOW].jpos_off;
+	mech->joint[Z_INS].jvel 	= d4_dot;//  - mech->joint[Z_INS].jpos_off;
 
 	return;
 }

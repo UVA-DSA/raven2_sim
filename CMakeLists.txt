@@ -31,6 +31,7 @@ endif()
 #set(BOOST_ROOT ~/Desktop)
 #set(Boost_USE_STATIC_LIBS ON)
 #find_package(Boost 1.58.0 COMPONENTS math REQUIRED) 
+find_package(Boost COMPONENTS system filesystem REQUIRED) 
 ##include_directories(${Boost_INCLUDE_DIRS}) 
 
 #common commands for building c++ executables and libraries
@@ -44,6 +45,7 @@ rosbuild_add_boost_directories()
 include_directories(src/raven)
 include_directories(include)
 include_directories(include/raven)
+find_package(cmake_modules REQUIRED)
 
 #add include directories for dynamics integration
 #include_directories(include/tnt)
@@ -100,3 +102,5 @@ src/raven/reconfigure.cpp
 #src/raven/velocity.cpp
 src/raven/tools.cpp
 )
+
+target_link_libraries(r2_control ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})

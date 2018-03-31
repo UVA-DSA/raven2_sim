@@ -35,12 +35,12 @@ extern int NUM_MECH;
 extern unsigned long int gTime;
 
 /**\fn void updateAtmelOutputs(struct device *device0, int runlevel)
- * \brief
- * \struct device
+ * \brief updates the software output: 8 bits of each arm (identical for both arms) are reserved(5 bits are used) for this output. 
+ *        This output will later be written to the USB as hardware input.
  * \param device0 - pointer to device struct
  * \param runlevel - current runlevel
  * \return void
- * \ingroup Network
+ * \ingroup Hardware
  */
 void updateAtmelOutputs(struct device *device0, int runlevel)
 {
@@ -57,7 +57,7 @@ void updateAtmelOutputs(struct device *device0, int runlevel)
 
     //Update Linux State
     outputs |= (runlevel & (PIN_LS0 | PIN_LS1));
-      
+
     //Update WD Timer - if not software triggered
     if ( !soft_estopped )
     {
@@ -70,7 +70,7 @@ void updateAtmelOutputs(struct device *device0, int runlevel)
             counter = 0;
         }
     }
-        
+
     //Write Changes
     for (i = 0; i < NUM_MECH; i++)
         device0->mech[i].outputs = outputs;
@@ -79,12 +79,14 @@ void updateAtmelOutputs(struct device *device0, int runlevel)
 }
 
 /**\fn void updateAtmelInputs(struct device device0, int runlevel)
- * \brief
- * \struct device
+ * \brief reads the hardware output received from the USB package and retrieves the runlevel in PLC.
+ *        This function is mainly for debugging purpose.
  * \param device0 - device struct
  * \param runlevel - current runlevel
  * \return void
- * \ingroup Network
+ * \ingroup Hardware
+ * \ingroup Debug
+ * \todo I don't think this function does anything - nothing is returned and I don't think the device is updated
  */
 void updateAtmelInputs(struct device device0, int runlevel)
 {

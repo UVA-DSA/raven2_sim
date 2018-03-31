@@ -272,15 +272,15 @@ class Raven():
             pass
         os.system("rm /tmp/dac_fifo > /dev/null 2>&1")
         os.system("rm /tmp/mpos_vel_fifo > /dev/null 2>&1")
+        os.system("killall two_arm_dyn > /dev/null 2>&1")        
+        os.system("killall r2_control > /dev/null 2>&1")
         os.system("killall roslaunch > /dev/null 2>&1")
         os.system("killall rostopic > /dev/null 2>&1")
-        os.system("killall r2_control > /dev/null 2>&1")
         os.system("killall roscore > /dev/null 2>&1")
         os.system("killall rosmaster > /dev/null 2>&1")
         if self.rviz_enabled:
             os.system("killall rviz > /dev/null 2>&1")
         os.system("killall xterm > /dev/null 2>&1")
-        os.system("killall two_arm_dyn > /dev/null 2>&1")
         #os.system("killall python") # Don't work with run_mfi_experiment()
 
     def _compile_raven(self):
@@ -319,17 +319,17 @@ class Raven():
 
         # Setup Variables
   
-        ravenTask = "xterm -hold -e 'roslaunch raven_2 raven_2.launch'"
+        ravenTask = "roslaunch raven_2 raven_2.launch > raven.output"
         #ravenTask = "xterm -hold -e 'LD_PRELOAD=/home/raven/homa_wksp/malicious_wrapper/malicious_wrapper.so roslaunch raven_2 raven_2.launch'"
         visTask = 'xterm -e roslaunch raven_visualization raven_visualization.launch'
         pubTask = 'roslaunch raven_visualization raven_state_publisher.launch'
         dynSimTask = 'xterm -e "cd ./Li_DYN && make -j && ./two_arm_dyn"'
         rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv'
         if (self.surgeon_simulator == 1):
-            packetTask = 'xterm -e python '+self.raven_home+'/Real_Packet_Generator_Surgeon.py '+ self.mode + ' '+ self.traj 
+            packetTask = 'python '+self.raven_home+'/Real_Packet_Generator_Surgeon.py '+ self.mode + ' '+ self.traj + '> packet_gen.output'
             #print(packetTask)
         else:
-            packetTask = 'xterm -e python '+self.raven_home+'/Packet_Generator.py'
+            packetTask = 'python '+self.raven_home+'/Packet_Generator.py > packet_gen.output'
 
         # Call publisher, visualization, packet generator, and Raven II software
         if self.rviz_enabled:
@@ -340,9 +340,9 @@ class Raven():
         	time.sleep(1) 
         if self.packet_gen == "1":
                 self.packet_proc = subprocess.Popen(packetTask, shell=True, preexec_fn=os.setsid)
-                print "Using the packet generator.."
+                print "\nRunning the packet generator.."
         elif self.packet_gen == "0":
-                print "Waiting for the GUI packets.."
+                print "\nWaiting for the GUI packets.."
         else:
             print usage
             sys.exit(2)

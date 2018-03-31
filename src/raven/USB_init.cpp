@@ -17,13 +17,29 @@
  * along with Raven 2 Control.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/**\file USB_init.cpp
- * \brief USB initialization module
- * \author Ken Fodero
- * \author Hawkeye King
- * \ingroup IO
- */
+ /**
+*   \file USB_init.cpp
+*
+*	\brief USB initialization module
+*
+*	\fn These are the 9 functions in USB_init.cpp file. 
+*           Functions marked with "*" are called explicitly from other files.
+* 		(1) getdir		 
+*       	(2) get_board_id_from_filename	 
+* 		(3) write_zeros to board	:uses (8)
+* 	       *(4) USBInit			:uses (1)(2)(3)
+* 	       *(5) USBShutDown
+* 	       *(6) startUSBRead
+* 	       *(7) usb_read
+* 		(8) usb_write
+* 	       *(9) usb_reset_encoder
+*
+*	\author Hawkeye King
+*
+*       \date 3-Nov-2011
+*
+*	\ingroup IO
+*/
 
 #include <string.h>
 #include <vector>
@@ -32,6 +48,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <ros/console.h>
+
 #include "USB_init.h"
 #include "parallel.h"
 
@@ -57,6 +74,7 @@ extern USBStruct USBBoards;
 extern int NUM_MECH;
 
 using namespace std;
+
 
 /**\fn int getdir(string dir, vector<string> &files)
  * \brief List directory contents matching BOARD_FILE_STR

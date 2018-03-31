@@ -85,9 +85,10 @@ int    deviceType = SURGICAL_ROBOT;//PULLEY_BOARD;
 struct device device0 ={0};  //Declaration Moved outside rt loop for access from console thread
 int    mech_gravcomp_done[2]={0};
 
-#ifdef packetgen
-int NUM_MECH=2;   // Define NUM_MECH as a C variable, not a c++ variable
+
 int done_homing = 0;
+#ifdef simulator // We might need to have this changed to pakcet_gen
+int NUM_MECH=2;   // Define NUM_MECH as a C variable, not a c++ variable
 #else
 int NUM_MECH=0;   // Define NUM_MECH as a C variable, not a c++ variable
 #endif
@@ -359,11 +360,11 @@ static void *rt_process(void* )
       //////////////// END SURGICAL ROBOT CODE ///////////////////////////
 
       // Check for overcurrent and impose safe torque limits
-      if (overdriveDetect(&device0))
+      if (overdriveDetect(&device0, currParams.runlevel))
       {
-	      soft_estopped = TRUE;
-	      showInverseKinematicsSolutions(&device0, currParams.runlevel);
-	      outputRobotState();
+		  soft_estopped = TRUE;
+		  showInverseKinematicsSolutions(&device0, currParams.runlevel);
+		  outputRobotState();
 #ifdef dyn_simulator
 #ifdef save_logs
 		  logging = 1;
@@ -456,12 +457,12 @@ static void *rt_process(void* )
 #endif
 #ifndef no_logging
         printf("Estimated (mpos,mvel):(%f, %f),(%f, %f),(%f, %f)\n",
-				device0->mech[i].joint[SHOULDER].mpos,
-				device0->mech[i].joint[SHOULDER].mvel,
-				device0->mech[i].joint[ELBOW].mpos,
-				device0->mech[i].joint[ELBOW].mvel,
-				device0->mech[i].joint[Z_INS].mpos,
-				device0->mech[i].joint[Z_INS].mvel);
+				device0.mech[i].joint[SHOULDER].mpos,
+				device0.mech[i].joint[SHOULDER].mvel,
+				device0.mech[i].joint[ELBOW].mpos,
+				device0.mech[i].joint[ELBOW].mvel,
+				device0.mech[i].joint[Z_INS].mpos,
+				device0.mech[i].joint[Z_INS].mvel);
 #endif
 
 #ifndef no_logging

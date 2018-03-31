@@ -18,21 +18,25 @@
  */
 
 
-/*******************************
+/* 
+*  \file inv_cable_coupling.cpp
+* 
+*  \brief Calculate the inverse cable coupling from a Joint Space Pose,
+* 	(th1, th2, d3) express the desired motor pose (m1, m2, m3)
 *
-* File: inv_cable_coupling.c
+*  \fn:These are the 2 functions in inv_cable_coupling.cpp file. 
+*      Functions marked with "*" are called explicitly from other files.
+* 	   *(1) invCableCoupling	 	:uses (2)
+*      	    (2) invMechCableCoupling	
 *
-* \ingroup Control
-* \ingroup Tool
+*  \ingroup Control
+*           Tool
 *
-* \brief Calculate the inverse cable coupling from a Joint Space Pose,
-* (th1, th2, d3) express the desired motor pose (m1, m2, m3)
+*  \todo standardize numbering system 0 or 1 origin for motor designation
+*  \todo standardize 3 or 4 insertion axis
+*  \todo analyze (DANYING) coupling and convert to matrix maths
 *
-* \todo standardize numbering system 0 or 1 origin for motor designation
-* \todo standardize 3 or 4 insertion axis
-* \todo analyze (DANYING) coupling and convert to matrix maths
-*
-**********************************/
+*/
 
 #include "inv_cable_coupling.h"
 #include "log.h"
@@ -58,6 +62,7 @@ void invCableCoupling(struct device *device0, int runlevel)
   for (i = 0; i < NUM_MECH; i++)
     invMechCableCoupling(&(device0->mech[i]));
 }
+
 
 /**
 * \brief Calculates desired motor positions from desired joint positions
@@ -191,10 +196,16 @@ void invMechCableCoupling(struct mechanism *mech, int no_use_actual)
 		break;
   }
 
+  int sgn_6 = sgn;
+#ifdef OPPOSE_GRIP
+  sgn_6 *= -1;
+
+#endif
+
   float tool_coupling = mech->mech_tool.wrist_coupling;
   m3 = (tr3 * th3) + sgn * m4_actual/GB_RATIO;
   m5 = (tr5 * th5) + sgn * m4_actual/GB_RATIO;
-  m6 = (tr6 * (th6 + th5*tool_coupling)) + sgn * m4_actual/GB_RATIO;
+  m6 = (tr6 * (th6 + th5*tool_coupling)) + sgn_6 * m4_actual/GB_RATIO; //was th6 +th5*...
   m7 = (tr7 * (th7 - th5*tool_coupling)) + sgn * m4_actual/GB_RATIO;
 
 

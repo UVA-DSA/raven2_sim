@@ -71,7 +71,7 @@ void mpos_PD_control(struct DOF *joint, int reset_I)
     float kp = DOF_types[joint->type].KP;
     float kd = DOF_types[joint->type].KD;
     float ki = DOF_types[joint->type].KI;
-     
+
     /* PD CONTROL LAW */
 
     //Calculate error
@@ -92,7 +92,7 @@ void mpos_PD_control(struct DOF *joint, int reset_I)
 
     //Calculate integral term
     iTerm = errInt[joint->type] * ki;
-    
+
     //Calculate feedforward friction term
 //    errSign = err < 0 ? -1 : 1;
 //    if (fabs(err) >= eps) {
@@ -130,7 +130,7 @@ float jvel_PI_control(struct DOF *_joint, int resetI){
     kv[TOOL_ROT_GOLD] = kv[TOOL_ROT_GREEN] = (0.005/(15 DEG2RAD));
     kv[WRIST_GOLD]    = kv[WRIST_GREEN]    = 0;
     kv[GRASP1_GOLD]   = kv[GRASP1_GREEN]   = 0;
-    kv[GRASP2_GREEN]  = kv[GRASP2_GREEN]   = 0;
+    kv[GRASP2_GOLD]   = kv[GRASP2_GREEN]   = 0;
 
     static float jVelIntErr[MAX_MECH * MAX_DOF_PER_MECH];  // Integral of velocity error
 

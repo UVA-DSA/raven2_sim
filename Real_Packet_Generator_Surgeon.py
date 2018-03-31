@@ -145,7 +145,8 @@ def sendPackets():
     
     global robot_state
     while (robot_state == 0):
-		print "\rWaiting for Raven...",  
+        pass
+        #print('\rWaiting for Raven...')  
   
     # Send trajectory packets until the operation is done (e.g. until runlevel = 3 or for 9000 steps) 
     # Skip duplicate packets in the trajectory  
@@ -167,7 +168,7 @@ def sendPackets():
 					print_line = print_line + (str(float(line[dac_index+i]))+',')
 					print_line = print_line + (str(float(line[djpos_index+i])*(math.pi/180))+',')
 					print_line = print_line + (str(float(line[jpos_index+i])*(math.pi/180))+',')
-				print '(mpos,mvel,dac) = ' + print_line+'\n'			
+				print('(mpos,mvel,dac) = ' + print_line+'\n')			
 				for i in range(0,3):
 					print_line = print_line + (str(float(line[dpos_index+i]))+',')
 					print_line = print_line + (str(float(line[pos_index+i]))+',')

@@ -62,23 +62,23 @@
 
 
 #ifdef packetgen
-#define SERVER_PORT  "36001"             // used if the robot needs to send data to the server
+#define SERVER_PORT  "36001"             // used for packet_gen
 #else
-#define SERVER_PORT  "36000"             // used if the robot needs to send data to the server
+#define SERVER_PORT  "36000"             // used for gui
 #endif
 //#define SERVER_ADDR  "192.168.0.102"
 //#define SERVER_ADDR  "128.95.205.206"    // used only if the robot needs to send data to the server
-#define SERVER_ADDR  "130.126.143.20"
+//#define SERVER_ADDR  "130.126.143.20"
+#define SERVER_ADDR  "192.168.5.19"
 
-#ifdef packetgen
 extern int done_homing;
+#ifdef packetgen
 int first = 0;
 extern struct device device0;
 #define PACK_GEN_PORT  "32000"
 #define RUN_PY_PORT  "34000"
-#define HOST_ADDR  "127.0.0.1"    // used only if the robot needs to send data to the server
+#define HOST_ADDR  "127.0.0.1"    // used only if the robot needs to send data to the packet_gen
 #endif
-
 #ifdef save_logs
 extern int logging;
 #endif
@@ -177,6 +177,7 @@ volatile struct v_struct v;
   \param param1 void pointer
   \return void
   \ingroup Network
+  \todo do something with retval to keep the compiler from complaining 
 */
 void* network_process(void* param1)
 {
@@ -201,7 +202,7 @@ void* network_process(void* param1)
     volatile int bytesread;
 
     // print some status messages
-    log_msg("Starting network services..");
+    log_msg("Starting network services...");
     log_msg("  u_struct size: %i",uSize);
     log_msg("  Using default port %s",port);
 
@@ -249,6 +250,7 @@ void* network_process(void* param1)
         // wait for i/o lines to change state //
         // Select() examines the I/O descriptor sets whose addresses are passed in fe_sets and returns the total number of ready descriptors in all the sets
         nfound = select(maxfd+1, &rmask, (fd_set *)0, (fd_set *)0, &timeout);
+
         // Select error
         if (nfound < 0)
         {
@@ -261,7 +263,7 @@ void* network_process(void* param1)
             break;
         }
 
-// Select timeout: nothing to do
+        // Select timeout: nothing to do
         if (nfound == 0)
         {
 #ifdef packetgen
@@ -407,10 +409,16 @@ void* network_process(void* param1)
             else if (u.sequence > seq)       // Valid packet
             {
 #ifdef save_logs
-                log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
+                //log_msg("NETWORK) Receieved Valid Packet # %d", u.sequence);
+      		//log_msg("Pos Arm 0 = %d, %d, %d", u.delx[0], u.dely[0], u.delz[0]);
+      		//log_msg("Pos Arm 1 = %d, %d, %d", u.delx[1], u.dely[1], u.delz[1]);
                 //log_file("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 #endif
-				seq = u.sequence;
+                
+// Remember 
+		//log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
+
+		seq = u.sequence;
                 receiveUserspace(&u,uSize);   // coordinates transform from ITP frame to robot 0 frame
             }
 
@@ -442,7 +450,7 @@ void* network_process(void* param1)
 		sendto ( sock, (void*)&v, sizeof(v), 0,
 		(struct sockaddr *) &clientName, clientLength);
 		printf("=================> Sent Stopped to Packet Generator at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
-#ifdef dyn_simulator
+#ifdef simulator
 		clientName.sin_port = htons((u_short)atoi(RUN_PY_PORT));
 		inet_aton(HOST_ADDR, &clientName.sin_addr);
 		sendto ( sock, (void*)&v, sizeof(v), 0,
@@ -463,6 +471,29 @@ void* network_process(void* param1)
     log_msg("Network socket is shutdown.");
     return(NULL);
 } // main - server.c //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* int checkPacket(struct u_struct &u, int seq) */
 /* { */
