@@ -36,9 +36,9 @@
 const double base_tilt = 0 DEG2RAD;  // Accomodates for 25deg offset from zero angle in shoulder
 
 // Constant DH parameters
-const double go_dh_al[6] = {0,              -A12,   M_PI - A23,  0, M_PI/2, -M_PI/2};
+const double go_dh_al[6] = {0,              -A12_,   M_PI - A23_,  0, M_PI/2, -M_PI/2};
 const double go_dh_a[6]  = {0,              0,      0,         0, 0, 0 };
-const double gr_dh_al[6] = {M_PI,           A12,   A23,        M_PI, M_PI/2, M_PI/2};
+const double gr_dh_al[6] = {M_PI,           A12_,   A23_,        M_PI, M_PI/2, M_PI/2};
 const double gr_dh_a[6]  = {0,              0,      0,         0, 0, 0 };
 
 void invKin(struct device *device0, struct param_pass * currParam);

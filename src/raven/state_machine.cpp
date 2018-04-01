@@ -40,7 +40,7 @@ struct tms dummy_times;
  * \param device0 robot_device struct defined in DS0.h
  * \param currParam param_pass struct defined in DS1.h
  * \param rcvdParams param_pass struct
- * 
+ *
  * In SOFTWARE_RUNLEVEL mode, get desired runlevel from the rcvdParams.
  * In PLC_RUNLEVELS mode, get desired runlevel from the PLC via atmel inputs.
  * If the two PLC's give different runlevels, select  the lowest of the two.
@@ -64,6 +64,7 @@ void stateMachine(struct device *device0, struct param_pass *currParams, struct 
         tmp = ( device0->mech[i].inputs & (PIN_PS0 | PIN_PS1)) >> 6;
         if ( tmp < rlDesired )
         {
+
             rlDesired = tmp;
         }
     }
@@ -83,8 +84,9 @@ void stateMachine(struct device *device0, struct param_pass *currParams, struct 
     *rl = rlDesired;            // Update Run Level
     device0->runlevel = *rl;    // Log runlevels in DS0.
     log_msg("Entered runlevel %d", *rl);
-
-
+#ifdef save_logs
+    log_file("Entered runlevel %d", *rl);
+#endif
     if (*rl == RL_E_STOP)
     {
         if (soft_estopped)

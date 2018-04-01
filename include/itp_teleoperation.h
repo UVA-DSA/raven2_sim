@@ -37,8 +37,8 @@
 #define TELEOPERATION_H
 #define SURGEON_ENGAGED       1
 #define SURGEON_DISENGAGED    0
+#include "defines.h" 
 
-#define simulator
 /*
 u_struct : structure passed from master to slave.
 This struct defines an incremental movment packet type.
@@ -59,43 +59,40 @@ surgeon_mode    SURGEON_ENGAGED or SURGEON_DISENGAGED  (formerly Pedal_Down or P
 checksum
 */
 
+struct u_struct {
+	unsigned int sequence;
+	unsigned int pactyp;
+	unsigned int version;
+
+	int delx[2];
+	int dely[2];
+	int delz[2];
+#ifdef packetgen
+    double R_l[3][3];
+    double R_r[3][3];
 #ifdef simulator
-struct u_struct {
-	unsigned int sequence;
-	unsigned int pactyp;
-	unsigned int version;
-
-	int delx[2];
-	int dely[2];
-	int delz[2];
-        double R_l[3][3];
-        double R_r[3][3];
-	double ljoints[6];
-	double rjoints[6];
-	int buttonstate[2];
-	int grasp[2];
-	int surgeon_mode;
-	int checksum;
-}__attribute__((__packed__));
+	double jpos[16];
+	double jvel[16];
+	double mpos[16];
+	double mvel[16];
+#endif
+#ifdef detector
+	double jpos[16];
+	double jvel[16];
+	double mpos[16];
+	double mvel[16];
+#endif
 #else
-struct u_struct {
-	unsigned int sequence;
-	unsigned int pactyp;
-	unsigned int version;
-
-	int delx[2];
-	int dely[2];
-	int delz[2];
         double Qx[2];
         double Qy[2];
         double Qz[2];
         double Qw[2];
+#endif
 	int buttonstate[2];
 	int grasp[2];
 	int surgeon_mode;
 	int checksum;
 }__attribute__((__packed__));
-#endif
 
 /*
 v_struct: Return DS from slave to master.

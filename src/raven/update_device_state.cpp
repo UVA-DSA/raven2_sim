@@ -20,12 +20,11 @@
 #include "update_device_state.h"
 #include "log.h"
 
-#define simulator
-#ifdef simulator
-extern int program_state;
+#ifdef save_logs
 extern int logging;
 int curr_pack_no = 0;
 #endif
+
 
 extern struct DOF_type DOF_types[];
 extern struct traj trajectory[];
@@ -38,6 +37,8 @@ unsigned int newDofTorqueMech = 0;      // for setting torque from console
 unsigned int newDofTorqueDof = 0;       //
 int newDofTorqueTorque = 0;             // float for torque value in mNm
 t_controlmode newRobotControlMode = homing_mode;
+const static double d2r = M_PI/180; //degrees to radians
+const static double r2d = 180/M_PI; //radians to degrees
 
 /**
  * updateDeviceState - Function that update the device state based on parameters passed from
@@ -50,35 +51,35 @@ t_controlmode newRobotControlMode = homing_mode;
  */
 int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdParams, struct device *device0)
 {
-    ///log_msg("updateDeviceState %d", currParams->runlevel);///Added
+    //log_file("updateDeviceState %d", currParams->runlevel);///Added
     currParams->last_sequence = rcvdParams->last_sequence;
 
-#ifdef simulator
-    program_state = 5;
+#ifdef save_logs
     if ((currParams->last_sequence == 111) && (curr_pack_no == 0))
-	{
-		logging = 0;
+    {
+        logging = 0;
     }
     else
+    {
+	if (currParams->last_sequence != curr_pack_no)
 	{
-		if (currParams->last_sequence != curr_pack_no)
+		if (curr_pack_no !=0)		 	
 		{
-			if (curr_pack_no !=0)		 	
-			{
-				log_file("______________________________________________\n");
-			}
-			// Dropped
-			if (currParams->last_sequence > (curr_pack_no+1))
-			{
-				for (int i=curr_pack_no+1;i<currParams->last_sequence;i++)   {
-					log_file("Packet: %d\n", i);
-   					log_file("Error: Packet Dropped.\n");  
-					log_file("______________________________________________\n");	  
-		        }			
-			}
-			curr_pack_no = currParams->last_sequence;   
-			log_file("Packet: %d\n", curr_pack_no);  
+			log_file("______________________________________________\n");
 		}
+		// Dropped
+		if (currParams->last_sequence > (curr_pack_no+1))
+		{
+  		    for (int i=curr_pack_no+1;i<currParams->last_sequence;i++)   
+                    {
+			log_file("Packet: %d\n", i);
+			log_file("Error: Packet Dropped.\n");  
+			log_file ("______________________________________________\n");	  
+	            }			
+		}
+		curr_pack_no = currParams->last_sequence;   
+		log_file("Packet: %d\n", curr_pack_no);  
+	}
     }
 #endif
  
@@ -91,31 +92,32 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
         currParams->rd[i].pitch = rcvdParams->rd[i].pitch * WRIST_SCALE_FACTOR;
         currParams->rd[i].roll  = rcvdParams->rd[i].roll;
         currParams->rd[i].grasp = rcvdParams->rd[i].grasp;
+		// commented debug output
+    	//log_msg("Device State: Arm %d : User desired end-effector positions: (%d,%d,%d)", i, currParams->xd[i].x, currParams->xd[i].y, currParams->xd[i].z);  
+
     }
 
     // set desired mech position in pedal_down runlevel
     if (currParams->runlevel == RL_PEDAL_DN)
     {
+
 #ifdef simulator 
-        //log_file("RT_PROCESS) Pedal is down. Update device state.\n");         
-        //currParams->robotControlMode = cartesian_space_control;////Added
-	if (currParams->last_sequence == 1)
-	{
-	    device0->mech[0].joint[SHOULDER].jpos_d = rcvdParams->jpos_d[0];
-     	device0->mech[0].joint[ELBOW].jpos_d = rcvdParams->jpos_d[1];
-	    device0->mech[0].joint[Z_INS].jpos_d = rcvdParams->jpos_d[2];
-	    device0->mech[0].joint[TOOL_ROT].jpos_d = rcvdParams->jpos_d[3];
-	    device0->mech[0].joint[WRIST].jpos_d = rcvdParams->jpos_d[4];
-	    device0->mech[0].joint[GRASP1].jpos_d = rcvdParams->jpos_d[5];
-	    device0->mech[0].joint[GRASP2].jpos_d = rcvdParams->jpos_d[6];
-	    device0->mech[1].joint[SHOULDER].jpos_d = rcvdParams->jpos_d[7];
-     	device0->mech[1].joint[ELBOW].jpos_d = rcvdParams->jpos_d[8];
-	    device0->mech[1].joint[Z_INS].jpos_d = rcvdParams->jpos_d[9];
-	    device0->mech[1].joint[TOOL_ROT].jpos_d = rcvdParams->jpos_d[10];
-	    device0->mech[1].joint[WRIST].jpos_d = rcvdParams->jpos_d[11];
-	    device0->mech[1].joint[GRASP1].jpos_d = rcvdParams->jpos_d[12];
-	    device0->mech[1].joint[GRASP2].jpos_d = rcvdParams->jpos_d[13];
-	}
+		if (currParams->last_sequence == 1)
+		{
+			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
+		    for (int i = 0; i < NUM_MECH; i++)
+			{
+				for (int j = 0; j < 8; j++)
+				{
+				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
+					device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
+					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];			
+					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];	
+					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];			
+					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];			
+				}			
+			} 	    
+		}
 #endif
         for (int i = 0; i < NUM_MECH; i++)
         {
@@ -124,15 +126,13 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
             device0->mech[i].pos_d.z = rcvdParams->xd[i].z;
             device0->mech[i].ori_d.grasp  = rcvdParams->rd[i].grasp;
 
-
             for (int j=0;j<3;j++)
                 for (int k=0;k<3;k++)
-                device0->mech[i].ori_d.R[j][k]  = rcvdParams->rd[i].R[j][k];
-        }	
-
+	           device0->mech[i].ori_d.R[j][k]  = rcvdParams->rd[i].R[j][k];
+        }
     }
 
-     // Switch control modes only in pedal up or init.
+    // Switch control modes only in pedal up or init.
     if ( (currParams->runlevel == RL_E_STOP)   &&
          (currParams->robotControlMode != (int)newRobotControlMode) )
     {
@@ -160,13 +160,12 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
     {
         device0->surgeon_mode=rcvdParams->surgeon_mode; //store the surgeon_mode to DS0
     }
-#ifdef simulator
-/*    log_msg("Device desired end-effector positions: (%d,%d,%d)/(%d,%d,%d)",
-            device0->mech[0].pos_d.x, device0->mech[0].pos_d.y, device0->mech[0].pos_d.z,
-            device0->mech[1].pos_d.x, device0->mech[1].pos_d.y, device0->mech[1].pos_d.z);
-*/
-        //log_file("Current Control Mode: %d\n",currParams->robotControlMode);         
+#ifdef save_logs
+    //log_file("Surgoen mode = %d\n",device0->surgeon_mode);
+    //log_msg("-----> Runlevel = %d\n",currParams->runlevel);
+    //log_file("Current Control Mode: %d\n",currParams->robotControlMode);         
 #endif
+ 
     return 0;
 }
 

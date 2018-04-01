@@ -18,18 +18,20 @@
  */
 
 /**
- * utils.h
- *
- * Kenneth Fodero
- * Biorobotics Lab
- * 2005
- *
- */
+* 	\file utils.h
+*
+* 	\brief some common utility functions
+*
+* 	\author Kenneth Fodero
+* 
+* 	\date 2005
+*/
 
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
 #include <time.h>
+#include <string.h>
 
 #ifndef NULL
 #define NULL 0
@@ -48,7 +50,6 @@ int loop_over_joints(struct mechanism* _mech, struct DOF*& _joint, int& jnum);
 
 int toShort(int value, short int *target);
 void strtoken(char *str, char *result, char delim);
-void strcopy(const char *src, char *dest);
 
 int is_toolDOF(struct DOF*);
 int is_toolDOF(int);
@@ -59,9 +60,13 @@ const int _Qx=0, _Qy=1, _Qz=2, _Qw=3;
 void getQuaternion(float* Q, float mat[3][3]);
 
 /**
- * the struct timespec consists of nanoseconds
- * and seconds. This rolls over the ns to seconds.
- */
+*	\fn static inline void tsnorm(struct timespec *ts) 
+*
+*	\brief the struct timespec consists of nanoseconds
+* 		and seconds. This rolls over the ns to seconds.
+*
+*	\param ts 	timespec struct containing nanosec times to convert to sec
+*/
 #define NSEC_PER_SEC    1000000000          // nanoseconds per sec
 static inline void tsnorm(struct timespec *ts)
 {

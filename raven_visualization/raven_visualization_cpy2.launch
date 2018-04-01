@@ -1,0 +1,7 @@
+<launch>
+	<arg name="model" />
+	<param name="robot_description" textfile="$(arg model)" />
+	<!--Node name="joint_publisher" pkg="raven_visualization" type="joint_publisher" ></node-->
+	<node name="robot_state_publisher_cpy2" pkg="robot_state_publisher" type="state_publisher" />
+	<node name="rviz_cpy2" pkg="rviz" type="rviz" args="-d $(find raven_visualization)/ravenII_2arm.vcg" />
+</launch>

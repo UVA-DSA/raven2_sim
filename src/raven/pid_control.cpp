@@ -51,6 +51,11 @@
 extern struct DOF_type DOF_types[];
 extern unsigned long int gTime;
 
+#ifdef dyn_simulator
+#include <stdio.h>
+extern int runlevel;
+extern int packet_num;
+#endif
 /**
  * \brief calculates PD control (or PI) for
  */
@@ -100,16 +105,14 @@ void mpos_PD_control(struct DOF *joint, int reset_I)
     //Finally place torque
     joint->tau_d = pTerm + vTerm +iTerm + friction_feedforward;
 
-
-    static int count = 0;
-    if (count <100){
-    	log_msg("kp --> %d", kp);
-    	log_msg("pterm --> %f", pTerm);
-   	log_msg("joint->type --> %i", joint->type);
-    	log_msg("");
-
-    	count++;
-    }
+/*#ifdef dyn_simulator
+	if ((joint->type == 0) && (packet_num >= 1000) && (packet_num <= 1020))
+		printf("\nPacket %d = err = %f,errVel = %f, pTerm = %f, vTerm = %f, tau_d = %f\n",packet_num,err,errVel,pTerm,vTerm, joint->tau_d);
+#endif*/
+    /*if (joint->type < 2)
+	{
+		log_msg("Joint %d iTerm = %f, pTerm = %f, vTerm = %f, tau_d = %f\n",joint->type, iTerm,pTerm,vTerm, joint->tau_d); 
+	}*/
 }
 
 /**
@@ -127,7 +130,7 @@ float jvel_PI_control(struct DOF *_joint, int resetI){
     kv[TOOL_ROT_GOLD] = kv[TOOL_ROT_GREEN] = (0.005/(15 DEG2RAD));
     kv[WRIST_GOLD]    = kv[WRIST_GREEN]    = 0;
     kv[GRASP1_GOLD]   = kv[GRASP1_GREEN]   = 0;
-    kv[GRASP2_GREEN]  = kv[GRASP2_GREEN]   = 0;
+    kv[GRASP2_GOLD]   = kv[GRASP2_GREEN]   = 0;
 
     static float jVelIntErr[MAX_MECH * MAX_DOF_PER_MECH];  // Integral of velocity error
 

@@ -58,18 +58,34 @@
 #include "DS0.h"
 #include "DS1.h"
 #include "log.h"
+#include "defines.h"
 
-#define SERVER_PORT  "36000"             // used if the robot needs to send data to the server
+
+#ifdef packetgen
+#define SERVER_PORT  "36001"             // used for packet_gen
+#else
+#define SERVER_PORT  "36000"             // used for gui
+#endif
 //#define SERVER_ADDR  "192.168.0.102"
-#define SERVER_ADDR  "128.95.205.206"    // used only if the robot needs to send data to the server
+//#define SERVER_ADDR  "128.95.205.206"    // used only if the robot needs to send data to the server
+//#define SERVER_ADDR  "130.126.143.20"
+#define SERVER_ADDR  "192.168.5.19"
 
-#define simulator 
-#ifdef simulator
-extern int logging;
+extern int done_homing;
+#ifdef packetgen
 int first = 0;
-#define PACK_GEN_PORT  "32000" 
-#define RUN_PY_PORT  "34000"  
-#define HOST_ADDR  "127.0.0.1"    // used only if the robot needs to send data to the server
+extern struct device device0;
+#define PACK_GEN_PORT  "32000"
+#define RUN_PY_PORT  "34000"
+#define HOST_ADDR  "127.0.0.1"    // used only if the robot needs to send data to the packet_gen
+#endif
+#ifdef save_logs
+extern int logging;
+#endif
+
+#ifdef log_USB
+#include <fstream>
+extern std::ofstream NetworkPacketfile;
 #endif
 
 extern int receiveUserspace(void *u,int size);  // Defined in the local_io.cpp
@@ -161,6 +177,7 @@ volatile struct v_struct v;
   \param param1 void pointer
   \return void
   \ingroup Network
+  \todo do something with retval to keep the compiler from complaining 
 */
 void* network_process(void* param1)
 {
@@ -185,7 +202,7 @@ void* network_process(void* param1)
     volatile int bytesread;
 
     // print some status messages
-    log_msg("Starting network services..");
+    log_msg("Starting network services...");
     log_msg("  u_struct size: %i",uSize);
     log_msg("  Using default port %s",port);
 
@@ -248,36 +265,53 @@ void* network_process(void* param1)
 
         // Select timeout: nothing to do
         if (nfound == 0)
-        {          
-#ifdef simulator
-			if (first == 0)
+        {
+#ifdef packetgen
+#ifdef packetgen_restart
+            // To enable recieving packets again, set first
+			if (device0.runlevel == 0)
+				first = 0;
+#endif
+            if ((first == 0) && (device0.runlevel == 2))
 			{
-				char v[6] = "Ready";
-		        clientName.sin_port = htons((u_short)atoi(PACK_GEN_PORT));
+				done_homing = 0;
+	            char v[6] = "Ready";
+				clientName.sin_port = htons((u_short)atoi(PACK_GEN_PORT));
 				inet_aton(HOST_ADDR, &clientName.sin_addr);
-		        sendto ( sock, (void*)&v, sizeof(v), 0,
-		             (struct sockaddr *) &clientName, clientLength);          		
-		        printf("=================> Sent READY to Packet Generator at ADDR = %d, PORT = %d\n", clientName.sin_port, clientName.sin_addr);
-				first = 1;		        
+				sendto ( sock, (void*)&v, sizeof(v), 0,
+				(struct sockaddr *) &clientName, clientLength);
+#ifndef no_logging
+                printf("=================> Sent READY to Packet Generator at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
+#endif
 			}
-			else if (first == 1)
+
+			if ((first == 1) && (device0.runlevel == 2))
 			{
-				char v[6] = "Done!";
-		        clientName.sin_port = htons((u_short)atoi(RUN_PY_PORT));
+    			char v[6] = "Done!";
+				clientName.sin_port = htons((u_short)atoi(RUN_PY_PORT));
 				inet_aton(HOST_ADDR, &clientName.sin_addr);
-		        sendto ( sock, (void*)&v, sizeof(v), 0,
-		             (struct sockaddr *) &clientName, clientLength);          		
-		        printf("=================> Sent DONE to Run Injection at ADDR = %d, PORT = %d\n", clientName.sin_port, clientName.sin_addr);
-		        logging = 1;
-                log_file("______________________________________________\n");
-                logging = 0;
-				first = 2;		        
-			}			
+				sendto ( sock, (void*)&v, sizeof(v), 0,
+				     (struct sockaddr *) &clientName, clientLength);
+#ifndef no_logging
+				printf("=================> Sent DONE to Run Injection at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
+#endif
+#ifdef save_logs
+				logging = 0;
+#endif
+			        //log_file("______________________________________________\n");
+			        //logging = 0;
+                                first = 2;
+			}
 #endif
             fflush(stdout);
             continue;
         }
-       
+#ifdef packetgen
+        else {
+            first = 1;
+        }
+#endif
+
         // Select: data on socket
         if (FD_ISSET( sock, &rmask))   // check whether the diescriptor sock is added to the fdset mask
         {
@@ -287,12 +321,45 @@ void* network_process(void* param1)
                                  0,
                                  NULL,
                                  NULL);
+#ifdef log_USB
+        	for (int k = 0; k < uSize; k++)
+        	{
+        	    printf("%d ",(unsigned int)*((unsigned char*)(&u)+k));
+        	    NetworkPacketfile << (unsigned int)*((unsigned char*)(&u)+k) << " ";
+        	}
+        	printf("\n");
+        	NetworkPacketfile << "\n";
+#endif
 
-#ifdef simulator
-        //log_file("NETWORK) Receieved Data on Socket, Size = %d", uSize);         
+#ifdef mfi
+//MFI_HOOK
+//Conditions to check:
+//If robot state is pedal down:
+//if (device0.runlevel == 3)
+
+//Start at packet 10 and continue for 100 packets:
+//if ((u.sequence >= 10) && (u.sequence < 110))
+
+//Variables to change (single or multiple, within or outside range):
+//int u.delx[0], u.dely[0], u.delz[0] DONE(generate_u_delta_faults())
+//float R_l[3][3] DONE(generate_u_R_l_faults())
+//int surgeon_mode
+//Data files to find the ranges for variables are inside: /home/raven/homa_wksp/Tests/
+//Test_1, Test_2, Test_3 and others
+// Result: t[1.194307:-1.269246], s[3.141593:-3.141593], p[3.141592:-3.141585]
+
+#endif
+
+#ifdef save_logs
+      //log_msg("NETWORK) Receieved Data on Socket, Size = %d", uSize);
+      //log_msg("Pos Arm 0 = %d, %d, %d", u.delx[0], u.dely[0], u.delz[0]);
+      //log_msg("Pos Arm 1 = %d, %d, %d", u.delx[1], u.dely[1], u.delz[1]);
+
+
 #endif
             if (bytesread != uSize){
                 ROS_ERROR("ERROR: Rec'd wrong ustruct size on socket!\n");
+                log_msg("%d not %d",bytesread, uSize);
                 FD_CLR(sock, &rmask);   // remove the descriptor sock from fdset rmask
                 continue;
             }
@@ -340,11 +407,17 @@ void* network_process(void* param1)
             }
 
             else if (u.sequence > seq)       // Valid packet
-            {    
-#ifdef simulator
-                log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence); 
-                //log_file("NETWORK) Receieved Valid Packet # %d\n", u.sequence);         
+            {
+#ifdef save_logs
+                //log_msg("NETWORK) Receieved Valid Packet # %d", u.sequence);
+      		//log_msg("Pos Arm 0 = %d, %d, %d", u.delx[0], u.dely[0], u.delz[0]);
+      		//log_msg("Pos Arm 1 = %d, %d, %d", u.delx[1], u.dely[1], u.delz[1]);
+                //log_file("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 #endif
+                
+// Remember 
+		//log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
+
 		seq = u.sequence;
                 receiveUserspace(&u,uSize);   // coordinates transform from ITP frame to robot 0 frame
             }
@@ -367,7 +440,25 @@ void* network_process(void* param1)
                 retval = write(logFile,logbuffer, strlen(logbuffer));
             }
         }
-
+// code i need
+#ifdef packetgen_restart
+	if (device0.runlevel == 0)
+	{
+		char v[8] = "Stopped";
+		clientName.sin_port = htons((u_short)atoi(PACK_GEN_PORT));
+		inet_aton(HOST_ADDR, &clientName.sin_addr);
+		sendto ( sock, (void*)&v, sizeof(v), 0,
+		(struct sockaddr *) &clientName, clientLength);
+		printf("=================> Sent Stopped to Packet Generator at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
+#ifdef simulator
+		clientName.sin_port = htons((u_short)atoi(RUN_PY_PORT));
+		inet_aton(HOST_ADDR, &clientName.sin_addr);
+		sendto ( sock, (void*)&v, sizeof(v), 0,
+		(struct sockaddr *) &clientName, clientLength);
+		printf("=================> Sent E-Stopped to Run Injection at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
+#endif
+	}
+#endif
 #ifdef NET_SEND
         sendto ( sock, (void*)&v, vSize, 0,
                  (struct sockaddr *) &clientName, clientLength);

@@ -32,6 +32,8 @@
  **
  *********************************************/
 
+#include "tools.h"
+
 #ifndef DS0_H
 #define DS0_H
 //#define NUM_MECH 2
@@ -103,8 +105,8 @@ struct DOF {
   //  float mpos_old;
   float jvel; 		// actual DOF velocity(q-dot)
   float mvel;
-  float tau;		// actual DOF force/torque
-  float tau_d;		// desired DOF force/torque
+  float tau;		// actual DOF force/torque at joint
+  float tau_d;		// desired DOF force/torque at motor capstan after gearbox
   float tau_g;		// Estimated gravity force/torque on joint.
   float jpos_d;		// desired DOF coordinate (rad)
   float mpos_d;
@@ -115,6 +117,13 @@ struct DOF {
   int enc_offset;       // Encoder offset to "zero"
   float perror_int;     // integrated position error for joint space position control
 };
+
+
+/** Tool type enumerator used in old init method
+ *
+ *  \todo deprecate this structure in favor of new tool class
+ *
+ */
 
 typedef enum {TOOL_NONE,
 	TOOL_GRASPER_10MM,
@@ -134,6 +143,7 @@ typedef enum {TOOL_NONE,
 struct mechanism {
   u_16 type;
   e_tool_type tool_type;
+  tool mech_tool;
   struct position pos;
   struct position pos_d;
   struct position base_pos;     // base position in world frame

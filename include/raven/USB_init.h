@@ -34,6 +34,17 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <vector>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <errno.h>
+#include <paths.h>
+#include <termios.h>
+#include <sysexits.h>
+#include <sys/param.h>
+#include <sys/select.h>
+#include <sys/time.h>
+#include <time.h>
 
 #include "defines.h"
 #include "struct.h"
@@ -57,6 +68,7 @@ typedef struct
 
 } USBStruct;
 
+static struct termios gOriginalTTYAttrs;
 
 //Defines
 

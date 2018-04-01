@@ -76,26 +76,55 @@ using namespace std;
 #define MS  (1000 * US)
 #define SEC (1000 * MS)
 
-#define simulator
 
 //Global Variables
 unsigned long int gTime;
 int initialized=0;     // State initialized flag
 int soft_estopped=0;   // Soft estop flag- indicate desired software estop.
-
 int    deviceType = SURGICAL_ROBOT;//PULLEY_BOARD;
 struct device device0 ={0};  //Declaration Moved outside rt loop for access from console thread
 int    mech_gravcomp_done[2]={0};
 
-#ifdef simulator
-#include <fstream>
-int inject_mode;
+
+int done_homing = 0;
+#ifdef simulator // We might need to have this changed to pakcet_gen
 int NUM_MECH=2;   // Define NUM_MECH as a C variable, not a c++ variable
-int program_state = -1;
-int logging = 0;
-int no_pack_cnt = 0;
 #else
 int NUM_MECH=0;   // Define NUM_MECH as a C variable, not a c++ variable
+#endif
+
+#ifdef save_logs
+#include <fstream>
+char* raven_path = new char[100];
+char err_str[1024];
+int logging = 0;
+int no_pack_cnt = 0;
+int inject_mode;
+#endif
+
+#ifdef log_USB
+std::ofstream ReadUSBfile;
+std::ofstream WriteUSBfile;
+std::ofstream NetworkPacketfile;
+#endif
+
+#ifdef log_syscall
+std::ofstream SysCallTiming;
+int WriteSyscallfp;
+struct timespec t1, t2;
+#endif
+
+#ifdef dyn_simulator
+int wrfd,rdfd;
+char sim_buf[1024];
+int first_run = 0;
+int runlevel = 0;
+int packet_num = 111;
+#endif
+#ifdef detector
+double sim_mpos[3];
+double sim_mvel[3];
+double sim_jpos[3];
 #endif
 
 pthread_t rt_thread;
@@ -169,7 +198,7 @@ static void *rt_process(void* )
     {
       0
     };
-  struct timespec t, tnow, t2, tbz;                           // Tracks the timer value
+  struct timespec t, tnow, tnow2, t2, tbz;                           // Tracks the timer value
   int interval= 1 * MS;                        // task period in nanoseconds
 
   //CPU locking doesn't help timing.  Oh well.
@@ -200,8 +229,10 @@ static void *rt_process(void* )
   log_msg("Starting RT Process..");
 
   // Initializations (run here and again in init.cpp)
+#ifdef simulator
   device0.mech[0].type = GOLD_ARM;
   device0.mech[1].type = GREEN_ARM;
+#endif
   initDOFs(&device0);
 
 
@@ -217,13 +248,11 @@ static void *rt_process(void* )
   log_msg("*** Ready to teleoperate ***");
 
 
-
-
   // --- Main robot control loop ---
   // TODO: Break when board becomes disconnected.
   while (ros::ok() && !r2_kill)
   {
-
+      //printf("RealTime @= %lx\n", gTime);
       // Initiate USB Read
 #ifndef simulator
       initiateUSBGet(&device0);
@@ -231,6 +260,7 @@ static void *rt_process(void* )
       // Set next timer-shot (must be in future)
       clock_gettime(CLOCK_REALTIME,&tnow);
       int sleeploops = 0;
+
       while (isbefore(t,tnow))
         {
 	  t.tv_nsec+=interval;
@@ -238,13 +268,16 @@ static void *rt_process(void* )
 	  sleeploops++;
         }
       if (sleeploops!=1)
-	//std::cout<< "slplup"<< sleeploops <<std::endl;
+      {
+	std::cout<< "slplup"<< sleeploops <<std::endl;
+      }
 #ifndef simulator
       parport_out(0x00);
 #endif
       /// SLEEP until next timer shot
       clock_nanosleep(0, TIMER_ABSTIME, &t, NULL);
-#ifndef simulator      
+
+#ifndef simulator
       parport_out(0x03);
 #endif
       gTime++;
@@ -272,7 +305,9 @@ static void *rt_process(void* )
       clock_gettime(CLOCK_REALTIME,&t2);
       t2 = tsSubtract(t2, tnow);
       if (loops!=0)
+      {
 	std::cout<< "bzlup"<<loops<<"0us time:" << (double)t2.tv_sec + (double)t2.tv_nsec/SEC <<std::endl;
+      }
 
       //Run Safety State Machine
 #ifndef simulator
@@ -286,18 +321,25 @@ static void *rt_process(void* )
       //Get state updates from master
       if ( checkLocalUpdates() == TRUE)
       {
-#ifdef simulator
-   	    logging = 1;  
-        no_pack_cnt++; 
-        //log_file("RT_PROCESS) Update device state based on received packet.\n");         
+
+#ifdef packetgen
+#ifdef save_logs
+   	    logging = 1;
+        no_pack_cnt++;
 #endif
- 	     updateDeviceState(&currParams, getRcvdParams(&rcvdParams), &device0);
+        //log_file("RT_PROCESS) Update device state based on received packet.\n");
+#endif
+        updateDeviceState(&currParams, getRcvdParams(&rcvdParams), &device0);
+
       }
       else
       {
-#ifdef simulator
-   	    logging = 0;  
-        //log_file("RT_PROCESS) No new packets. Use previous parameters.\n");         
+
+#ifdef packetgen
+#ifdef save_logs
+      	logging = 0;
+#endif
+        //log_file("RT_PROCESS) No new packets. Use previous parameters.\n");
 #endif
         rcvdParams.runlevel = currParams.runlevel;
       }
@@ -307,29 +349,106 @@ static void *rt_process(void* )
 #endif
       //////////////// SURGICAL ROBOT CODE //////////////////////////
       if (deviceType == SURGICAL_ROBOT)
-        {
-#ifdef simulator
-	    program_state = 6;
-#endif
-	  // Calculate Raven control
-	  controlRaven(&device0, &currParams);
-        }
+      {
+  		// Calculate Raven control
+  		controlRaven(&device0, &currParams);
+      }
       //////////////// END SURGICAL ROBOT CODE ///////////////////////////
 
       // Check for overcurrent and impose safe torque limits
-      if (overdriveDetect(&device0))
+      if (overdriveDetect(&device0, currParams.runlevel))
       {
-	      soft_estopped = TRUE;
-	      showInverseKinematicsSolutions(&device0, currParams.runlevel);
-	      outputRobotState();
-      }
+		  soft_estopped = TRUE;
+		  showInverseKinematicsSolutions(&device0, currParams.runlevel);
+		  outputRobotState();
+#ifdef dyn_simulator
+#ifdef save_logs
+		  logging = 1;
+          log_file("ERROR: soft_estopped = %d\n",soft_estopped);
+		  logging = 0;
+#endif
+          //printf("ERROR: soft_estopped = %d\n",soft_estopped);
+          device0.runlevel = 0;
+		  //r2_kill = 1;
+		  //if (ros::ok()) ros::shutdown();
+		  //return 0;
+#endif
+       }
+
+
+
 
       //Update Atmel Output Pins
       updateAtmelOutputs(&device0, currParams.runlevel);
 
-#ifndef simulator  
-      //Fill USB Packet and send it out   
+#ifdef dyn_simulator
+        runlevel = currParams.runlevel;
+        packet_num = currParams.last_sequence;
+	    //Send the DACs, mvel, and mpos to the simulator
+		int i = 0;
+	    if (((runlevel == 3)) && (packet_num != 111))
+	    {
+				    // Send simulator input to FIFO
+				    sprintf(sim_buf, "%d %d %f %f %f %f %f %f %d %d %d", i, currParams.last_sequence,
+					  (double)device0.mech[i].joint[SHOULDER].mpos,
+					  (double)device0.mech[i].joint[ELBOW].mpos,
+					  (double)device0.mech[i].joint[Z_INS].mpos,
+					  (double)device0.mech[i].joint[SHOULDER].mvel,
+					  (double)device0.mech[i].joint[ELBOW].mvel,
+					  (double)device0.mech[i].joint[Z_INS].mvel,
+					  device0.mech[i].joint[SHOULDER].current_cmd,
+					  device0.mech[i].joint[ELBOW].current_cmd,
+					  device0.mech[i].joint[Z_INS].current_cmd);
+				    write(wrfd, sim_buf, sizeof(sim_buf));
+				//printf("Packet %d: Sent:\n%s\n",currParams.last_sequence,sim_buf);
+#ifndef no_logging
+        printf("Estimated (mpos,mvel):(%f, %f),(%f, %f),(%f, %f)\n",
+				device0.mech[i].joint[SHOULDER].mpos,
+				device0.mech[i].joint[SHOULDER].mvel,
+				device0.mech[i].joint[ELBOW].mpos,
+				device0.mech[i].joint[ELBOW].mvel,
+				device0.mech[i].joint[Z_INS].mpos,
+				device0.mech[i].joint[Z_INS].mvel);
+#endif
+
+#ifndef no_logging
+				    printf("\nPacket %d:\nSent DACs: %d,%d,%d, estop = %d\n",
+	 					currParams.last_sequence,
+						device0.mech[i].joint[SHOULDER].current_cmd,
+						device0.mech[i].joint[ELBOW].current_cmd,
+						device0.mech[i].joint[Z_INS].current_cmd,
+						soft_estopped);
+#endif
+	   }
+    //For debugging
+	  /*if ((packet_num < 2991) && (packet_num > 2970))
+	  {
+				printf("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
+				   packet_num,
+          (float)device0.mech[0].joint[SHOULDER].mpos,
+				  (float)device0.mech[0].joint[ELBOW].mpos,
+				  (float)device0.mech[0].joint[Z_INS].mpos,
+				  (float)device0.mech[0].joint[SHOULDER].mvel,
+				  (float)device0.mech[0].joint[ELBOW].mvel,
+				  (float)device0.mech[0].joint[Z_INS].mvel,
+				  (int)device0.mech[0].joint[SHOULDER].current_cmd,
+				  (s_16)device0.mech[0].joint[ELBOW].current_cmd,
+				  (s_16)device0.mech[0].joint[Z_INS].current_cmd);
+    }
+    if (currParams.last_sequence == 2988)
+	  {
+       r2_kill = 1;
+  	   if (ros::ok()) ros::shutdown();
+  		 return 0;
+    }*/
+#endif
+
+
+#ifndef simulator
+      //Fill USB Packet and send it out
       putUSBPackets(&device0); //disable usb for par port test
+#else
+    // Nothing
 #endif
       //Publish current raven state
       publish_ravenstate_ros(&device0,&currParams);   // from local_io
@@ -346,7 +465,10 @@ static void *rt_process(void* )
 */
 int init_module(void)
 {
-#ifndef simulator
+#ifdef simulator
+  device0.mech[0].type = GOLD_ARM;
+  device0.mech[1].type = GREEN_ARM;
+#else
   log_msg("Initializing USB I/O...");
 
   //Initiailze USB Board
@@ -375,7 +497,7 @@ int init_ros(int argc, char **argv)
    */
   ros::init(argc, argv, "r2_control", ros::init_options::NoSigintHandler);
   ros::NodeHandle n;
-#ifdef simulator
+#ifdef save_logs
   n.getParam("inject",inject_mode);
 #endif
   //    rosrt::init();
@@ -397,7 +519,7 @@ int main(int argc, char **argv)
   signal( SIGINT,&sigTrap);
 
   // set parallelport permissions
-#ifndef simulator  
+#ifndef simulator
   ioperm(PARPORT,1,1);
 #endif
   // init stuff (usb, local-io, rt-memory, etc.);
@@ -416,18 +538,49 @@ int main(int argc, char **argv)
       cerr << "ERROR! Failed to init memory_pool.  Exiting.\n";
       exit(1);
     }
-#ifdef simulator
+
+#ifdef save_logs
+  char* ROS_PACKAGE_PATH;
+  ROS_PACKAGE_PATH = getenv("ROS_PACKAGE_PATH");
+  if (ROS_PACKAGE_PATH!= NULL)
+  {
+     raven_path = strtok(ROS_PACKAGE_PATH,":");
+     while(raven_path!= NULL){
+	 if (strstr(raven_path,"raven_2") != NULL){
+             printf("%s\n",raven_path);
+	     break;
+         }
+	 raven_path = strtok(NULL,":");
+     }
+  }
+  log_msg("%s\n",raven_path);
+
+#ifndef no_logging
   std::ofstream logfile;
   log_msg("************** Inject mode = %d\n",inject_mode);
+
+  char buff[50];
   if (inject_mode == 0)
-      logfile.open("/home/homa/Documents/raven_2/sim_log.txt", std::ofstream::out);
+      sprintf(buff,"%s/sim_log.txt", raven_path);
   else
-  {
-      char buff[50];
-      sprintf(buff,"/home/homa/Documents/raven_2/fault_log_%d.txt",inject_mode);
-      logfile.open(buff,std::ofstream::out); 
-  }
-  //log_file("MAIN) Initiated ROS and Memory Pool.\n");     
+      sprintf(buff,"%s/fault_log_%d.txt", raven_path, inject_mode);
+  logfile.open(buff,std::ofstream::out);
+#endif
+
+#endif 
+
+
+#ifdef dyn_simulator
+    char wrfifo[20] = "/tmp/dac_fifo";
+    char rdfifo[20] = "/tmp/mpos_vel_fifo";
+    /* create the FIFO (named pipe) */
+    mkfifo(wrfifo, 0666);
+    log_msg("djpos FIFO Created..");
+    /* open, read, and display the message from the FIFO */
+    wrfd = open(wrfifo, O_WRONLY);
+    log_msg("Write FIFO Opened..");
+    rdfd = open(rdfifo, O_RDONLY);
+    log_msg("Read FIFO Opened..");
 #endif
 
   // init reconfigure
@@ -435,20 +588,27 @@ int main(int argc, char **argv)
   dynamic_reconfigure::Server<raven_2::MyStuffConfig>::CallbackType f;
   f = boost::bind(&reconfigure_callback, _1, _2);
   srv.setCallback(f);
-  
+
   pthread_create(&net_thread, NULL, network_process, NULL); //Start the network thread
   pthread_create(&console_thread, NULL, console_process, NULL);
   pthread_create(&rt_thread, NULL, rt_process, NULL);
 
 #ifdef simulator
-  //log_file("MAIN) Created and initiated threads.\n");         
+  //log_file("MAIN) Created and initiated threads.\n");
 #endif
-
   ros::spin();
 
-#ifndef simulator  
+#ifndef simulator
   USBShutdown();
 #endif
+
+#ifdef dyn_simulator
+  /* remove the FIFO */
+  unlink(wrfifo);
+  close(wrfd);
+  close(rdfd);
+#endif
+
   //Suspend main until all threads terminate
   pthread_join(rt_thread,NULL);
   pthread_join(console_thread, NULL);

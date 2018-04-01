@@ -34,10 +34,14 @@ endif()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
+find_package(Boost COMPONENTS system filesystem REQUIRED) 
+rosbuild_add_boost_directories()
 
 include_directories(src/raven)
 include_directories(include)
 include_directories(include/raven)
+find_package(cmake_modules REQUIRED)
+
 rosbuild_find_ros_package(dynamic_reconfigure)
 include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
 gencfg()
@@ -46,6 +50,8 @@ gencfg()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-result -Wno-missing-field-initializers")
 
 rosbuild_add_executable(r2_control
+# add arm dynamics
+#src/raven/two_arm_dyn.cpp
 #src/raven/asinw.cpp
 src/raven/dof.cpp
 src/raven/fwd_cable_coupling.cpp
@@ -84,4 +90,7 @@ src/raven/USB_init.cpp
 src/raven/utils.cpp
 src/raven/reconfigure.cpp
 #src/raven/velocity.cpp
+src/raven/tools.cpp
 )
+
+target_link_libraries(r2_control ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})

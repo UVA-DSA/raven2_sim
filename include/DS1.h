@@ -45,6 +45,10 @@ struct param_pass {
   int    dac_d[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];      // desired dac level
   float  jpos_d[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];     // desired joint coordinates
   float  jvel_d[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];     // desired joint velocity
+/// Simulator only
+  float  mpos_d[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];     // desired motor coordinates
+  float  mvel_d[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];     // desired motor velocity
+/// Simulator only
   float  kp[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];         // position gain
   float  kd[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];         // derivative gain
   struct position xd[MAX_MECH_PER_DEV];		                // desired end-point position

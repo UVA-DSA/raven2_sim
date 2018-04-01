@@ -1,6 +1,0 @@
-<launch>
-    <rosparam file="$(find raven_2)/params/r2params.yaml" command="load" output="screen" />
-    <arg name="inject_mode"/> 
-    <param name="inject" value="$(arg inject_mode)"/>
-    <node name ="r2_control" pkg="raven_2" type="r2_control" output="screen" launch-prefix="gdbserver localhost:1234"/>
-</launch>

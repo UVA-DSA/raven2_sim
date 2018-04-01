@@ -1,0 +1,704 @@
+<sdf version='1.4'>
+  <model name='raven_2'>
+    <static>true</static>
+    <link name='0_link'>
+      <pose>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='0_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.001 0.001</size>
+          </box>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <link name='base_link_L'>
+      <pose>0 0 0 1.57084 -1.13446 -1.57084</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='base_link_L_visual'>
+        <pose>0 0 0 -1.57075 1.57075 -1.57075</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/base_w_motors.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='camera_L' type='revolute'>
+      <child>base_link_L</child>
+      <parent>world</parent>
+      <axis>
+        <xyz>-1.95785e-05 -0.422618 0.906308</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='link1_L'>
+      <pose>0 0 0 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='link1_L_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/link1_w_cover.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='shoulder_L' type='revolute'>
+      <child>link1_L</child>
+      <parent>base_link_L</parent>
+      <axis>
+        <xyz>-1 0.000129574 -0.000288142</xyz>
+        <limit>
+          <lower>-3.1415</lower>
+          <upper>3.1415</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='link2_L'>
+      <pose>0 0 0 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='link2_L_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/link2.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='elbow_L' type='revolute'>
+      <child>link2_L</child>
+      <parent>link1_L</parent>
+      <axis>
+        <xyz>-0.258894 0.96367 0.066294</xyz>
+        <limit>
+          <lower>-3.1415</lower>
+          <upper>3.1415</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='link3_L'>
+      <pose>0 0 0 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='link3_L_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/link3.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='insertion_L' type='prismatic'>
+      <child>link3_L</child>
+      <parent>link2_L</parent>
+      <axis>
+        <xyz>-0.601287 -0.797066 -0.0558799</xyz>
+        <limit>
+          <lower>-0.17</lower>
+          <upper>0.1</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='instrument_shaft_L'>
+      <pose>0 0 0 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='instrument_shaft_L_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/instrument_shaft.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='tool_roll_L' type='revolute'>
+      <child>instrument_shaft_L</child>
+      <parent>link3_L</parent>
+      <axis>
+        <xyz>-0.601287 -0.797066 -0.0558799</xyz>
+        <limit>
+          <lower>-3.1415</lower>
+          <upper>3.1415</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='wrist_L'>
+      <pose>0 0 0 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='wrist_L_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/wrist.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='wrist_joint_L' type='revolute'>
+      <child>wrist_L</child>
+      <parent>instrument_shaft_L</parent>
+      <axis>
+        <xyz>-0.563863 0.377117 0.734738</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='grasper1_L'>
+      <pose>0.00680139 0.0101024 -0.000274083 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='grasper1_L_visual'>
+        <pose>-0.0068 -0.00904 0.00452 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/grasper_1.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='grasper_joint_1_L' type='revolute'>
+      <child>grasper1_L</child>
+      <parent>wrist_L</parent>
+      <axis>
+        <xyz>-0.564544 0.472907 -0.676502</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='grasper2_L'>
+      <pose>0.00680139 0.0101024 -0.000274083 0.436332 -0.000288142 -0.000129574</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='grasper2_L_visual'>
+        <pose>-0.0068 -0.00904 0.00452 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/left_arm/grasper_2.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='grasper_joint_2_L' type='revolute'>
+      <child>grasper2_L</child>
+      <parent>wrist_L</parent>
+      <axis>
+        <xyz>0.564544 -0.472907 0.676502</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='base_link_R'>
+      <pose>-0.2 0 0 -1.57084 -1.13446 -1.57084</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='base_link_R_visual'>
+        <pose>0 0 1 3.1415 -1.57075 -1.46271e-16</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/base_w_motors.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='camera_R' type='revolute'>
+      <child>base_link_R</child>
+      <parent>world</parent>
+      <axis>
+        <xyz>-1.95785e-05 -0.422618 0.906308</xyz>
+        <limit>
+          <lower>0</lower>
+          <upper>0</upper>
+          <effort>0</effort>
+          <velocity>0</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='link1_R'>
+      <pose>-0.2 0 0 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='link1_R_visual'>
+        <pose>1 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/link1_w_cover.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='shoulder_R' type='revolute'>
+      <child>link1_R</child>
+      <parent>base_link_R</parent>
+      <axis>
+        <xyz>-1 0.000107892 -2.24078e-05</xyz>
+        <limit>
+          <lower>-3.1415</lower>
+          <upper>3.1415</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='link2_R'>
+      <pose>-0.2 0 0 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='link2_R_visual'>
+        <pose>1 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/link2.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='elbow_R' type='revolute'>
+      <child>link2_R</child>
+      <parent>link1_R</parent>
+      <axis>
+        <xyz>-0.259102 -0.963615 -0.0662851</xyz>
+        <limit>
+          <lower>-3.1415</lower>
+          <upper>3.1415</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='link3_R'>
+      <pose>-0.2 0 0 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='link3_R_visual'>
+        <pose>1 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/link3.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='insertion_R' type='prismatic'>
+      <child>link3_R</child>
+      <parent>link2_R</parent>
+      <axis>
+        <xyz>0.601115 -0.797213 -0.0556193</xyz>
+        <limit>
+          <lower>-0.17</lower>
+          <upper>0.1</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='instrument_shaft_R'>
+      <pose>-0.2 0 0 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='instrument_shaft_R_visual'>
+        <pose>1 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/instrument_shaft.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='tool_roll_R' type='revolute'>
+      <child>instrument_shaft_R</child>
+      <parent>link3_R</parent>
+      <axis>
+        <xyz>-0.601115 0.797213 0.0556193</xyz>
+        <limit>
+          <lower>-3.1415</lower>
+          <upper>3.1415</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='wrist_R'>
+      <pose>-0.2 0 0 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='wrist_R_visual'>
+        <pose>1 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/wrist.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='wrist_joint_R' type='revolute'>
+      <child>wrist_R</child>
+      <parent>instrument_shaft_R</parent>
+      <axis>
+        <xyz>0.563724 0.377051 0.734878</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='grasper1_R'>
+      <pose>-0.206799 0.010104 -0.000277131 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='grasper1_R_visual'>
+        <pose>1.0068 -0.00904 0.00452 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/grasper_1.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='grasper_joint_1_R' type='revolute'>
+      <child>grasper1_R</child>
+      <parent>wrist_R</parent>
+      <axis>
+        <xyz>-0.564841 -0.214039 0.796962</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+    <link name='grasper2_R'>
+      <pose>-0.206799 0.010104 -0.000277131 0.43624 -2.24078e-05 -0.000107892</pose>
+      <inertial>
+        <pose>0 0 1 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <visual name='grasper2_R_visual'>
+        <pose>1.0068 -0.00904 0.00452 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://raven_visualization/Raven_files/right_arm/grasper_2.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+    </link>
+    <joint name='grasper_joint_2_R' type='revolute'>
+      <child>grasper2_R</child>
+      <parent>wrist_R</parent>
+      <axis>
+        <xyz>0.564866 0.472711 -0.676371</xyz>
+        <limit>
+          <lower>-2</lower>
+          <upper>2</upper>
+          <effort>1000</effort>
+          <velocity>0.5</velocity>
+        </limit>
+        <dynamics/>
+      </axis>
+    </joint>
+  </model>
+</sdf>

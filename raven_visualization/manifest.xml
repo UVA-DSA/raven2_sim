@@ -1,0 +1,16 @@
+<package>
+  <description brief="raven_visualization">
+
+     raven_visualization
+
+  </description>
+  <author>sina</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/raven_visualization</url>
+  <depend package="roscpp"/>
+  <depend package="sensor_msgs"/>
+
+</package>
+
+

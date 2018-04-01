@@ -29,6 +29,14 @@
 
 #include <math.h>
 
+// Simulator Macros
+//#define simulator // running with no hardware
+//#define dyn_simulator // run the dynamic models
+//#define packetgen  // use packet generator instead of GUI
+//#define packetgen_restart // packet generator can restart after an E-STOP
+#define save_logs // save trajectory logs into sim_log.txt
+//#define no_logging // disable logging
+
 #define RAVEN_MODULE_VERSION RAVEN_II_RELEASE_02
 #define device robot_device
 
@@ -36,21 +44,27 @@
 #define RAVEN_II        	1
 //#define KIST
 
+//~~~~~~~~~ tool adapter definition ~~~~~~~~~~~~~~~~
+
 #define RAVEN_TOOLS
 //#define DV_ADAPTER			1
-//#define RAVEN_II_SQUARE    1 //for Santa Cruz style tool carriage
-//#define RICKS_TOOLS
-
-//#undef RAVEN_TOOLS
-#undef DV_ADAPTER
-#undef RAVEN_II_SQUARE
-#undef RICKS_TOOLS
+//#define RICKS_TOOLS     //skips tool initialization //not supported since switch to tools.h?
+//#define SCISSOR_RIGHT
+//#define OPPOSE_GRIP
 
 
+//~~~~~~~~~ USB Board definition ~~~~~~~~~~~~~~~~~~~
 // Two arm identification
 // Change this to match device ID in /dev/brl_usbXX
-#define GREEN_ARM_SERIAL 37
-#define GOLD_ARM_SERIAL  29
+#define GREEN_ARM_SERIAL 10
+#define GOLD_ARM_SERIAL  25
+
+//~~~~~~~~ Other settings, experts only ~~~~~~~~~~~~
+#define NO_LPF    // This setting short circuits the Low Pass Filter in state_estimate.cpp
+//#define OMNI_GAIN  2  // Get a little more oomph out of the omni grasping button - sets a gain in local__io.cpp
+//#define ORIENTATION_V
+
+//~~~~~~~~ Other defines ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #define GREEN_ARM        GREEN_ARM_SERIAL
 #define GOLD_ARM         GOLD_ARM_SERIAL
@@ -186,6 +200,14 @@
 // TR6 : Sixth joint, Grasper jaw 1
 // TR7 : Seventh joint, Grasper jaw 2
 //    This is most critical in init.cpp - initDOFparams() and
+//
+// USES:
+// ~~ Torque_motor * TR = Torque_joint
+// ~~ m_pos / TR = j_pos
+//
+// Be careful, tau_per_amp calculated in init.cpp also includes gearbox ratio
+
+
 #define SHOULDER_TR_GREEN_ARM (float)( (PARTIAL_PULLEY_LINK1_RADIUS/CAPSTAN_RADIUS_GP42) * GEAR_BOX_GP42_TR) // RE-40, GP-42 // UNITLESS
 #define ELBOW_TR_GREEN_ARM    (float)( (PARTIAL_PULLEY_LINK2_RADIUS/CAPSTAN_LINK2_SMALL_RADIUS)  *  (CAPSTAN_LINK2_LARGE_RADIUS/CAPSTAN_RADIUS_GP42) * GEAR_BOX_GP42_TR) // RE-40, GP-42 // UNITLESS
 #define Z_INS_TR_GREEN_ARM    (float)( (1.0/((2*M_PI*CAPSTAN_RADIUS_GP42)/1000.0)) * GEAR_BOX_GP42_TR *2*M_PI) // UNITS: rad/meter  Note: 2pi cancels
@@ -203,8 +225,8 @@
 #define GRASP2_TR_GOLD_ARM     (GRASP2_TR_GREEN_ARM)
 
 //Link Angles/Lengths
-#define A12 (float)(1.30899694)    /*Link1 - 75deg in RAD*/
-#define A23 (float)(0.907571211)    /*Link2 - 52deg in RAD - was set to 60*/
+#define A12_ (float)(1.30899694)    /*Link1 - 75deg in RAD*/
+#define A23_ (float)(0.907571211)    /*Link2 - 52deg in RAD - was set to 60*/
 
 //Kinematic Zero Offset (encoder space)
 #define SHOULDER_GOLD_KIN_OFFSET (float)(0.0) //(62.0)
@@ -232,6 +254,9 @@
 #define ELBOW_MIN_LIMIT (float)(  45.0 DEG2RAD)
 #define ELBOW_MAX_LIMIT (float)( 135.0 DEG2RAD)
 
+#define Z_INS_MIN_LIMIT (float) 0.23 //meters (-0.230)
+#define Z_INS_MAX_LIMIT (float) 0.56 //meters ( 0.010)
+
 /*#define TOOL_GRASP1_MIN_LIMIT (float)(-45.0 DEG2RAD)
 #define TOOL_GRASP1_MAX_LIMIT (float)( 45.0 DEG2RAD)
 #define TOOL_GRASP2_MIN_LIMIT (float)(-45.0 DEG2RAD)
@@ -255,24 +280,53 @@
 #define GRASP2_MAX_DAC     4500  // up from 2000 on 10/10/2013 //up from 2500 on 2/28/14
 
 #else
-#define MAX_INST_DAC 20000 //32000
+
+//everything but square RAVEN
+#define MAX_INST_DAC 12000//20000 //32000
 
 // Doubled position joints 4-Apr-2013 by HK
 #define SHOULDER_MAX_DAC   5000   // 2000 usually moves 1000 doesn't
 #define ELBOW_MAX_DAC      5000   //  ""
 #define Z_INS_MAX_DAC      4000   //  1000 moves but doesn't overcome friction in tool joints
 #define TOOL_ROT_MAX_DAC   3000  // 10000   These are set really low for safety sake
-#define WRIST_MAX_DAC      1900  // 20000
-#define GRASP1_MAX_DAC     2400  // 15000
-#define GRASP2_MAX_DAC     2400
+#define WRIST_MAX_DAC      3000  // 20000
+#define GRASP1_MAX_DAC     3800  // 15000
+#define GRASP2_MAX_DAC     3800
 
 
 #endif
 
 
+//~~~~~~~~ SAFETY LEVEL AND POLICY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#define NO_REGULATION	0  // print and do nothing (WARNING: NOT RECOMMENDED)
+#define SOFT_REGULATION	1  // print and clip current
+#define HARD_REGULATION	2  // print and Estop
+
+#define BEGINNER_MODE	0
+#define MODERATE_MODE	1
+#define ADVANCED_MODE	2
+
+#define BEGINNER_SHOULDER_MAX_DAC   1500   // support circle motion speed up to level ~20
+#define BEGINNER_ELBOW_MAX_DAC      1500
+#define BEGINNER_Z_INS_MAX_DAC      1000
+
+#define MODERATE_SHOULDER_MAX_DAC   2500   // support circle motion speed up to level ~30
+#define MODERATE_ELBOW_MAX_DAC      2500
+#define MODERATE_Z_INS_MAX_DAC      2000
+
+#define ADVANCED_SHOULDER_MAX_DAC   5000   // support circle motion speed up to level ~45
+#define ADVANCED_ELBOW_MAX_DAC      5000
+#define ADVANCED_Z_INS_MAX_DAC      4000
+
+// Our choice of the safety level and policy for RAVEN teleoperation
+#define SAFETY_POLICY	SOFT_REGULATION // User can change this! (this value is used in overdrive_detect.cpp)
+#define SAFETY_LEVEL	BEGINNER_MODE 	// User can change this! (this value is used in init.cpp)
+
+
+
 #define SHOULDER_MAX_ANGLE   0.0
 #define ELBOW_MAX_ANGLE      3*M_PI/4 + (2.5*M_PI/180)
-
+#define Z_INS_MAX_ANGLE      0.562
 
 
 #define SHOULDER_HOME_ANGLE   M_PI/6

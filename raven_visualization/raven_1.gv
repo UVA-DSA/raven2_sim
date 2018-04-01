@@ -1,0 +1,29 @@
+digraph G {
+node [shape=box];
+"0_link" [label="0_link"];
+"base_link_L" [label="base_link_L"];
+"link1_L" [label="link1_L"];
+"link2_L" [label="link2_L"];
+"link3_L" [label="link3_L"];
+"instrument_shaft_L" [label="instrument_shaft_L"];
+"wrist_L" [label="wrist_L"];
+"grasper1_L" [label="grasper1_L"];
+"grasper2_L" [label="grasper2_L"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"0_link" -> "camera_L" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"camera_L" -> "base_link_L"
+"base_link_L" -> "shoulder_L" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"shoulder_L" -> "link1_L"
+"link1_L" -> "elbow_L" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"elbow_L" -> "link2_L"
+"link2_L" -> "insertion_L" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"insertion_L" -> "link3_L"
+"link3_L" -> "tool_roll_L" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"tool_roll_L" -> "instrument_shaft_L"
+"instrument_shaft_L" -> "wrist_joint_L" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"wrist_joint_L" -> "wrist_L"
+"wrist_L" -> "grasper_joint_1_L" [label="xyz: 0.0068 0.00904 -0.00452 \nrpy: 0 -0 0"]
+"grasper_joint_1_L" -> "grasper1_L"
+"wrist_L" -> "grasper_joint_2_L" [label="xyz: 0.0068 0.00904 -0.00452 \nrpy: 0 -0 0"]
+"grasper_joint_2_L" -> "grasper2_L"
+}
