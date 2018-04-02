@@ -121,7 +121,6 @@ struct timespec t1, t2;
 #ifdef dyn_simulator
 int wrfd,rdfd;
 char sim_buf[1024];
-int first_run = 0;
 int runlevel = 0;
 int packet_num = 111;
 #endif
@@ -386,6 +385,7 @@ static void *rt_process(void* )
       updateAtmelOutputs(&device0, currParams.runlevel);
 
 #ifdef dyn_simulator
+		// Local variables
         runlevel = currParams.runlevel;
         packet_num = currParams.last_sequence;
 	    //Send the DACs, mvel, and mpos to the simulator
