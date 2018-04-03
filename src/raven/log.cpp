@@ -71,12 +71,12 @@ int log_file(const char* fmt,...)
 #endif
 	if ((strstr(buf,"ERROR") || strstr(buf,"Error") || strstr(buf,"rror")) && !strstr(buf,"Packet"))
 	{
-	   sprintf(buf, "%s;",buf);
+	   //sprintf(buf, "%s;",buf);
        if (err_str[0] != '\0')
 	       strcat(err_str, buf);
 	   else
 		   strcpy(err_str, buf);
-	   //printf("%s\n",err_str);
+	   printf("HELLO = %s END\n",err_str);
 	}
 	// Print on console
 	//ROS_INFO("%s",buf);

@@ -9,7 +9,7 @@ import genpy
 import std_msgs.msg
 
 class raven_state(genpy.Message):
-  _md5sum = "8cfa3eaa599c3f37ad2f9a9d1469687d"
+  _md5sum = "f0370e49caffda1d79af0d5849568123"
   _type = "raven_2/raven_state"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """Header      hdr
@@ -23,7 +23,7 @@ float32[18]   ori_d
 int32[6]    pos_d
 duration    dt
 int32[16]   encVals
-int32[16]   dac_val
+int32[16]   dac_val	
 float32[16] tau
 float32[16] mpos
 float32[16] jpos
@@ -35,10 +35,11 @@ float32[16] jpos_d
 float32[2]  grasp_d
 float32[16] encoffsets
 int32[16] current_cmd
-char[1024] err_msg
 float32[3] sim_mpos
 float32[3] sim_mvel
 float32[3] sim_jpos
+char[1024] err_msg
+
 ================================================================================
 MSG: std_msgs/Header
 # Standard metadata for higher-level stamped data types.
@@ -57,8 +58,8 @@ time stamp
 # 1: global frame
 string frame_id
 """
-  __slots__ = ['hdr','runlevel','sublevel','last_seq','type','pos','ori','ori_d','pos_d','dt','encVals','dac_val','tau','mpos','jpos','mvel','mvel_d','jvel','mpos_d','jpos_d','grasp_d','encoffsets','current_cmd','err_msg','sim_mpos','sim_mvel','sim_jpos']
-  _slot_types = ['std_msgs/Header','int32','int32','int32','int32[2]','int32[6]','float32[18]','float32[18]','int32[6]','duration','int32[16]','int32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[2]','float32[16]','int32[16]','char[1024]','float32[3]','float32[3]','float32[3]']
+  __slots__ = ['hdr','runlevel','sublevel','last_seq','type','pos','ori','ori_d','pos_d','dt','encVals','dac_val','tau','mpos','jpos','mvel','mvel_d','jvel','mpos_d','jpos_d','grasp_d','encoffsets','current_cmd','sim_mpos','sim_mvel','sim_jpos','err_msg']
+  _slot_types = ['std_msgs/Header','int32','int32','int32','int32[2]','int32[6]','float32[18]','float32[18]','int32[6]','duration','int32[16]','int32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[2]','float32[16]','int32[16]','float32[3]','float32[3]','float32[3]','char[1024]']
 
   def __init__(self, *args, **kwds):
     """
@@ -68,7 +69,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       hdr,runlevel,sublevel,last_seq,type,pos,ori,ori_d,pos_d,dt,encVals,dac_val,tau,mpos,jpos,mvel,mvel_d,jvel,mpos_d,jpos_d,grasp_d,encoffsets,current_cmd,err_msg,sim_mpos,sim_mvel,sim_jpos
+       hdr,runlevel,sublevel,last_seq,type,pos,ori,ori_d,pos_d,dt,encVals,dac_val,tau,mpos,jpos,mvel,mvel_d,jvel,mpos_d,jpos_d,grasp_d,encoffsets,current_cmd,sim_mpos,sim_mvel,sim_jpos,err_msg
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -123,14 +124,14 @@ string frame_id
         self.encoffsets = [0.] * 16
       if self.current_cmd is None:
         self.current_cmd = [0] * 16
-      if self.err_msg is None:
-        self.err_msg = b'\0'*1024
       if self.sim_mpos is None:
         self.sim_mpos = [0.] * 3
       if self.sim_mvel is None:
         self.sim_mvel = [0.] * 3
       if self.sim_jpos is None:
         self.sim_jpos = [0.] * 3
+      if self.err_msg is None:
+        self.err_msg = b'\0'*1024
     else:
       self.hdr = std_msgs.msg.Header()
       self.runlevel = 0
@@ -155,10 +156,10 @@ string frame_id
       self.grasp_d = [0.] * 2
       self.encoffsets = [0.] * 16
       self.current_cmd = [0] * 16
-      self.err_msg = b'\0'*1024
       self.sim_mpos = [0.] * 3
       self.sim_mvel = [0.] * 3
       self.sim_jpos = [0.] * 3
+      self.err_msg = b'\0'*1024
 
   def _get_types(self):
     """
@@ -202,15 +203,15 @@ string frame_id
       buff.write(_get_struct_2f().pack(*self.grasp_d))
       buff.write(_get_struct_16f().pack(*self.encoffsets))
       buff.write(_get_struct_16i().pack(*self.current_cmd))
+      buff.write(_get_struct_3f().pack(*self.sim_mpos))
+      buff.write(_get_struct_3f().pack(*self.sim_mvel))
+      buff.write(_get_struct_3f().pack(*self.sim_jpos))
       _x = self.err_msg
       # - if encoded as a list instead, serialize as bytes instead of string
       if type(_x) in [list, tuple]:
         buff.write(_get_struct_1024B().pack(*_x))
       else:
         buff.write(_get_struct_1024s().pack(_x))
-      buff.write(_get_struct_3f().pack(*self.sim_mpos))
-      buff.write(_get_struct_3f().pack(*self.sim_mvel))
-      buff.write(_get_struct_3f().pack(*self.sim_jpos))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -301,9 +302,6 @@ string frame_id
       end += 64
       self.current_cmd = _get_struct_16i().unpack(str[start:end])
       start = end
-      end += 1024
-      self.err_msg = str[start:end]
-      start = end
       end += 12
       self.sim_mpos = _get_struct_3f().unpack(str[start:end])
       start = end
@@ -312,6 +310,9 @@ string frame_id
       start = end
       end += 12
       self.sim_jpos = _get_struct_3f().unpack(str[start:end])
+      start = end
+      end += 1024
+      self.err_msg = str[start:end]
       self.dt.canon()
       return self
     except struct.error as e:
@@ -355,15 +356,15 @@ string frame_id
       buff.write(self.grasp_d.tostring())
       buff.write(self.encoffsets.tostring())
       buff.write(self.current_cmd.tostring())
+      buff.write(self.sim_mpos.tostring())
+      buff.write(self.sim_mvel.tostring())
+      buff.write(self.sim_jpos.tostring())
       _x = self.err_msg
       # - if encoded as a list instead, serialize as bytes instead of string
       if type(_x) in [list, tuple]:
         buff.write(_get_struct_1024B().pack(*_x))
       else:
         buff.write(_get_struct_1024s().pack(_x))
-      buff.write(self.sim_mpos.tostring())
-      buff.write(self.sim_mvel.tostring())
-      buff.write(self.sim_jpos.tostring())
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -455,9 +456,6 @@ string frame_id
       end += 64
       self.current_cmd = numpy.frombuffer(str[start:end], dtype=numpy.int32, count=16)
       start = end
-      end += 1024
-      self.err_msg = str[start:end]
-      start = end
       end += 12
       self.sim_mpos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=3)
       start = end
@@ -466,6 +464,9 @@ string frame_id
       start = end
       end += 12
       self.sim_jpos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=3)
+      start = end
+      end += 1024
+      self.err_msg = str[start:end]
       self.dt.canon()
       return self
     except struct.error as e:

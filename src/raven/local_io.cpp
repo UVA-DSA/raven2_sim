@@ -584,6 +584,7 @@ void publish_ravenstate_ros(struct robot_device *dev,struct param_pass *currPara
 	    msg_ravenstate.dac_val[jtype]   = dev->mech[j].joint[i].current_cmd;
         }
     }
+
 //    msg_ravenstate.f_secs = d.toSec();
     msg_ravenstate.hdr.stamp = msg_ravenstate.hdr.stamp.now();
     msg_ravenstate.runlevel=currParams->runlevel;
@@ -592,7 +593,7 @@ void publish_ravenstate_ros(struct robot_device *dev,struct param_pass *currPara
 #ifdef save_logs
 	for (int i = 0; i < 1024; i++)
 		if ((err_str[i] != '\n') && (err_str[i] != '\0'))
-	    	msg_ravenstate.err_msg[i] = err_str[i];
+	    	msg_ravenstate.err_msg[i] = err_str[i];		
     err_str[0] = '\0';
 #endif
 #ifdef detector

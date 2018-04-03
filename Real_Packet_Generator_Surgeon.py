@@ -108,7 +108,8 @@ def sendPackets():
     global seq
     csvfile = open(teleop_home+'/new_test_'+str(traj.split('traj')[1])+'.csv','r');    
     outfile = open('./robot_run.csv','w');
-    reader = csv.reader(csvfile)
+    #reader = csv.reader(csvfile)
+    reader = csv.reader(x.replace('\0', '') for x in csvfile)
     writer = csv.writer(outfile,delimiter=',')
     headers = reader.next()
     writer.writerow(headers)
@@ -134,7 +135,10 @@ def sendPackets():
     line_no = 0;
     line = [];
     while (runlevel < 3) or (packet_num == 111) or (packet_num == 0):
-        line = reader.next()
+        try:
+        	line = reader.next()
+        except Exception: 
+            print line
         line_no = line_no+1
         runlevel = int(line[runlevel_index])
         packet_num = int(line[packet_index])
