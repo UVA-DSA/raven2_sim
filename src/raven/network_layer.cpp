@@ -280,9 +280,9 @@ void* network_process(void* param1)
 				inet_aton(HOST_ADDR, &clientName.sin_addr);
 				sendto ( sock, (void*)&v, sizeof(v), 0,
 				(struct sockaddr *) &clientName, clientLength);
-#ifndef no_logging
+//#ifndef no_logging
                 printf("=================> Sent READY to Packet Generator at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
-#endif
+//#endif
 			}
 
 			if ((first == 1) && (device0.runlevel == 2))
@@ -292,9 +292,9 @@ void* network_process(void* param1)
 				inet_aton(HOST_ADDR, &clientName.sin_addr);
 				sendto ( sock, (void*)&v, sizeof(v), 0,
 				     (struct sockaddr *) &clientName, clientLength);
-#ifndef no_logging
+//#ifndef no_logging
 				printf("=================> Sent DONE to Run Injection at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
-#endif
+//#endif
 #ifdef save_logs
 				logging = 0;
 #endif
@@ -442,22 +442,22 @@ void* network_process(void* param1)
         }
 // code i need
 #ifdef packetgen_restart
-	if (device0.runlevel == 0)
-	{
-		char v[8] = "Stopped";
-		clientName.sin_port = htons((u_short)atoi(PACK_GEN_PORT));
-		inet_aton(HOST_ADDR, &clientName.sin_addr);
-		sendto ( sock, (void*)&v, sizeof(v), 0,
-		(struct sockaddr *) &clientName, clientLength);
-		printf("=================> Sent Stopped to Packet Generator at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
+		if (device0.runlevel == 0)
+		{
+			char v[8] = "Stopped";
+			clientName.sin_port = htons((u_short)atoi(PACK_GEN_PORT));
+			inet_aton(HOST_ADDR, &clientName.sin_addr);
+			sendto ( sock, (void*)&v, sizeof(v), 0,
+			(struct sockaddr *) &clientName, clientLength);
+			printf("=================> Sent Stopped to Packet Generator at ADDR = %d, PORT = %d\n", 			clientName.sin_addr, clientName.sin_port);
 #ifdef simulator
-		clientName.sin_port = htons((u_short)atoi(RUN_PY_PORT));
-		inet_aton(HOST_ADDR, &clientName.sin_addr);
-		sendto ( sock, (void*)&v, sizeof(v), 0,
-		(struct sockaddr *) &clientName, clientLength);
-		printf("=================> Sent E-Stopped to Run Injection at ADDR = %d, PORT = %d\n", clientName.sin_addr, clientName.sin_port);
+			clientName.sin_port = htons((u_short)atoi(RUN_PY_PORT));
+			inet_aton(HOST_ADDR, &clientName.sin_addr);
+			sendto ( sock, (void*)&v, sizeof(v), 0,
+			(struct sockaddr *) &clientName, clientLength);
+			printf("=================> Sent E-Stopped to Run Injection at ADDR = %d, PORT = %d\n", 			clientName.sin_addr, clientName.sin_port);
 #endif
-	}
+		}
 #endif
 #ifdef NET_SEND
         sendto ( sock, (void*)&v, vSize, 0,
