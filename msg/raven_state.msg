@@ -9,7 +9,7 @@ float32[18]   ori_d
 int32[6]    pos_d
 duration    dt
 int32[16]   encVals
-int32[16]   dac_val
+int32[16]   dac_val	
 float32[16] tau
 float32[16] mpos
 float32[16] jpos
@@ -25,3 +25,4 @@ char[1024] err_msg
 float32[3] sim_mpos
 float32[3] sim_mvel
 float32[3] sim_jpos
+
