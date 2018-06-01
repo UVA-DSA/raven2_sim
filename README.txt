@@ -30,7 +30,7 @@ Setting up the repository:
    "git clone https://github.com/UVA-DSA/raven2_sim.git"
 1. Rename the folder name from "raven2_sim" to "raven_2"
 2. Change the ROS_PACKAGE_PATH environment variable to the location of raven_2 folder. For example:
-   "export ROS_PACKAGE_PATH=/home/raven/raven_2:/home/raven/raven_2/raven_visualization:/opt/ros/indigo/share:/opt/ros/indigo/stacks"
+   "export ROS_PACKAGE_PATH=/home/raven/raven_2:/home/raven/raven_2/raven_visualization:/opt/ros/kinetic/share:/opt/ros/kinetic/stacks"
    To test if the change was made successfully, run "roscd raven_2" and you should be relocated to the raven_2 folder.
 4. Run "tar zxvf ./teleop_data/new_test_data.tgz" to unzip the datafiles used by the packet generator
 
