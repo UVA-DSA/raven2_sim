@@ -272,7 +272,11 @@ void teleopIntoDS1(struct u_struct *us_t)
 #ifdef SCISSOR_RIGHT
         if (armserial == GREEN_ARM_SERIAL) graspmin = (-40.0 * 1000.0 DEG2RAD);
 #endif
-		data1.rd[i].grasp -= grasp_gain * us_t->grasp[armidx];
+#ifdef packetgen												// Attempt to resolve closed grasper (Samin)
+		data1.rd[i].grasp = grasp_gain * us_t->grasp[armidx]; // removed - (Samin)
+#else															// Attempt to resolve closed grasper (Samin)
+		data1.rd[i].grasp -= grasp_gain * us_t->grasp[armidx]; 
+#endif															// Attempt to resolve closed grasper (Samin)
 		if (data1.rd[i].grasp>graspmax) data1.rd[i].grasp=graspmax;
 		else if(data1.rd[i].grasp<graspmin) data1.rd[i].grasp=graspmin;
 
