@@ -657,6 +657,7 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef save_logs
+  char buff[100]; // watch out for buffer overflow
   char* ROS_PACKAGE_PATH;
   ROS_PACKAGE_PATH = getenv("ROS_PACKAGE_PATH");
   if (ROS_PACKAGE_PATH!= NULL)
@@ -676,7 +677,6 @@ int main(int argc, char **argv)
   std::ofstream logfile;
   log_msg("************** Inject mode = %d\n",inject_mode);
 
-  char buff[50];
   if (inject_mode == 0)
       sprintf(buff,"%s/sim_log.txt", raven_path);
   else
@@ -685,7 +685,6 @@ int main(int argc, char **argv)
 #endif
 
 #ifdef log_USB
-  char buff[100];
   sprintf(buff,"%s/readUSB_log.txt", raven_path);
   ReadUSBfile.open(buff,std::ofstream::out);
 
@@ -695,6 +694,7 @@ int main(int argc, char **argv)
   sprintf(buff,"%s/networkPackets_log.txt", raven_path);
   NetworkPacketfile.open(buff,std::ofstream::out);
 #endif
+
 #ifdef log_syscall
   sprintf(buff,"%s/SysCall_Time.txt", raven_path);
   SysCallTiming.open(buff,std::ofstream::out);
