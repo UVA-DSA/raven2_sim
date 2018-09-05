@@ -63,7 +63,7 @@ if fast_surgeon:
    MAX_PACKETS = 5000
    FREQ = 0.001
 else: 
-   MAX_PACKETS = 100000
+   MAX_PACKETS = 1000000 #100000 # changed to 1000000 from 100000 - Samin
    FREQ = 0.001
 
 # When only running simulator with no robot, we need to send jpos values

@@ -89,10 +89,10 @@ class Raven():
         self.mfi_changed = 0
         self.return_code = 0 #0 is normal, 1 is error
         self.curr_inj = -1
-        self.rviz_enabled = 1
+        self.rviz_enabled = 0
         self.result_folder = ''
         self.exp_status = '' # expriment status: 'running' or 'done'
-        self.vision = 0 #added by Samin for camera data
+        self.vision = 0#added by Samin for camera data
         inj = injection.split(':')
         self.injection = inj[0]
         self.starting_inj_num = 0
@@ -271,7 +271,7 @@ class Raven():
         except:
             pass
         try: #Added by Samin for vision data
-            #os.killpg(self.recordProc.pid, signal.SIGINT)
+            os.killpg(self.recordProc.pid, signal.SIGINT)
             os.killpg(self.visionProc.pid, signal.SIGINT)         
             time.sleep(1)
         except:
@@ -324,9 +324,9 @@ class Raven():
         sock.bind((UDP_IP,UDP_PORT))
 
         # Setup Variables
-        #kinectTask = "xterm -e roslaunch openni_launch openni.launch" #added by Samin for vision data
-        #recordTask = "rosrun image_view video_recorder image:=/camera/rgb/image_raw" #added by Samin for vision data		
-        recordTask = "python rec.py" #added by Samin for vision data using ZED		
+        kinectTask = "xterm -e roslaunch openni_launch openni.launch" #added by Samin for vision data
+        recordTask = "rosrun image_view video_recorder image:=/camera/rgb/image_raw" #added by Samin for vision data		
+        #recordTask = "python rec.py" #added by Samin for vision data using ZED		
         ravenTask = "roslaunch raven_2 raven_2.launch > raven.output"
         #ravenTask = "xterm -hold -e 'LD_PRELOAD=/home/raven/homa_wksp/malicious_wrapper/malicious_wrapper.so roslaunch raven_2 raven_2.launch'"
         visTask = 'xterm -e roslaunch raven_visualization raven_visualization.launch'
@@ -335,8 +335,8 @@ class Raven():
         rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv'
 
         if (self.vision == 1): #added by Samin for vision data
-			#visionProc = subprocess.Popen(kinectTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
-			#time.sleep(0.2) 
+			visionProc = subprocess.Popen(kinectTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
+			time.sleep(0.2) 
 			recordProc = subprocess.Popen(recordTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
 			time.sleep(0.2) 		
         if (self.surgeon_simulator == 1):
@@ -359,7 +359,9 @@ class Raven():
         else:
             print usage
             sys.exit(2)
-        self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
+        # changed by Yongming. In this way we can have a separate terminal window for raven_2.launch.
+        #self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
+        os.system("gnome-terminal -x roslaunch raven_2 raven_2.launch > raven.output")
         # Call rostopic to log the data from this RAVEN into latest_run.csv        
         self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
         time.sleep(0.2);

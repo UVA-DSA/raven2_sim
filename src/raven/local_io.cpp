@@ -185,7 +185,7 @@ void teleopIntoDS1(struct u_struct *us_t)
         p.x = us_t->delx[armidx];
         p.y = us_t->dely[armidx];
         p.z = us_t->delz[armidx];
-
+		log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)", p.x, p.y, p.z);
         //set local quaternion from teleop quaternion data
         q_temp.setX( us_t->Qx[armidx] );
         q_temp.setY( us_t->Qy[armidx] );

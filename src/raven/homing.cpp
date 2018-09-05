@@ -200,7 +200,7 @@ int raven_homing(struct device *device0, struct param_pass *currParams, int begi
             _joint->current_cmd = 0;
             stop_trajectory(_joint);
             log_msg("joint %d checked ",j);
-        }
+        }	
 
         // For each mechanism, check to see if the mech is finished homing.
         if ( j == (MAX_DOF_PER_MECH-1) )
@@ -209,7 +209,8 @@ int raven_homing(struct device *device0, struct param_pass *currParams, int begi
             if ((  !tools_ready(_mech) &&
                    _mech->joint[TOOL_ROT].state==jstate_hard_stop &&
                    _mech->joint[WRIST   ].state==jstate_hard_stop &&
-                   _mech->joint[GRASP1  ].state==jstate_hard_stop )  // \TODO check for grasp2 - bug?
+                   _mech->joint[GRASP1  ].state==jstate_hard_stop  &&
+				   _mech->joint[GRASP2  ].state==jstate_hard_stop )  // \TODO check for grasp2 - bug?
                     ||
                 (  tools_ready( _mech ) &&
                    _mech->joint[SHOULDER].state==jstate_hard_stop &&
