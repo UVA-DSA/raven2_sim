@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: raven_visualization
+    relative_path: ravenII_2arm.urdf
+  SRDF:
+    relative_path: config/raven_2.srdf
+  CONFIG:
+    author_name: Robert P.
+    author_email: rtp4qg@virginia.edu
+    generated_timestamp: 1502911105

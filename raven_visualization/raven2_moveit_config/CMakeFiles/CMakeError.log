@@ -1,0 +1,53 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2405106988/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2405106988.dir/build.make CMakeFiles/cmTryCompileExec2405106988.dir/build
+make[1]: Entering directory `/home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2405106988.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2405106988.dir/CheckSymbolExists.c.o   -c /home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec2405106988
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2405106988.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2405106988.dir/CheckSymbolExists.c.o  -o cmTryCompileExec2405106988 -rdynamic 
+CMakeFiles/cmTryCompileExec2405106988.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec2405106988] Error 1
+make: *** [cmTryCompileExec2405106988/fast] Error 2
+
+File /home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3137999750/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3137999750.dir/build.make CMakeFiles/cmTryCompileExec3137999750.dir/build
+make[1]: Entering directory `/home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3137999750.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec3137999750.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3137999750
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3137999750.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec3137999750.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3137999750 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/home/raven/raven_2/raven_visualization/raven2_moveit_config/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec3137999750] Error 1
+make: *** [cmTryCompileExec3137999750/fast] Error 2
+
+
