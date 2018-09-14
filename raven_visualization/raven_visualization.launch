@@ -1,6 +1,58 @@
 <launch>
-	<arg name="model" default="$(find raven_visualization)/ravenII_2arm.urdf"/>
-	<param name="robot_description" textfile="$(arg model)" />
-	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find raven_visualization)/raven_2.rviz" />
+	<!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>	
+
+<env name = "GAZEBO_MODEL_PATH" value="$(find raven_visualization)/Raven_files" />
+
+<env name = "GAZEBO_PLUGIN_PATH" value="$(find raven_visualization)/lib"/>
+
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- <arg name="world_name" value="$(find raven_visualization)/model.sdf"/> -->
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <!--param name="robot_description" command="$(find xacro)/xacro inorder '$(find rrbot_description)/urdf/rrbot.xacro'"  -->
+
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+    args="-unpause -urdf -model RavenII -z 1 
+	-J shoulder_L 1.52 	
+	-J tool_roll_L -0.68 
+	-J wrist_joint_L 0.61 
+	-J grasper_joint_1_L 1.15 
+	-J grasper_joint_2_L 1.15 
+	-J elbow_L 0.13 
+	-J insertion_L -0.16 
+	-file '$(find raven_visualization)/ravenII_2arm.urdf'"/>
+
+
+<!-- Spawn a table. -->
+ <!--<node name= "table_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoTable -z 0.80 -file '$(find raven_visualization)/floating_table.urdf'" /> -->
+  <!-- Spawn a simple box into gazebo, as well. -->
+  <node name="box_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoBox -x 0.1 -z 0.85 -file '$(find raven_visualization)/box.urdf'"/> 
+
+
+
+  <!-- ros_control rrbot launch file -->
+  <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->
+
+  <arg name="model" default="$(find raven_visualization)/ravenII_2arm.urdf"/>
+  <param name="robot_description" textfile="$(arg model)" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+
+<param name="/use_gui" value="True" />
+<!--<node name="joint_state_publisher_gui" pkg="joint_state_publisher" type="joint_state_publisher" /> -->
+
 </launch>

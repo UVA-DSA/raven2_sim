@@ -19,7 +19,7 @@
         <pose>0 0 0 0 -0 0</pose>
         <geometry>
           <box>
-            <size>0.001 0.001 0.001</size>
+            <size>0.01 0.01 0.01</size>
           </box>
         </geometry>
       </visual>
@@ -47,7 +47,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/base_w_motors.dae</uri>
+            <uri>model:///left_arm/base_w_motors.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -89,7 +89,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/link1_w_cover.dae</uri>
+            <uri>model:///left_arm/link1_w_cover.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -131,7 +131,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/link2.dae</uri>
+            <uri>model:///left_arm/link2.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -173,7 +173,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/link3.dae</uri>
+            <uri>model:///left_arm/link3.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -215,7 +215,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/instrument_shaft.dae</uri>
+            <uri>model:///left_arm/instrument_shaft.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -257,7 +257,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/wrist.dae</uri>
+            <uri>model:///left_arm/wrist.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -299,7 +299,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/grasper_1.dae</uri>
+            <uri>model:///left_arm/grasper_1.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -341,7 +341,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/left_arm/grasper_2.dae</uri>
+            <uri>model:///left_arm/grasper_2.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -383,7 +383,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/base_w_motors.dae</uri>
+            <uri>model:///right_arm/base_w_motors.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -425,7 +425,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/link1_w_cover.dae</uri>
+            <uri>model:///right_arm/link1_w_cover.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -467,7 +467,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/link2.dae</uri>
+            <uri>model:///right_arm/link2.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -509,7 +509,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/link3.dae</uri>
+            <uri>model:///right_arm/link3.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -551,7 +551,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/instrument_shaft.dae</uri>
+            <uri>model:///right_arm/instrument_shaft.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -593,7 +593,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/wrist.dae</uri>
+            <uri>model:///right_arm/wrist.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -635,7 +635,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/grasper_1.dae</uri>
+            <uri>model:///right_arm/grasper_1.dae</uri>
           </mesh>
         </geometry>
       </visual>
@@ -677,7 +677,7 @@
         <geometry>
           <mesh>
             <scale>1 1 1</scale>
-            <uri>model://raven_visualization/Raven_files/right_arm/grasper_2.dae</uri>
+            <uri>model:///right_arm/grasper_2.dae</uri>
           </mesh>
         </geometry>
       </visual>
