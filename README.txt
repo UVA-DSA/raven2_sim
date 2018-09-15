@@ -40,3 +40,8 @@ Running RAVEN simulator using trajectory 2:
    Dynamic simulator /w packet-gen: "python run.py dyn_sim 1 none traj2"
    Robot /w packet-gen:  "python run.py rob 1 none traj2"
    Robot /w surgeon-gui: "python run.py rob 0 none traj2" 
+   
+Branches:
+- Simulator:  Simple simulator with no fault injection capabilities
+- Gazebo_Sim: Simulator integrated with Gazebo and fault injection capabilities
+- Test_sim:   Simulator with rviz and fault injection capabilities
