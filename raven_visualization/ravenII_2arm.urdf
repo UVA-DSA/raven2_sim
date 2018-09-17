@@ -85,7 +85,7 @@
 
     <inertial>
         <pose>0 0 1 0 -0 0</pose>
-        <mass value = "10"/>
+        <mass value = "1"/>
         <inertia
 	  ixx = "10"
           ixy = "0"
@@ -109,7 +109,7 @@
     </visual>
     <inertial>
         <pose>0 0 1 0 -0 0</pose>
-        <mass value = "10" />
+        <mass value = "1" />
         <inertia
           ixx = "10"
           ixy= "0"
@@ -141,7 +141,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -172,7 +172,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -336,7 +336,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -364,7 +364,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -396,7 +396,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -428,7 +428,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -460,7 +460,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -584,7 +584,7 @@
       <geometry>
         <mesh filename="/home/homa/Downloads/Ring.dae"/>
       </geometry>
-    <origin rpy="0 0 0" xyz="2.00680 -0.00904 0.00452"/>
+    <origin rpy="0 0 0" xyz="1.90680 -0.00904 0.80452"/>
     </visual>
 
     <inertial>
