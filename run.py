@@ -92,7 +92,7 @@ class Raven():
         self.rviz_enabled = 1
         self.result_folder = ''
         self.exp_status = '' # expriment status: 'running' or 'done'
-        self.vision = 0#added by Samin for camera data
+        self.vision = 0 #added by Samin for camera data
         inj = injection.split(':')
         self.injection = inj[0]
         self.starting_inj_num = 0
@@ -605,3 +605,6 @@ signal.signal(signal.SIGINT, raven.signal_handler)
 
 # Run Raven
 raven.run()
+#cmd = "scp /home/homa/raven_2/latest_run.csv mohammadsaminyasar@172.25.44.142:/Users/mohammadsaminyasar/Documents/ismr_results/exp35/"
+#os.system(cmd)
+

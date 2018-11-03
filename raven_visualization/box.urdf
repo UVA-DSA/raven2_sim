@@ -6,33 +6,38 @@
 
 <gazebo reference="box">
       <turnGravityOff>true</turnGravityOff>
+
     </gazebo>
+<static>true</static>
   <link name="box">
     <visual>
       <geometry>
 	<box size="0.1 0.005 0.005" />
       </geometry>
+    <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00152"/>
     </visual>
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "10"/>
+      <mass value = "1000"/>
       <inertia
-          ixx = "10"
+          ixx = "1000"
           ixy = "0"
           ixz = "0"
-          iyy = "10"
+          iyy = "1000"
           iyz = "0"
-          izz = "10"
+          izz = "1000"
           />
     </inertial>
 
     <collision>
-      <origin xyz="0 0 0"/>
       <geometry>
         <box size="0.1 0.005 0.005" />
       </geometry>
+
+    <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00152"/>
     </collision>
 
   </link>
 </robot>
+

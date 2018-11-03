@@ -185,7 +185,7 @@ void teleopIntoDS1(struct u_struct *us_t)
         p.x = us_t->delx[armidx];
         p.y = us_t->dely[armidx];
         p.z = us_t->delz[armidx];
-		log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)", p.x, p.y, p.z);
+		//log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)", p.x, p.y, p.z);
         //set local quaternion from teleop quaternion data
         q_temp.setX( us_t->Qx[armidx] );
         q_temp.setY( us_t->Qy[armidx] );
@@ -672,9 +672,9 @@ void publish_joints(struct robot_device* device0){
     joint_state.name[4] ="wrist_joint_L";
     joint_state.position[4] = device0->mech[left].joint[5].jpos + offsets_l.wrist_off;
     joint_state.name[5] ="grasper_joint_1_L";
-    joint_state.position[5] = device0->mech[left].joint[6].jpos + offsets_l.grasp1_off;
+    joint_state.position[5] = device0->mech[left].joint[6].jpos - offsets_l.grasp1_off;// + 3.14/10;
     joint_state.name[6] ="grasper_joint_2_L";
-    joint_state.position[6] = device0->mech[left].joint[7].jpos * -1 + offsets_l.grasp2_off;
+    joint_state.position[6] = device0->mech[left].joint[7].jpos * -1 - offsets_l.grasp2_off;// + 3.14/10;
 
     //======================RIGHT ARM===========================
     joint_state.name[7] ="shoulder_R";
@@ -688,9 +688,9 @@ void publish_joints(struct robot_device* device0){
     joint_state.name[11] ="wrist_joint_R";
     joint_state.position[11] = device0->mech[right].joint[5].jpos * -1 + offsets_r.wrist_off;
     joint_state.name[12] ="grasper_joint_1_R";
-    joint_state.position[12] = device0->mech[right].joint[6].jpos + offsets_r.grasp1_off;
+    joint_state.position[12] = device0->mech[right].joint[6].jpos - offsets_r.grasp1_off;// - 3.14/4;
     joint_state.name[13] ="grasper_joint_2_R";
-    joint_state.position[13] = device0->mech[right].joint[7].jpos * -1 + offsets_r.grasp2_off;
+    joint_state.position[13] = device0->mech[right].joint[7].jpos * -1 - offsets_r.grasp2_off;// - 3.14/4;
 
     //======================LEFT ARM===========================
 

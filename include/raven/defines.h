@@ -51,8 +51,8 @@
 
 //~~~~~~~~~ tool adapter definition ~~~~~~~~~~~~~~~~
 
-#define RAVEN_TOOLS
-//#define DV_ADAPTER			1
+#define RAVEN_TOOLS 		//changed
+//#define DV_ADAPTER	//changed		1
 //#define RICKS_TOOLS     //skips tool initialization //not supported since switch to tools.h?
 //#define SCISSOR_RIGHT
 #define OPPOSE_GRIP
@@ -287,7 +287,7 @@
 #else
 
 //everything but square RAVEN
-#define MAX_INST_DAC 13000//12000//20000 //32000 //Increased the MAX_INST_DAC  to 12500 from 12000-Samin
+#define MAX_INST_DAC 13500//12000//20000 //32000 //Increased the MAX_INST_DAC  to 12500 from 12000-Samin
 
 // Doubled position joints 4-Apr-2013 by HK
 #define SHOULDER_MAX_DAC   5000   // 2000 usually moves 1000 doesn't

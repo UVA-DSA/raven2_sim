@@ -25,7 +25,6 @@
            <palm_link> wrist_R  </palm_link>
            <gripper_link> grasper1_R </gripper_link>
            <gripper_link> grasper2_R </gripper_link>
-
        </arm>
        <forces_angle_tolerance>100</forces_angle_tolerance>
        <update_rate>4</update_rate>
@@ -85,7 +84,7 @@
 
     <inertial>
         <pose>0 0 1 0 -0 0</pose>
-        <mass value = "1"/>
+        <mass value = "10"/>
         <inertia
 	  ixx = "10"
           ixy = "0"
@@ -109,7 +108,7 @@
     </visual>
     <inertial>
         <pose>0 0 1 0 -0 0</pose>
-        <mass value = "1" />
+        <mass value = "10" />
         <inertia
           ixx = "10"
           ixy= "0"
@@ -141,7 +140,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -172,7 +171,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -192,6 +191,7 @@
 
 <gazebo reference="instrument_shaft_L">
       <turnGravityOff>true</turnGravityOff>
+
     </gazebo>
   <link name="instrument_shaft_L">
     <visual>
@@ -252,6 +252,7 @@
 
 <gazebo reference="grasper1_L">
       <turnGravityOff>true</turnGravityOff>
+<implicitSpringDamper>1</implicitSpringDamper>
     </gazebo>
   <link name="grasper1_L">
     <visual>
@@ -278,6 +279,18 @@
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/grasper_1.dae"/>
       </geometry>
+	<surface>
+	<contact>
+	<ode>
+	<kp>1000000.0</kp>
+	<kd>1.0</kd>
+	<mu1>1.0</mu1>
+	<mu2>1.0</mu2>
+	<minDepth>0.001</minDepth>
+
+	</ode>
+	</contact>
+	</surface>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
     </collision> 
 
@@ -286,6 +299,7 @@
 
 <gazebo reference="grasper2_L">
       <turnGravityOff>true</turnGravityOff>
+
     </gazebo>
   <link name="grasper2_L">
     <visual>
@@ -312,6 +326,18 @@
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/grasper_2.dae"/>
       </geometry>
+<surface>
+	<contact>
+	<ode>
+	<kp>1000000.0</kp>
+	<kd>1.0</kd>
+	<mu1>1.0</mu1>
+	<mu2>1.0</mu2>
+	<minDepth>0.001</minDepth>
+
+	</ode>
+	</contact>
+	</surface>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
     </collision> 
   </link>
@@ -336,7 +362,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -364,7 +390,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -396,7 +422,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -428,7 +454,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -460,7 +486,7 @@
 
     <inertial>
     <origin xyz="1 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -575,40 +601,6 @@
     <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
     </collision>
   </link>
-
-<gazebo reference="wood_R">
-      <turnGravityOff>true</turnGravityOff>
-    </gazebo>
-  <link name="wood_R">
-    <visual>
-      <geometry>
-        <mesh filename="/home/homa/Downloads/Ring.dae"/>
-      </geometry>
-    <origin rpy="0 0 0" xyz="1.90680 -0.00904 0.80452"/>
-    </visual>
-
-    <inertial>
-    <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
-      <mass value = "1"/>
-      <inertia
-          ixx = "1"
-          ixy = "0"
-          ixz = "0"
-          iyy = "1"
-          iyz = "0"
-          izz = "1"
-          />
-    </inertial>
-
-    <collision> 
-      <geometry>
-        <mesh filename="/home/homa/Downloads/Ring.dae"/>
-      </geometry>
-    <origin rpy="0 0 0" xyz="2.00680 -0.00904 0.00452"/>
-    </collision>
-  </link>
-
-
 
 
   <!-- LEFT ARM JOINTS -->
@@ -744,15 +736,6 @@
     <parent link="wrist_R"/>
     <child link="grasper2_R"/>
   </joint>
-
-  <joint name="pegW" type="fixed">
-    <axis xyz="0.5648    0.1427   0.8128"/>
-    <limit effort="1000.0" lower="-2" upper="2" velocity=".5"/>
-    <origin rpy="0 0 0" xyz="-2.00680 -0.0104 -1.00452"/>
-    <parent link="wrist_R"/>
-    <child link="wood_R"/>
-  </joint>
-
 
 
 <!-- Used for fixing robot to Gazebo 'base_link' -->
