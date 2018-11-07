@@ -206,7 +206,8 @@ void teleopIntoDS1(struct u_struct *us_t)
         for (int j=0;j<3;j++)
             for (int k=0;k<3;k++)
                 data1.rd[i].R[j][k] = rot_mx_temp[j][k];
-        //log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
+
+    //    log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
 #else
 		// Set Position command
 	  	data1.xd[i].x = us_t->delx[armidx];
@@ -259,9 +260,9 @@ void teleopIntoDS1(struct u_struct *us_t)
 
 // For both PacketGen and not PacketGen
 #ifdef OMNI_GAIN
-	const int grasp_gain = OMNI_GAIN;
+     const int grasp_gain = OMNI_GAIN;
 #else
-	const int grasp_gain = 1;
+     const int grasp_gain = 1;
 #endif
 
 #ifdef SCISSOR_RIGHT
@@ -275,11 +276,10 @@ void teleopIntoDS1(struct u_struct *us_t)
 #ifdef packetgen												// Attempt to resolve closed grasper (Samin)
 		data1.rd[i].grasp = grasp_gain * us_t->grasp[armidx]; // removed - (Samin)
 #else															// Attempt to resolve closed grasper (Samin)
-		data1.rd[i].grasp -= grasp_gain * us_t->grasp[armidx]; 
-#endif															// Attempt to resolve closed grasper (Samin)
+		data1.rd[i].grasp -= grasp_gain * us_t->grasp[armidx];
+#endif
 		if (data1.rd[i].grasp>graspmax) data1.rd[i].grasp=graspmax;
 		else if(data1.rd[i].grasp<graspmin) data1.rd[i].grasp=graspmin;
-
     }
     /// \question HK: why is this a hack?
     // HACK HACK HACK
@@ -293,7 +293,6 @@ void teleopIntoDS1(struct u_struct *us_t)
     //           data1.xd[0].x, data1.xd[0].y, data1.xd[0].z,
     //           data1.xd[1].x, data1.xd[1].y, data1.xd[1].z);
     data1.surgeon_mode = us_t->surgeon_mode;
-
 
     //log_file("Data1 Surgeon Mode is %d\n",us_t->surgeon_mode);
 
@@ -597,7 +596,7 @@ void publish_ravenstate_ros(struct robot_device *dev,struct param_pass *currPara
 #ifdef save_logs
 	for (int i = 0; i < 1024; i++)
 		if ((err_str[i] != '\n') && (err_str[i] != '\0'))
-	    	msg_ravenstate.err_msg[i] = err_str[i];		
+	    	msg_ravenstate.err_msg[i] = err_str[i];
     err_str[0] = '\0';
 #endif
 #ifdef detector

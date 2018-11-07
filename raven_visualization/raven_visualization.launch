@@ -26,7 +26,7 @@
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
-    args="-unpause -urdf -model RavenII -z 1 
+    args="-unpause -urdf -model RavenII -z 0.2 
 	-J shoulder_L 1.52 	
 	-J tool_roll_L -0.68 
 	-J wrist_joint_L 0.61 
@@ -38,17 +38,11 @@
 
 
 <!-- Spawn a table. -->
-<node name= "table_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoTable -z 0.80 -file '$(find raven_visualization)/floating_table.urdf'" /> 
+<node name= "table_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoTable -z 0.051 -file '$(find raven_visualization)/floating_table.urdf'" /> 
   <!-- Spawn a simple box into gazebo, as well. -->
-  <node name="box_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoBox -y 0.05 -z 0.9 -file '$(find raven_visualization)/box.urdf'"/> 
+  <node name="box_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoBox -x 0.0 -y 0.02 -z 0.1  -file '$(find raven_visualization)/box.urdf'"/> 
 
-
- <node name="sor_pgs_iters" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_iters 50"/>
-  <node name="sor_pgs_w" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_w 0"/>
-<node name="time_step" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo time_step 0.001"/>
-
-
-
+ 
 <node name = "contact_surface_layer" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo contact_surface_layer 0.001"/>
 <node name = "contact_max_correcting_vel" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo contact_max_correcting_vel 100.0"/>
 <node name = "cfm" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo cfm 0.0"/>

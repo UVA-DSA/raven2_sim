@@ -51,11 +51,11 @@
 
 //~~~~~~~~~ tool adapter definition ~~~~~~~~~~~~~~~~
 
-#define RAVEN_TOOLS 		//changed
-//#define DV_ADAPTER	//changed		1
-//#define RICKS_TOOLS     //skips tool initialization //not supported since switch to tools.h?
+#define RAVEN_TOOLS 	//changed
+//#define DV_ADAPTER	
+//#define RICKS_TOOLS   //skips tool initialization //not supported since switch to tools.h?
 //#define SCISSOR_RIGHT
-#define OPPOSE_GRIP
+//#define OPPOSE_GRIP //disabled oppose grip- samin
 
 
 //~~~~~~~~~ USB Board definition ~~~~~~~~~~~~~~~~~~~
@@ -65,7 +65,7 @@
 #define GOLD_ARM_SERIAL  25
 
 //~~~~~~~~ Other settings, experts only ~~~~~~~~~~~~
-#define NO_LPF    // This setting short circuits the Low Pass Filter in state_estimate.cpp
+//#define NO_LPF    // This setting short circuits the Low Pass Filter in state_estimate.cpp
 //#define OMNI_GAIN  2  // Get a little more oomph out of the omni grasping button - sets a gain in local__io.cpp
 //#define ORIENTATION_V
 

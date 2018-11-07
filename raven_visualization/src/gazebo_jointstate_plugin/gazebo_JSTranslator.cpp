@@ -6,8 +6,8 @@
 #include <string>
 #include <stdlib.h>
 
-/*The purpose of this plugin is to read messages from the Joint_State topic 
-  , translate their contents into something Gazebo readable, and invoke the gazebo service SetModelConfiguration 
+/*The purpose of this plugin is to read messages from the Joint_State topic
+  , translate their contents into something Gazebo readable, and invoke the gazebo service SetModelConfiguration
   to set the joints to their proper setting.
  */
 
@@ -29,7 +29,7 @@ public:
 
   void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
   {
-    // Make sure the ROS node for Gazebo has already been initialized                                                                                    
+    // Make sure the ROS node for Gazebo has already been initialized
     if (!ros::isInitialized())
     {
       ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
@@ -47,7 +47,7 @@ public:
     if(!JointStateSub){
       ROS_INFO("GJST: Empty subscriber!");
       n.shutdown();
-      
+
     }
     ROS_INFO("GJST: Subscriber created!");
 
@@ -55,21 +55,21 @@ public:
 
     ModelConfigClient = n.serviceClient<gazebo_msgs::SetModelConfiguration>("/gazebo/set_model_configuration");
 
-    
-    
-    
+
+
+
   }
 
   void Update(physics::ModelPtr _model, sdf::ElementPtr _sdf){
 
-    
+
   }
 
-  /*This is where the translation actually happens. When messages are received by the subscriber, they 
-  trigger the callback function passed as a parameter for the subscriber constructor, with a 
+  /*This is where the translation actually happens. When messages are received by the subscriber, they
+  trigger the callback function passed as a parameter for the subscriber constructor, with a
   sensor_msgs::Joint_state message passed in as an argument to the callback function.
 
-  The message's contents are reinterpreted (basically, just slapped into a service request) and sent to 
+  The message's contents are reinterpreted (basically, just slapped into a service request) and sent to
   SetModelConfiguration, where Gazebo handles the rest.
   */
 
@@ -81,7 +81,7 @@ public:
 
     srv.request.model_name = "RavenII";
     srv.request.urdf_param_name = "robot_description";
-    
+
     //Debug Info: Size of name list in msg, etc.
     ROS_INFO("DEBUG:Size of msg name list : %d", (int)msg->name.size());
 
@@ -95,10 +95,10 @@ public:
 
     }
     //Call the SetModelConfiguration service.
-   
+
     if(ModelConfigClient.call(srv)){
       ROS_INFO("DEBUG: Success : %d", srv.response.success);
-      
+
     }
 
   }

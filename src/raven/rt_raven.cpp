@@ -75,8 +75,8 @@ extern int initialized; //Defined in rt_process_preempt.cpp
 *	\brief This function controls the RAVEN for one loop cycle based on the desired control mode.
 *
 *	\desc This function first initializes the robot and then it computes Mpos and Velocities by calling
-* 			stateEstimate() and then it calls fwdCableCoupling() and r2_fwd_kin() to calculate the 
-* 			forward cable coupling and inverse kinematics respectively. 
+* 			stateEstimate() and then it calls fwdCableCoupling() and r2_fwd_kin() to calculate the
+* 			forward cable coupling and inverse kinematics respectively.
 * 			The following types of control can be selected from the control mode:
 *  				-No control
 *  				-Cartesian Space Control
@@ -106,7 +106,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
     initRobotData(device0, currParams->runlevel, currParams);
 
     //Compute Mpos & Velocities
-    stateEstimate(device0); 
+    stateEstimate(device0);
 
 	// commented debug output
     /*log_msg("User desired end-effector positions: Arm %d(%d,%d,%d)\n Arm %d(%d,%d,%d)\n",
@@ -120,7 +120,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 
     switch (controlmode){
 
-        //this is handy for checking that gravity compensation works - also allows for robot to be 
+        //this is handy for checking that gravity compensation works - also allows for robot to be
 		//manipulated without brakes
         case no_control:
         {
@@ -134,7 +134,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
             getGravityTorque(*device0, *currParams);
 
             while ( loop_over_joints(device0, _mech, _joint, i,j) )
-                _joint->tau_d = _joint->tau_g;  // Add gravity torque 
+                _joint->tau_d = _joint->tau_g;  // Add gravity torque
 
             TorqueToDAC(device0);
 
@@ -143,8 +143,8 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
         //Cartesian Space Control is called to control the robot in cartesian space
         case cartesian_space_control:
 #ifdef packet_gen
-                //log_msg("RT_PROCESS) Cartesian space control");         
-#endif		
+                //log_msg("RT_PROCESS) Cartesian space control");
+#endif
 
         	ret = raven_cartesian_space_command(device0,currParams);
         	break;
@@ -181,23 +181,23 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 		device0->mech[0].pos.x, device0->mech[0].pos.y, device0->mech[0].pos.z,
 	        device0->mech[1].pos.x, device0->mech[1].pos.y, device0->mech[1].pos.z);*/
             }
-#else           
+#else
 #ifdef packetgen
 		if (currParams->last_sequence != 1)
-		{		
-			done_homing = 1; 
-			currParams->runlevel = RL_PEDAL_DN; 
+		{
+			done_homing = 1;
+			currParams->runlevel = RL_PEDAL_DN;
         	device0->runlevel = 2;
-		}		
+		}
 		if (currParams->last_sequence == 1)
-		{			
+		{
             currParams->robotControlMode = cartesian_space_control;
    	        newRobotControlMode = cartesian_space_control;
 		}
 #else
-		done_homing = 1; 
+		done_homing = 1;
         	device0->runlevel = 3;
-		currParams->runlevel = RL_PEDAL_DN; 
+		currParams->runlevel = RL_PEDAL_DN;
 	        currParams->robotControlMode = cartesian_space_control;
    	        newRobotControlMode = cartesian_space_control;
 #endif
@@ -220,7 +220,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
             break;
     }
 #ifdef save_logs
-	//log_file("_______________________________________________\n");   
+	//log_file("_______________________________________________\n");
 #endif
     return ret;
 }
@@ -241,7 +241,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 *  	\param currParams param_pass struct defined in DS1.h
 *
 *  	\return 0 when torque is applied to DAC
-*		   -1 if Pedal is up and 
+*		   -1 if Pedal is up and
 *
 *	\ingroup Control
 */
@@ -252,19 +252,52 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
     int i=0,j=0;
 
     if (currParams->runlevel < RL_PEDAL_UP)
-    {  
+    {
 	return -1;
     }
     else if (currParams->runlevel < RL_PEDAL_DN)
     {
         set_posd_to_pos(device0);
     	updateMasterRelativeOrigin(device0);
+
     }
 
 #ifndef simulator
     parport_out(0x01);
 #endif
+
+#ifdef simulator
+if (currParams->runlevel !=RL_PEDAL_DN){
+
+ _mech = NULL;  _joint = NULL;
+    while ( loop_over_joints(device0, _mech, _joint, i,j) )
+    {
+        _joint->tau_d += _joint->tau_g;  // Add gravity torque
+    }
+}
+#endif
     //Inverse kinematics
+    // COde added by Samin 11/07/2018
+    #ifdef simulator
+    #ifndef packetgen
+    _mech = NULL; _joint = NULL;
+    float array [16] = {29.95 DEG2RAD, 90.45 DEG2RAD, 22.90 DEG2RAD, 0, 11.56 DEG2RAD, 7.28 DEG2RAD, 82.41 DEG2RAD, 56.66 DEG2RAD, 29.95 DEG2RAD, 90.45 DEG2RAD, 22.90 DEG2RAD, 0, 11.56 DEG2RAD, 7.28 DEG2RAD, 82.41 DEG2RAD, 56.66 DEG2RAD};
+    /*while ( loop_over_joints(device0, _mech, _joint, i,j) )
+    {
+        struct DOF * _joint = &(device0->mech[1].joint[j]);
+        _joint->jpos_d = array[i*MAX_DOF_PER_MECH + j];
+    }
+
+    device0->mech[0].pos_d.x = 206926;
+    device0->mech[0].pos_d.y = -109554;
+    device0->mech[0].pos_d.z = -95855;
+    device0->mech[1].pos_d.x =  206926;
+    device0->mech[1].pos_d.y = -109554;
+    device0->mech[1].pos_d.z = -95855;
+    */
+    #endif
+    #endif
+    //Code adding ended
     r2_inv_kin(device0, currParams->runlevel);
 
     //Inverse Cable Coupling
@@ -293,16 +326,17 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
         _joint->tau_d += _joint->tau_g;  // Add gravity torque
     }
     //log_msg("changed tau_d to = %f\n",_joint->tau_d);
-
     TorqueToDAC(device0);
-	/*for (int i =0; i < 2; i++)
-	{  
+/*for (int i =0; i < 2; i++)
+	{
 		printf("\nDACs -arm %d:\n%d,%d,%d\n", i, device0->mech[i].joint[SHOULDER].current_cmd,
 			  device0->mech[i].joint[ELBOW].current_cmd,
 			  device0->mech[i].joint[Z_INS].current_cmd);
 		printf("\nX,Y,Z -arm %d:\n%d,%d,%d\n", i, device0->mech[i].pos_d.x,device0->mech[i].pos_d.y,
 				  device0->mech[i].pos_d.z);
-	}*/
+	}
+  */
+  //device0->mech[i].pos_d.z = device0->mech[i].pos_d.z -100;
     return 0;
 }
 
@@ -312,7 +346,7 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
 *
 *  	\brief  This function applies a sinusoidal trajectory to all joints
 *
-*	\desc This function: 
+*	\desc This function:
 *  			1. returns 0 if not in pedal down or init.init (do nothing)
 *  			2. it sets trajectories on all the joints
 *  			3. calls the invCableCoupling() to calculate inverse cable coupling
@@ -415,7 +449,7 @@ int raven_sinusoidal_joint_motion(struct device *device0, struct param_pass *cur
 *	\desc This function: only run in runlevel 1.2
 *  			1. It checks the run level
 *  			2. loops over all the joints and mechanisim to set the torque value
-*  				MAX_DOF_PER_MECH is 8 and is defined in DS0.h 
+*  				MAX_DOF_PER_MECH is 8 and is defined in DS0.h
 *  				NUM_MECH is the number of mechanisim of the robot
 *
 *  	\param device0 is robot_device struct defined in DS0.h
@@ -616,8 +650,3 @@ int raven_joint_velocity_control(struct device *device0, struct param_pass *curr
 
     return 0;
 }
-
-
-
-
-

@@ -63,26 +63,26 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
     {
 	if (currParams->last_sequence != curr_pack_no)
 	{
-		if (curr_pack_no !=0)		 	
+		if (curr_pack_no !=0)
 		{
 			log_file("______________________________________________\n");
 		}
 		// Dropped
 		if (currParams->last_sequence > (curr_pack_no+1))
 		{
-  		    for (int i=curr_pack_no+1;i<currParams->last_sequence;i++)   
+  		    for (int i=curr_pack_no+1;i<currParams->last_sequence;i++)
                     {
 			log_file("Packet: %d\n", i);
-			log_file("Error: Packet Dropped.\n");  
-			log_file ("______________________________________________\n");	  
-	            }			
+			log_file("Error: Packet Dropped.\n");
+			log_file ("______________________________________________\n");
+	            }
 		}
-		curr_pack_no = currParams->last_sequence;   
-		log_file("Packet: %d\n", curr_pack_no);  
+		curr_pack_no = currParams->last_sequence;
+		log_file("Packet: %d\n", curr_pack_no);
 	}
     }
 #endif
- 
+
     for (int i = 0; i < NUM_MECH; i++)
     {
         currParams->xd[i].x = rcvdParams->xd[i].x;
@@ -93,7 +93,7 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
         currParams->rd[i].roll  = rcvdParams->rd[i].roll;
         currParams->rd[i].grasp = rcvdParams->rd[i].grasp;
 		// commented debug output
-    	//log_msg("Device State: Arm %d : User desired end-effector positions: (%d,%d,%d)", i, currParams->xd[i].x, currParams->xd[i].y, currParams->xd[i].z);  
+    	//log_msg("Device State: Arm %d : User desired end-effector positions: (%d,%d,%d)", i, currParams->xd[i].x, currParams->xd[i].y, currParams->xd[i].z);
 
     }
 
@@ -111,12 +111,12 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
 				{
 				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
 					device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
-					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];			
-					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];	
-					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];			
-					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];			
-				}			
-			} 	    
+					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
+					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
+					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
+					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
+				}
+			}
 		}
 #endif
 #ifdef detector
@@ -129,12 +129,12 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
 				{
 				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
 					device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
-					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];			
-					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];	
-					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];			
-					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];			
-				}			
-			} 	    
+					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
+					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
+					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
+					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
+				}
+			}
 		}
 #endif
         for (int i = 0; i < NUM_MECH; i++)
@@ -181,9 +181,9 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
 #ifdef save_logs
     //log_file("Surgoen mode = %d\n",device0->surgeon_mode);
     //log_msg("-----> Runlevel = %d\n",currParams->runlevel);
-    //log_file("Current Control Mode: %d\n",currParams->robotControlMode);         
+    //log_file("Current Control Mode: %d\n",currParams->robotControlMode);
 #endif
- 
+
     return 0;
 }
 
@@ -192,7 +192,7 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
 *       Change controller mode, i.e. position control, velocity control, visual servoing, etc
 *   \param t_controlmode    current control mode.
 */
-void setRobotControlMode(t_controlmode in_controlMode){   
+void setRobotControlMode(t_controlmode in_controlMode){
     newRobotControlMode = in_controlMode;
     log_msg("New control mode: %d",newRobotControlMode);
     isUpdated = TRUE;

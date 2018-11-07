@@ -96,14 +96,14 @@ class Raven():
         inj = injection.split(':')
         self.injection = inj[0]
         self.starting_inj_num = 0
-        self.end_inj_num = -1 
+        self.end_inj_num = -1
         self.title = ''
         if len(inj) > 1:
             param = inj[1].split('-')
             self.starting_inj_num = int(param[0])
             if len(param) > 1:
                 self.end_inj_num = int(param[1])
-        
+
     def __change_defines_h(self):
         """ Modifies <raven_home>/include/raven/defines.h """
         # Change define macros
@@ -124,11 +124,11 @@ class Raven():
                 if self.packet_gen == '1':
                     line = line.lstrip('//')
             elif line.startswith('//#define mfi'):
-                if self.injection == 'mfi' or self.injection == 'mfi2': 
+                if self.injection == 'mfi' or self.injection == 'mfi2':
                     line = line.lstrip('//')
             elif line.startswith('//#define detector'):
-                if self.mode == 'detect': 
-                    line = line.lstrip('//')          
+                if self.mode == 'detect':
+                    line = line.lstrip('//')
             src_fp.write(line)
         src_fp.close()
         bkup_fp.close()
@@ -144,9 +144,9 @@ class Raven():
         os.system(cmd);
         cmd = 'cp ' + self.defines_bkup_file + ' ' + self.defines_src_file
         # delete backup
-        if (os.system(cmd) == 0): 
+        if (os.system(cmd) == 0):
             cmd = 'rm ' + self.defines_bkup_file;
-            os.system(cmd);   
+            os.system(cmd);
         self.defines_changed = 0
 
     def __mfi_insert_code(self, file_name, mfi_hook, code):
@@ -163,7 +163,7 @@ class Raven():
         #open files
         src_fp = open(self.mfi_src_file, 'w')
         bkup_fp = open(self.mfi_bkup_file, 'r')
-        
+
         for line in bkup_fp:
             src_fp.write(line)
             if line.startswith(mfi_hook):
@@ -184,13 +184,13 @@ class Raven():
 
         # For R matrices injected values are based on absolute values of yaw, roll, pitch
         if ((target[0] == 'u.R_l') or (target[0] == 'u.R_r')):
-            code = 'if (' + trigger_line + ') { '; 
+            code = 'if (' + trigger_line + ') { ';
             elems = target[1].split(';');
             for i in range(0,3):
                 for j in range(0,3):
-                    code =code+target[0]+'['+str(i)+']['+str(j)+']='+ elems[i*3+j]+'; '; 
-            code = code + '}\n';  
-        # For thetas and USBs the injected value is absolute 
+                    code =code+target[0]+'['+str(i)+']['+str(j)+']='+ elems[i*3+j]+'; ';
+            code = code + '}\n';
+        # For thetas and USBs the injected value is absolute
         elif (target[0].find('jpos') > -1) or (file_name.find('USB') > -1):
             code = 'if (' + trigger_line + ') { ' + target[0] + ' = ' + target[1] + ';}\n'
         # For position the injected value is incremental
@@ -208,9 +208,9 @@ class Raven():
         cmd = 'cp ' + self.mfi_bkup_file + ' ' + self.mfi_src_file
 
         # delete backup
-        if (os.system(cmd) == 0): 
+        if (os.system(cmd) == 0):
             cmd = 'rm ' + self.mfi_bkup_file;
-            os.system(cmd);   
+            os.system(cmd);
         self.mfi_changed = 0
 
     def __copy_files(self):
@@ -221,13 +221,13 @@ class Raven():
             os.system(cmd)
             cmd = 'cp mfi2.txt ' + self.result_folder
             os.system(cmd)
-            cmd = 'cp mfi2_params.csv ' + self.result_folder + '/' + self.param_name     
-            os.system(cmd)     
+            cmd = 'cp mfi2_params.csv ' + self.result_folder + '/' + self.param_name
+            os.system(cmd)
             cmd = 'cp ./robot_run.csv ' + self.result_folder + '/' + self.traj_name
             #cmd = 'cp ./golden_run/traj2.csv ' + self.result_folder + '/' + self.traj_name
             os.system(cmd)
-            
-    def __quit(self): 
+
+    def __quit(self):
         """ Terminate all process started by _run_experiment() """
         # Restore changes to source code
 
@@ -235,16 +235,16 @@ class Raven():
             self.__restore_defines_h()
         if self.mfi_changed:
             self.__restore_mfi()
-        
+
         try:
-            r2_control_pid = subprocess.check_output("pgrep r2_control", 
+            r2_control_pid = subprocess.check_output("pgrep r2_control",
                     shell=True)
             os.killpg(int(r2_control_pid), signal.SIGINT)
             time.sleep(1)
         except:
             pass
         try:
-            roslaunch_pid = subprocess.check_output("pgrep roslaunch", 
+            roslaunch_pid = subprocess.check_output("pgrep roslaunch",
                     shell=True)
             os.killpg(int(roslaunch_pid), signal.SIGINT)
             time.sleep(1)
@@ -272,13 +272,13 @@ class Raven():
             pass
         try: #Added by Samin for vision data
             os.killpg(self.recordProc.pid, signal.SIGINT)
-            os.killpg(self.visionProc.pid, signal.SIGINT)         
+            os.killpg(self.visionProc.pid, signal.SIGINT)
             time.sleep(1)
         except:
             pass
         os.system("rm /tmp/dac_fifo > /dev/null 2>&1")
         os.system("rm /tmp/mpos_vel_fifo > /dev/null 2>&1")
-        os.system("killall two_arm_dyn > /dev/null 2>&1")        
+        os.system("killall two_arm_dyn > /dev/null 2>&1")
         os.system("killall r2_control > /dev/null 2>&1")
         os.system("killall roslaunch > /dev/null 2>&1")
         os.system("killall rostopic > /dev/null 2>&1")
@@ -325,8 +325,8 @@ class Raven():
 
         # Setup Variables
         kinectTask = "xterm -e roslaunch openni_launch openni.launch" #added by Samin for vision data
-        recordTask = "rosrun image_view video_recorder image:=/camera/rgb/image_raw" #added by Samin for vision data		
-        #recordTask = "python rec.py" #added by Samin for vision data using ZED		
+        recordTask = "rosrun image_view video_recorder image:=/camera/rgb/image_raw" #added by Samin for vision data
+        #recordTask = "python rec.py" #added by Samin for vision data using ZED
         ravenTask = "roslaunch raven_2 raven_2.launch > raven.output"
         #ravenTask = "xterm -hold -e 'LD_PRELOAD=/home/raven/homa_wksp/malicious_wrapper/malicious_wrapper.so roslaunch raven_2 raven_2.launch'"
         visTask = 'xterm -e roslaunch raven_visualization raven_visualization.launch'
@@ -336,9 +336,9 @@ class Raven():
 
         if (self.vision == 1): #added by Samin for vision data
 			visionProc = subprocess.Popen(kinectTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
-			time.sleep(0.2) 
+			time.sleep(0.2)
 			recordProc = subprocess.Popen(recordTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
-			time.sleep(0.2) 		
+			time.sleep(0.2)
         if (self.surgeon_simulator == 1):
             packetTask = 'python '+self.raven_home+'/Real_Packet_Generator_Surgeon.py '+ self.mode + ' '+ self.traj + '> packet_gen.output'
         else:
@@ -347,10 +347,10 @@ class Raven():
         # Call publisher, visualization, packet generator, and Raven II software
         if self.rviz_enabled:
         	vis_proc = subprocess.Popen(visTask, shell=True, preexec_fn=os.setsid)
-        	time.sleep(2) 
+        	time.sleep(2)
         else:
-       		pub_proc = subprocess.Popen(pubTask, env=env, shell=True, preexec_fn=os.setsid)                
-        	time.sleep(1) 
+       		pub_proc = subprocess.Popen(pubTask, env=env, shell=True, preexec_fn=os.setsid)
+        	time.sleep(1)
         if self.packet_gen == "1":
                 self.packet_proc = subprocess.Popen(packetTask, shell=True, preexec_fn=os.setsid)
                 print "\nRunning the packet generator.."
@@ -362,7 +362,7 @@ class Raven():
         # changed by Yongming. In this way we can have a separate terminal window for raven_2.launch.
         #self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
         os.system("gnome-terminal -x roslaunch raven_2 raven_2.launch > raven.output")
-        # Call rostopic to log the data from this RAVEN into latest_run.csv        
+        # Call rostopic to log the data from this RAVEN into latest_run.csv
         self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
         time.sleep(0.2);
 
@@ -380,17 +380,17 @@ class Raven():
             print("Waiting for Raven to be done...")
             data = sock.recvfrom(100)
             if data[0].find('Done!') > -1:
-                print("Raven is done, shutdown everything...") 
-                self.return_code = 0 
+                print("Raven is done, shutdown everything...")
+                self.return_code = 0
             elif data[0].find('Stopped') > -1:
-                print("Raven is E-stopped, shutdown everything...")  
+                print("Raven is E-stopped, shutdown everything...")
                 self.return_code = 1
             else:
                 data = ''
         self.exp_status = 'done'
         self.__quit()
-  
-        
+
+
     def _run_mfi_experiment(self):
         """ Run mfi experiment according to the master_file """
         cur_inj = -1
@@ -410,7 +410,7 @@ class Raven():
                 # Skip lines begin with # or empty line
                 if param[0] == '' or param[0] == '#':
                     continue
-               
+
                 # Read location info
                 elif param[0] == 'location':
                     location_info = param[1].split(':')
@@ -458,7 +458,7 @@ class Raven():
         if self.title == 'mfi2_empty_test':
             self.result_folder = self.raven_home + '/exp_result/fault_free/' + self.title.rstrip() + '_' + time+'_'+self.mode
         else:
-            self.result_folder = self.raven_home + '/exp_result/faulty/' + self.title.rstrip() + '_' + time+'_'+self.mode            
+            self.result_folder = self.raven_home + '/exp_result/faulty/' + self.title.rstrip() + '_' + time+'_'+self.mode
         self.traj_name = time + '.trj'
         self.param_name = time+ '.param'
         cmd = 'mkdir -p ' + self.result_folder
@@ -492,7 +492,7 @@ class Raven():
         else:
             myshelve['param'] = param
             return True
-        
+
 
     def _run_mfi2_experiment(self):
         try:
@@ -539,13 +539,13 @@ class Raven():
                     self.title = l[1].rstrip()
                     logger.info("Experiment Title: " + self.title)
                     self.__setup_result_folder()
-                       
+
         # Delete if result_folder is empty
         try:
             os.rmdir(self.result_folder)
         except OSError as ex:
             pass
-    
+
     def signal_handler(self, signal, frame):
         """ Signal handler to catch Ctrl+C to shutdown everything"""
         print "Ctrl+C Pressed!"
@@ -591,9 +591,9 @@ if mode == "sim":
     print "Run Simulation"
 elif mode == "dyn_sim":
     print "Run Dynamic Simulation"
-elif mode == "rob": 
+elif mode == "rob":
     print "Run Real Robot"
-elif mode == "detect": 
+elif mode == "detect":
     print "Run Real Robot with Dynamic Model Detector"
 else:
     print usage
@@ -607,4 +607,3 @@ signal.signal(signal.SIGINT, raven.signal_handler)
 raven.run()
 #cmd = "scp /home/homa/raven_2/latest_run.csv mohammadsaminyasar@172.25.44.142:/Users/mohammadsaminyasar/Documents/ismr_results/exp35/"
 #os.system(cmd)
-

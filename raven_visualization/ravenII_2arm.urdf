@@ -10,9 +10,9 @@
 
   <gazebo> 
     <static value = "false"/>
-    <plugin name="gazebo_JSTranslator" filename="package://raven_visualization/lib/libgazebo_JSTranslator.so"></plugin>
+   <plugin name="gazebo_JSTranslator" filename="package://raven_visualization/lib/libgazebo_JSTranslator.so"></plugin>
 
-    <plugin name="gazebo_GraspFix" filename="package://raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib/libgazebo_grasp_fix.so">
+    <plugin name="gazebo_GraspFix" filename="/home/homa/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib/libgazebo_grasp_fix.so">
 
       <arm>
            <arm_name>left_arm</arm_name>
@@ -30,7 +30,7 @@
        <update_rate>4</update_rate>
        <grip_count_threshold>4</grip_count_threshold>
        <max_grip_count>8</max_grip_count>
-       <release_tolerance>0.005</release_tolerance>
+       <release_tolerance>0.0005</release_tolerance>
        <disable_collisions_on_attach>false</disable_collisions_on_attach>
        <contact_topic>__default_topic__</contact_topic>
 
@@ -44,30 +44,14 @@
     </gazebo>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 10 10" rpy="0 0 0" />
       <geometry>
-	<box size="0.01 0.01 0.01" />
+	<box size="0.00001 0.00001 0.00001" />
       </geometry>
       <material name="Cyan">
 	<color rgba="0 255 255 1.0"/>
       </material>
     </visual>
-
-    <inertial>
-      <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
-      <inertia
-          ixx = "1"
-          ixy = "0"
-          ixz = "0"
-          iyy = "1"
-          iyz = "0"
-          izz = "1"
-          />
-    </inertial>
-
-
-
   </link>
 
  
@@ -76,10 +60,10 @@
   <link name="base_link_L">
     <visual>
       <geometry>
-        <!-- <mesh filename="package://raven_visualization/Raven_files/left_arm/base_w_motors.dae"/> Maybe a simpler one?-->
+         <mesh filename="package://raven_visualization/Raven_files/left_arm/base_w_motors.dae"/>
 	<box size="0.43 0.25 0.32" />
       </geometry>
-    <origin xyz="0 0 -0.43" rpy="-1.57075 1.57075 -1.57075"/>
+    <origin xyz="0 0 0.0" rpy="-1.57075 1.57075 -1.57075"/>
     </visual>
 
     <inertial>
@@ -98,6 +82,8 @@
   </link>
 <gazebo reference="link1_L">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>1.0</mu1>
+	<mu2>1.0</mu2>
     </gazebo>
 
   <link name="link1_L">
@@ -130,6 +116,8 @@
 
 <gazebo reference="link2_L">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="link2_L">
     <visual>
@@ -161,6 +149,8 @@
 
 <gazebo reference="link3_L">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="link3_L">
     <visual>
@@ -191,7 +181,8 @@
 
 <gazebo reference="instrument_shaft_L">
       <turnGravityOff>true</turnGravityOff>
-
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="instrument_shaft_L">
     <visual>
@@ -202,7 +193,7 @@
 
     <inertial>
       <origin xyz = "0 0 0" rpy="0 0 0"/>
-      <mass value = "1"/>
+      <mass value = "10"/>
       <inertia
           ixx = "10"
           ixy = "0"
@@ -222,6 +213,8 @@
   </link>
 <gazebo reference="wrist_L">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="wrist_L">
     <visual>
@@ -253,6 +246,8 @@
 <gazebo reference="grasper1_L">
       <turnGravityOff>true</turnGravityOff>
 <implicitSpringDamper>1</implicitSpringDamper>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="grasper1_L">
     <visual>
@@ -284,8 +279,6 @@
 	<ode>
 	<kp>1000000.0</kp>
 	<kd>1.0</kd>
-	<mu1>1.0</mu1>
-	<mu2>1.0</mu2>
 	<minDepth>0.001</minDepth>
 
 	</ode>
@@ -296,10 +289,10 @@
 
   </link>
 
-
 <gazebo reference="grasper2_L">
       <turnGravityOff>true</turnGravityOff>
-
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="grasper2_L">
     <visual>
@@ -342,22 +335,22 @@
     </collision> 
   </link>
 
-
  <!-- RIGHT ARM LINKS -->
 
 <gazebo reference="base_link_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
-
 
  <link name="base_link_R">
     <visual>
       <geometry>
-       <!-- <mesh filename="package://raven_visualization/Raven_files/right_arm/base_w_motors.dae"/> -->
+	<mesh filename="package://raven_visualization/Raven_files/right_arm/base_w_motors.dae"/> 
        <box size="0.43 0.25 0.32" />
       </geometry>
     <!--origin xyz="0 0 -1" rpy="0 1.57075 0"/-->
-    <origin xyz="0 0 -0.43" rpy="3.1415 -1.57075 0"/>
+    <origin xyz="0 0 1" rpy="3.1415 -1.57075 0"/>
     </visual>
 
     <inertial>
@@ -379,6 +372,8 @@
 
 <gazebo reference="link1_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="link1_R">
     <visual>
@@ -411,6 +406,8 @@
 
 <gazebo reference="link2_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="link2_R">
     <visual>
@@ -443,6 +440,8 @@
 
 <gazebo reference="link3_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="link3_R">
     <visual>
@@ -475,6 +474,8 @@
 
 <gazebo reference="instrument_shaft_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="instrument_shaft_R">
     <visual>
@@ -507,6 +508,8 @@
 
 <gazebo reference="wrist_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="wrist_R">
     <visual>
@@ -540,6 +543,8 @@
 
 <gazebo reference="grasper1_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="grasper1_R">
     <visual>
@@ -572,6 +577,8 @@
 
 <gazebo reference="grasper2_R">
       <turnGravityOff>true</turnGravityOff>
+	<mu1>0.2</mu1>
+	<mu2>0.2</mu2>
     </gazebo>
   <link name="grasper2_R">
     <visual>

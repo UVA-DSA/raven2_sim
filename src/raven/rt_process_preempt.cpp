@@ -550,13 +550,13 @@ static void *rt_process(void* )
     // Set PortF outputs
     buffer_out[OUT_LENGTH-1] = device0.mech[0].outputs;
     // write to simulated board - just a file
-    //printf("&&&& WriteSyscallfp = %d\n", WriteSyscallfp); 
+    //printf("&&&& WriteSyscallfp = %d\n", WriteSyscallfp);
     clock_gettime(CLOCK_REALTIME,&t1);
     int ret2 = write(WriteSyscallfp, &buffer_out, OUT_LENGTH);
     clock_gettime(CLOCK_REALTIME,&t2);
     // Log the system call time
    	if (ret2 == OUT_LENGTH)
-     SysCallTiming << double((double)t2.tv_nsec/1000 - (double)t1.tv_nsec/1000) << "\n";    
+     SysCallTiming << double((double)t2.tv_nsec/1000 - (double)t1.tv_nsec/1000) << "\n";
 #endif
 #endif
       //Publish current raven state
@@ -699,9 +699,9 @@ int main(int argc, char **argv)
   sprintf(buff,"%s/SysCall_Time.txt", raven_path);
   SysCallTiming.open(buff,std::ofstream::out);
   sprintf(buff,"%s/SysCall_Logging.txt", raven_path);
-  WriteSyscallfp = open(buff, O_CREAT|O_RDWR|O_NONBLOCK, 0600); 
+  WriteSyscallfp = open(buff, O_CREAT|O_RDWR|O_NONBLOCK, 0600);
 #endif
-#endif 
+#endif
 
 
 #ifdef dyn_simulator
@@ -765,4 +765,3 @@ int main(int argc, char **argv)
 
   exit(0);
 }
-

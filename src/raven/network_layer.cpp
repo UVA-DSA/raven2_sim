@@ -177,7 +177,7 @@ volatile struct v_struct v;
   \param param1 void pointer
   \return void
   \ingroup Network
-  \todo do something with retval to keep the compiler from complaining 
+  \todo do something with retval to keep the compiler from complaining
 */
 void* network_process(void* param1)
 {
@@ -414,8 +414,8 @@ void* network_process(void* param1)
       		//log_msg("Pos Arm 1 = %d, %d, %d", u.delx[1], u.dely[1], u.delz[1]);
                 //log_file("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 #endif
-                
-// Remember 
+
+// Remember
 		//log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 
 		seq = u.sequence;
