@@ -207,7 +207,7 @@ void teleopIntoDS1(struct u_struct *us_t)
             for (int k=0;k<3;k++)
                 data1.rd[i].R[j][k] = rot_mx_temp[j][k];
 
-    //    log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
+        //log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
 #else
 		// Set Position command
 	  	data1.xd[i].x = us_t->delx[armidx];

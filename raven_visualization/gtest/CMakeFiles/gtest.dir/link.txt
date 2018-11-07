@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -O2 -g -DNDEBUG  -shared -Wl,-soname,libgtest.so -o ../lib/libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/opt/ros/kinetic/lib  -L/home/homa/raven_2/raven_visualization/gtest/src -lpthread -Wl,-rpath,/opt/ros/kinetic/lib:/home/homa/raven_2/raven_visualization/gtest/src 

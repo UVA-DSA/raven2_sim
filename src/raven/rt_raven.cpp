@@ -277,27 +277,6 @@ if (currParams->runlevel !=RL_PEDAL_DN){
 }
 #endif
     //Inverse kinematics
-    // COde added by Samin 11/07/2018
-    #ifdef simulator
-    #ifndef packetgen
-    _mech = NULL; _joint = NULL;
-    float array [16] = {29.95 DEG2RAD, 90.45 DEG2RAD, 22.90 DEG2RAD, 0, 11.56 DEG2RAD, 7.28 DEG2RAD, 82.41 DEG2RAD, 56.66 DEG2RAD, 29.95 DEG2RAD, 90.45 DEG2RAD, 22.90 DEG2RAD, 0, 11.56 DEG2RAD, 7.28 DEG2RAD, 82.41 DEG2RAD, 56.66 DEG2RAD};
-    /*while ( loop_over_joints(device0, _mech, _joint, i,j) )
-    {
-        struct DOF * _joint = &(device0->mech[1].joint[j]);
-        _joint->jpos_d = array[i*MAX_DOF_PER_MECH + j];
-    }
-
-    device0->mech[0].pos_d.x = 206926;
-    device0->mech[0].pos_d.y = -109554;
-    device0->mech[0].pos_d.z = -95855;
-    device0->mech[1].pos_d.x =  206926;
-    device0->mech[1].pos_d.y = -109554;
-    device0->mech[1].pos_d.z = -95855;
-    */
-    #endif
-    #endif
-    //Code adding ended
     r2_inv_kin(device0, currParams->runlevel);
 
     //Inverse Cable Coupling
@@ -326,17 +305,16 @@ if (currParams->runlevel !=RL_PEDAL_DN){
         _joint->tau_d += _joint->tau_g;  // Add gravity torque
     }
     //log_msg("changed tau_d to = %f\n",_joint->tau_d);
+
     TorqueToDAC(device0);
-/*for (int i =0; i < 2; i++)
+	/*for (int i =0; i < 2; i++)
 	{
 		printf("\nDACs -arm %d:\n%d,%d,%d\n", i, device0->mech[i].joint[SHOULDER].current_cmd,
 			  device0->mech[i].joint[ELBOW].current_cmd,
 			  device0->mech[i].joint[Z_INS].current_cmd);
 		printf("\nX,Y,Z -arm %d:\n%d,%d,%d\n", i, device0->mech[i].pos_d.x,device0->mech[i].pos_d.y,
 				  device0->mech[i].pos_d.z);
-	}
-  */
-  //device0->mech[i].pos_d.z = device0->mech[i].pos_d.z -100;
+	}*/
     return 0;
 }
 
