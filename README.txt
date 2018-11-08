@@ -3,11 +3,13 @@ Summary and licensing information
 ======================================
 This code is for RAVEN II surgical simulator. It is based on the open-source RAVEN II control software, developed by the University of Washington Biorobotics lab at: https://github.com/uw-biorobotics/raven2/tree/indigo and the first version of simulator developed at the University of Illinois at: https://github.com/CSLDepend/raven2_sim.
 
-It enables running RAVEN control software with no robotic hardware attached. A Python script (Real_Packet_Generator_Surgeon.py) mimicks the network packets sent from the surgeon console based on a previously collected data from the trajectory of a basic surgical task. A 3D visualization tool for ROS (rviz package) is used for 3D animation of the robotic motions. 
-For more information, please see: http://web.engr.illinois.edu/~alemzad1/papers/MedicalCPS_2015.pdf
+It enables running RAVEN control software with no robotic hardware attached. A Python script (Real_Packet_Generator_Surgeon.py) mimicks the network packets sent from the surgeon console based on a previously collected data from the trajectory of a basic surgical task. ROS  visualization packages (rviz and Gazebo) are used for 3D animation of the robotic motions and the interactions with environment. Different modes enable the simulator to work with or without the surgeon console or in parallel with the actual robot. The fault injection mode enables testing the resilience of the robot to accidental faults and malicious attacks by artificially inserting faults into the control software. 
+For more information, see the following papers: 
+http://web.engr.illinois.edu/~alemzad1/papers/MedicalCPS_2015.pdf
 http://arxiv.org/abs/1504.07135v1
+http://faculty.virginia.edu/alemzadeh/papers/DSN_2016.pdf 
 
-Copyright (C) 2017 Dependable Systems and Analytics Group, University of Virginia
+Copyright (C) 2018 Dependable Systems and Analytics Group, University of Virginia
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
