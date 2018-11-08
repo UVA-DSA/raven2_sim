@@ -53,6 +53,12 @@ ROS publishing is at the bottom half of this file.
 #include "r2_kinematics.h"
 #include "reconfigure.h"
 #include "defines.h"
+#ifdef simulator
+#ifndef packetgen
+#include <math.h>
+extern int firstpacket;
+#endif
+#endif
 
 extern int NUM_MECH;
 extern USBStruct USBBoards;
@@ -173,7 +179,7 @@ void teleopIntoDS1(struct u_struct *us_t)
     {
 #ifndef simulator
         armserial = USBBoards.boards[i]==GREEN_ARM_SERIAL ? GREEN_ARM_SERIAL : GOLD_ARM_SERIAL;
-        armidx    = USBBoards.boards[i]==GREEN_ARM_SERIAL ? 1 : 0;
+        armidx    = USBBoards.boards[i]==GREEN_AyawRM_SERIAL ? 1 : 0;
 		//log_msg("i = %d, armidx = %d\n",i, armidx);
 #else
         armserial = (i == 1) ? GREEN_ARM_SERIAL:GOLD_ARM_SERIAL;
@@ -181,6 +187,7 @@ void teleopIntoDS1(struct u_struct *us_t)
 #endif
 
 #ifndef packetgen
+
         // apply mapping to teleop data
         p.x = us_t->delx[armidx];
         p.y = us_t->dely[armidx];
@@ -207,10 +214,29 @@ void teleopIntoDS1(struct u_struct *us_t)
             for (int k=0;k<3;k++)
                 data1.rd[i].R[j][k] = rot_mx_temp[j][k];
 
+#ifdef simulator
+  float array [16] = {31.5444812775 DEG2RAD, 90.1361312866 DEG2RAD, 22.9244003296 DEG2RAD, 0, 10.3955860138 DEG2RAD, 19.3089828491 DEG2RAD,-2.37392711639 DEG2RAD, 4.69590997696 DEG2RAD, 29.9757232666 DEG2RAD,90.325050354 DEG2RAD,22.9270248413 DEG2RAD,0,-4.25127267838 DEG2RAD,-3.97164392471 DEG2RAD,46.3926887512 DEG2RAD,45.3422470093 DEG2RAD};
+  float cart_pose [6] = {-77507,-23265,14846,-77477,26066,13309};
+  float temprot [18] = {-0.975777983665,-0.207313895226,-0.069844275713,0.00283893872984,0.307242035866,-0.951627194881,0.218744635582,-0.928775131702,-0.299211472273, -0.920559287071,0.22624963522,0.318404972553,0.366252332926,0.216660767794,0.904940545559,0.135756596923,0.949667930603,-0.282313525677};
+  if (firstpacket == 0){
+    for (int j = 0; j < 16; j++)
+        data1.jpos_d[j] = array[j];
+    data1.xd[i].x = cart_pose[i*3 + 0];
+    data1.xd[i].y = cart_pose[i*3 + 1];
+    data1.xd[i].z = cart_pose[i*3 + 2];
+    for (int j=0;j<3;j++){
+      for (int k=0;k<3;k++){
+        data1.rd[i].R[j][k] = temprot[i*9 + j*3 + k];
+      }
+    }
+    if (data1.surgeon_mode==1)
+       firstpacket = 1;
+  }
+#endif
         //log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
 #else
 		// Set Position command
-	  	data1.xd[i].x = us_t->delx[armidx];
+	  data1.xd[i].x = us_t->delx[armidx];
 		data1.xd[i].y = us_t->dely[armidx];
 		data1.xd[i].z = us_t->delz[armidx];
 

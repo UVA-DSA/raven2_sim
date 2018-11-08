@@ -27,8 +27,7 @@ int curr_pack_no = 0;
 //code added by samin 11/07/2018
 #ifdef simulator
 #ifndef packetgen
-#include <math.h>
-int firstpacket = 0;
+extern int firstpacket;
 #endif
 #endif
 //code adding ended
@@ -116,32 +115,15 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
   float array [16] = {31.5444812775 DEG2RAD, 90.1361312866 DEG2RAD, 22.9244003296 DEG2RAD, 0, 10.3955860138 DEG2RAD, 19.3089828491 DEG2RAD,-2.37392711639 DEG2RAD, 4.69590997696 DEG2RAD, 29.9757232666 DEG2RAD,90.325050354 DEG2RAD,22.9270248413 DEG2RAD,0,-4.25127267838 DEG2RAD,-3.97164392471 DEG2RAD,46.3926887512 DEG2RAD,45.3422470093 DEG2RAD};
 
   if (firstpacket ==0){
-    for (int i = 0; i < 1; i++)
-    {
+    for (int i = 0; i < NUM_MECH; i++)
+
       for (int j = 0; j < 8; j++)
-      {
+
           device0->mech[i].joint[j].jpos_d = array[i*8 + j];
-      }
-    rcvdParams->xd[i].x = cart_pose[i*3 + 0];
-    rcvdParams->xd[i].y = cart_pose[i*3 + 1];
-    rcvdParams->xd[i].z = cart_pose[i*3 + 2];
-    currParams->rd[i].yaw   = atan(temprot[i*9 + 3]/temprot[i*9 + 0]);
-    currParams->rd[i].pitch = atan(-temprot[i*9 + 6]/sqrt(temprot[i*9 + 7]*temprot[i*9 + 7] +temprot[i*9 + 7]*temprot[i*9 + 8]));
-    currParams->rd[i].roll  = atan(temprot[i*9 + 7]/temprot[i*9 + 8]);
-    for (int j=0;j<3;j++){
-        for (int k=0;k<3;k++){
-          rcvdParams->rd[i].R[j][k] = temprot[i*9 + j*3 + k];
-      }
     }
-    //currParams->rd[i].grasp = rcvdParams->rd[i].grasp;
-    }
-    if (device0->surgeon_mode == 1){
-      firstpacket = 1;
-    }
-  }
   //log_msg("\nX,Y,Z -arm %d:\n%d,%d,%d\n", 0, rcvdParams->xd[0].x,rcvdParams->xd[0].y, rcvdParams->xd[0].z);
 #else
-// Code added finished
+
 		if (currParams->last_sequence == 1)
 		{
 			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");

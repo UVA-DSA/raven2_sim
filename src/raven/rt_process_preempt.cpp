@@ -88,6 +88,9 @@ int    mech_gravcomp_done[2]={0};
 
 int done_homing = 0;
 #ifdef simulator // We might need to have this changed to pakcet_gen
+#ifndef packetgen
+int firstpacket = 0;
+#endif
 int NUM_MECH=2;   // Define NUM_MECH as a C variable, not a c++ variable
 #else
 int NUM_MECH=0;   // Define NUM_MECH as a C variable, not a c++ variable
