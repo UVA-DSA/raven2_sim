@@ -270,6 +270,7 @@ void outputRobotState(){
             cout << "Green arm:\t";
         else
             cout << "Unknown arm:\t";
+
         cout<<"Board "<<j<<", type "<<device0.mech[j].type << ":\n";
         cout<<"P: (x,y,z) : ("<< device0.mech[j].pos.x / (1000.0*1000.0) << "\t" << device0.mech[j].pos.y / (1000.0*1000.0);
         cout << "\t" << device0.mech[j].pos.z / (1000.0*1000.0);

@@ -89,5 +89,5 @@ void fromITP(struct position *delpos, tf::Quaternion &delrot, int armserial)
     delpos->x = (int)(incr.getOrigin()[0]);
     delpos->y = (int)(incr.getOrigin()[1]);
     delpos->z = (int)(incr.getOrigin()[2]);
-
+    
 }
