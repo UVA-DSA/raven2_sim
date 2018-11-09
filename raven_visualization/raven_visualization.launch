@@ -42,12 +42,9 @@
   <!-- Spawn a simple box into gazebo, as well. -->
   <node name="box_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoBox -x 0.0 -y 0.02 -z 0.1  -file '$(find raven_visualization)/box.urdf'"/> 
 
- 
-<node name = "contact_surface_layer" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo contact_surface_layer 0.001"/>
-<node name = "contact_max_correcting_vel" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo contact_max_correcting_vel 100.0"/>
-<node name = "cfm" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo cfm 0.0"/>
-<node name = "erp" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo erp 0.2"/>
-
+ <node name="sor_pgs_iters" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_iters 50"/>
+  <node name="sor_pgs_w" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_w 0"/>
+<node name="time_step" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo time_step 0.001"/>
 	
 
   <!-- ros_control rrbot launch file -->

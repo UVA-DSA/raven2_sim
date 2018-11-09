@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: raven_visualization
+Description: Description of raven_visualization
+Version: 1.0.0
+Cflags: -I/opt/ros/kinetic/include
+Libs: -L/usr/local/lib -lroscpp -lpthread -lrosconsole -lrosconsole_log4cxx -lrosconsole_backend_interface -lxmlrpcpp -lroscpp_serialization -lrostime -lcpp_common
+Requires: 

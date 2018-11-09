@@ -1,0 +1,8 @@
+prefix=/home/homa/raven_2/raven_visualization/devel
+
+Name: raven_visualization
+Description: Description of raven_visualization
+Version: 1.0.0
+Cflags: -I/opt/ros/kinetic/include
+Libs: -L/home/homa/raven_2/raven_visualization/devel/lib -lroscpp -lpthread -lrosconsole -lrosconsole_log4cxx -lrosconsole_backend_interface -lxmlrpcpp -lroscpp_serialization -lrostime -lcpp_common
+Requires: 

@@ -1,10 +1,6 @@
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/gazebo.hh>
-#include <gazebo/physics/Model.hh>
 #include <gazebo_msgs/SetModelConfiguration.h>
-#include <gazebo/physics/physics.hh>
-#include <boost/bind.hpp>
-
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <string>
@@ -19,18 +15,12 @@ namespace gazebo
 {
 class GazeboJointStateTranslator : public ModelPlugin
 {
-
-private: event::ConnectionPtr updateConnection;
-
 public:
 
   ros::NodeHandle n;
   ros::Subscriber JointStateSub;
   // ros::Publisher pubDummy; //Test Publisher
   ros::ServiceClient ModelConfigClient;
-
-
-
 
   GazeboJointStateTranslator() : ModelPlugin()
   {
@@ -65,28 +55,13 @@ public:
 
     ModelConfigClient = n.serviceClient<gazebo_msgs::SetModelConfiguration>("/gazebo/set_model_configuration");
 
-// Listen to the update event. This event is broadcast every
-      // simulation iteration.
-      this->updateConnection = event::Events::ConnectWorldUpdateBegin(
-          boost::bind(&GazeboJointStateTranslator::OnUpdate, this, _1));
-
+    
     
     
   }
 
+  void Update(physics::ModelPtr _model, sdf::ElementPtr _sdf){
 
-//For testing purposes, I shall apply a constant torque/force to the links grasper1_L and 2_L.
-
-  void OnUpdate(physics::ModelPtr _model, sdf::ElementPtr _sdf){
-	//GRASP TEST: Set joint forces to appropriate numbers.
-
-	const math::Vector3 *torqueVectorGrasp1 = new math::Vector3(20, 0, 20); 
-	const math::Vector3 *torqueVectorGrasp2 = new math::Vector3(-20, 0, -20); 
-    _model->GetLink("grasper1_L")->AddRelativeTorque(*torqueVectorGrasp1);
-    _model->GetLink("grasper2_L")->AddRelativeTorque(*torqueVectorGrasp2);
-
-	delete torqueVectorGrasp1;
-	delete torqueVectorGrasp2;
     
   }
 
@@ -99,7 +74,7 @@ public:
   */
 
   void jointStatesCallback(const sensor_msgs::JointState::ConstPtr& msg){
-    //ROS_INFO("Received joint state msg." );
+    ROS_INFO("Received joint state msg." );
 
     //Create the service request.
     gazebo_msgs::SetModelConfiguration srv;
@@ -108,21 +83,21 @@ public:
     srv.request.urdf_param_name = "robot_description";
     
     //Debug Info: Size of name list in msg, etc.
-    //ROS_INFO("DEBUG:Size of msg name list : %d", (int)msg->name.size());
+    ROS_INFO("DEBUG:Size of msg name list : %d", (int)msg->name.size());
 
     for(int i = 0; i < msg->name.size(); i++){
       srv.request.joint_names.push_back(msg->name[i]);
       srv.request.joint_positions.push_back(msg->position[i]);
 
       //Debug Info
-      //ROS_INFO("DEBUG: Added joint name %s to srv: %s", msg->name[i].c_str(), srv.request.joint_names[i].c_str());
-      // ROS_INFO("DEBUG: Added joint position %f to srv: %f", msg->position[i], srv.request.joint_positions[i]);
+      ROS_INFO("DEBUG: Added joint name %s to srv: %s", msg->name[i].c_str(), srv.request.joint_names[i].c_str());
+      ROS_INFO("DEBUG: Added joint position %f to srv: %f", msg->position[i], srv.request.joint_positions[i]);
 
     }
     //Call the SetModelConfiguration service.
    
     if(ModelConfigClient.call(srv)){
-      //ROS_INFO("DEBUG: Success : %d", srv.response.success);
+      ROS_INFO("DEBUG: Success : %d", srv.response.success);
       
     }
 

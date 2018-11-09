@@ -179,7 +179,7 @@ void teleopIntoDS1(struct u_struct *us_t)
     {
 #ifndef simulator
         armserial = USBBoards.boards[i]==GREEN_ARM_SERIAL ? GREEN_ARM_SERIAL : GOLD_ARM_SERIAL;
-        armidx    = USBBoards.boards[i]==GREEN_AyawRM_SERIAL ? 1 : 0;
+        armidx    = USBBoards.boards[i]==GREEN_ARM_SERIAL ? 1 : 0;
 		//log_msg("i = %d, armidx = %d\n",i, armidx);
 #else
         armserial = (i == 1) ? GREEN_ARM_SERIAL:GOLD_ARM_SERIAL;
