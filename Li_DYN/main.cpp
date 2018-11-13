@@ -52,7 +52,7 @@ int main()
 	state_type r_state = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 	// yongming
-	std::ofstream out("dif.txt"); 
+	std::ofstream out("dif.txt");
 
 	while (read(fd1, buf, MAX_BUF))
 	//while (iter_time_gold < 100)
@@ -67,7 +67,7 @@ int main()
 		if (arm_type == 0)
 		{
 			// initial state
-#define UPDATE_IF_DIFF_LARGE
+//#define UPDATE_IF_DIFF_LARGE
 #ifdef UPDATE_MODEL
 			if (iter_time_gold % UPDATE_FREQ == 0)
 #elif defined(UPDATE_IF_DIFF_LARGE)
@@ -75,15 +75,15 @@ int main()
 			double sum = 0;
 			for (int i=0; i<3; ++i) sum += pow(mpos[i] - r_state[6+i], 2);
 			double dif = sqrt(sum);
-			out << mpos[0] << "," << mpos[1] << "," << mpos[2] <<"," 
-			<< r_state[6] << "," << r_state[7] << "," << r_state[8] << "," << dif << "\n";
+			//out << mpos[0] << "," << mpos[1] << "," << mpos[2] <<","
+			//<< r_state[6] << "," << r_state[7] << "," << r_state[8] << "," << dif << "\n";
 
 			if (iter_time_gold == 0 || dif > 100)
 #else
 			if (iter_time_gold == 0)
 #endif
 			{
-				out << "reset the inital position\n"; 
+				//out << "reset the inital position\n";
 				for (int i = 0; i < 3; i++)
 				{
 					switch (i)
@@ -164,7 +164,7 @@ int main()
 	close(fd1);
 	close(fd2);
 
-	out.close();
+	//out.close();
 
 	return 0;
 }

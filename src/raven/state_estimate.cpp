@@ -244,7 +244,7 @@ void getStateLPF(struct DOF *joint, int tool_type)
     }
 
 #ifdef OPPOSE_GRIP
-    if ((joint->type == GRASP1_GOLD) || (joint->type == GRASP1_GREEN)) 
+    if ((joint->type == GRASP1_GOLD) || (joint->type == GRASP1_GREEN))
  	f_enc_val *= -1;
 #endif
 
@@ -296,7 +296,7 @@ void getStateLPF(struct DOF *joint, int tool_type)
 
 //removed filter functionality - CIGIT 7/30/15
 //the filter was shown to cause fluttering in the tool joints after homing
-#ifdef NO_LPF  
+#ifdef NO_LPF
     joint->mvel = (motorPos - oldPos[0])/ STEP_PERIOD;
     joint->mpos = motorPos;
 
@@ -409,7 +409,7 @@ void getStateLPF(struct DOF *joint, style t_style)
     }
 
 #ifdef OPPOSE_GRIP
-    if ((joint->type == GRASP1_GOLD) || (joint->type == GRASP1_GREEN)) 
+    if ((joint->type == GRASP1_GOLD) || (joint->type == GRASP1_GREEN))
  	f_enc_val *= -1;
 #endif
 

@@ -360,8 +360,8 @@ class Raven():
             print usage
             sys.exit(2)
         # changed by Yongming. In this way we can have a separate terminal window for raven_2.launch.
-        #self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
-        os.system("gnome-terminal -x roslaunch raven_2 raven_2.launch > raven.output")
+        self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
+        #os.system("gnome-terminal -x roslaunch raven_2 raven_2.launch > raven.output")
         # Call rostopic to log the data from this RAVEN into latest_run.csv
         self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
         time.sleep(0.2);

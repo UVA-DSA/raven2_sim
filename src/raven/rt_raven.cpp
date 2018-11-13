@@ -265,17 +265,7 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
 #ifndef simulator
     parport_out(0x01);
 #endif
-
-#ifdef simulator
-if (currParams->runlevel !=RL_PEDAL_DN){
-
- _mech = NULL;  _joint = NULL;
-    while ( loop_over_joints(device0, _mech, _joint, i,j) )
-    {
-        _joint->tau_d += _joint->tau_g;  // Add gravity torque
-    }
-}
-#endif
+  //std::cout<<device0->mech[0].pos.x<<" "<<device0->mech[0].pos.y<<" "<<device0->mech[0].pos.z<<std::endl;
     //Inverse kinematics
     r2_inv_kin(device0, currParams->runlevel);
 

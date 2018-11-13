@@ -51,11 +51,11 @@
 
 //~~~~~~~~~ tool adapter definition ~~~~~~~~~~~~~~~~
 
-#define RAVEN_TOOLS 	//changed
-//#define DV_ADAPTER	
+#define RAVEN_TOOLS 	 // uncomment this when switching to raven
+//#define DV_ADAPTER  // uncomment this when switching to dv_adapter
 //#define RICKS_TOOLS   //skips tool initialization //not supported since switch to tools.h?
 //#define SCISSOR_RIGHT
-//#define OPPOSE_GRIP //disabled oppose grip- samin
+#define OPPOSE_GRIP
 
 
 //~~~~~~~~~ USB Board definition ~~~~~~~~~~~~~~~~~~~

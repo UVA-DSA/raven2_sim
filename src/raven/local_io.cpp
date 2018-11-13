@@ -128,7 +128,6 @@ int initLocalioData(void)
     return 0;
 }
 
-
 /**
  * \brief Initiates update of data1 local paramater structure from userspace
  *
@@ -156,7 +155,7 @@ int receiveUserspace(void *u,int size)
 /**
  * \brief Puts the master data into protected structure
  *
- * Takes the data from the master structure and places it into the parameter passing structure.
+ * Takes the data from the master structure and placedata1s it into the parameter passing structure.
  *
  * \question why is setting the sequence number like this a hack?
  * \todo Apply transform to incoming data </capslock>
@@ -187,13 +186,12 @@ void teleopIntoDS1(struct u_struct *us_t)
 #endif
 
 #ifndef packetgen
-
         // apply mapping to teleop data
         p.x = us_t->delx[armidx];
         p.y = us_t->dely[armidx];
         p.z = us_t->delz[armidx];
 		//log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)", p.x, p.y, p.z);
-        //set local quaternion from teleop quaternion data
+        //data1set local quaternion from teleop quaternion data
         q_temp.setX( us_t->Qx[armidx] );
         q_temp.setY( us_t->Qy[armidx] );
         q_temp.setZ( us_t->Qz[armidx] );
@@ -215,22 +213,34 @@ void teleopIntoDS1(struct u_struct *us_t)
                 data1.rd[i].R[j][k] = rot_mx_temp[j][k];
 
 #ifdef simulator
-  float array [16] = {31.5444812775 DEG2RAD, 90.1361312866 DEG2RAD, 22.9244003296 DEG2RAD, 0, 10.3955860138 DEG2RAD, 19.3089828491 DEG2RAD,-2.37392711639 DEG2RAD, 4.69590997696 DEG2RAD, 29.9757232666 DEG2RAD,90.325050354 DEG2RAD,22.9270248413 DEG2RAD,0,-4.25127267838 DEG2RAD,-3.97164392471 DEG2RAD,46.3926887512 DEG2RAD,45.3422470093 DEG2RAD};
-  float cart_pose [6] = {-77507,-23265,14846,-77477,26066,13309};
-  float temprot [18] = {-0.975777983665,-0.207313895226,-0.069844275713,0.00283893872984,0.307242035866,-0.951627194881,0.218744635582,-0.928775131702,-0.299211472273, -0.920559287071,0.22624963522,0.318404972553,0.366252332926,0.216660767794,0.904940545559,0.135756596923,0.949667930603,-0.282313525677};
+  if (data1.surgeon_mode==1)
+     firstpacket = 1;
+
+  float temprot [18] = {-0.7449436784,	0.5636990666,	0.3567944169,	0.4884248972,	0.8251422048,	-0.2838688195,	-0.4544227123,	-0.0371990092,	-0.8900091052,	-0.7411794662,	-0.4948744476,	0.4535992742,	-0.4885991216,	0.8610370755,	0.1410179138,	-0.460351944,	-0.1171086282,	-0.8799782395};
+  float cart_pose [6] = {-79801,	-24978,	9941,	-79929,	27582,	13249};
+  float array [16] = {27.6930198669,	91.2905731201,	22.7908210754,	0,	54.7564506531,	-24.742931366,	-57.0370979309,	57.0943908691,	28.5080890656,	95.9077606201,	22.6468734741,	0,	-62.0621871948,	-36.0904693604,	57.3144111633,	-57.2571182251};
+  float mpos [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
+  float mpos_d [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
+  float mvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+  float jvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+  float grasp[2] = {0.001,	0.001};
+
   if (firstpacket == 0){
-    for (int j = 0; j < 16; j++)
-        data1.jpos_d[j] = array[j];
+    for (int j = 0; j < 16; j++){
+        data1.jpos_d[j] = array[j]*M_PI/180;
+				data1.mvel_d[j] = mvel[j]*M_PI/180;
+        data1.mpos_d[j] = mpos_d[j]*M_PI/180;
+        data1.mvel_d[j] = mvel[j]*M_PI/180;
+      }
     data1.xd[i].x = cart_pose[i*3 + 0];
     data1.xd[i].y = cart_pose[i*3 + 1];
     data1.xd[i].z = cart_pose[i*3 + 2];
+    //ddata1.rd[i].grasp   = grasp[i];ata1.rd[i].grasp   = grasp[i];
     for (int j=0;j<3;j++){
       for (int k=0;k<3;k++){
         data1.rd[i].R[j][k] = temprot[i*9 + j*3 + k];
       }
     }
-    if (data1.surgeon_mode==1)
-       firstpacket = 1;
   }
 #endif
         //log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
@@ -243,7 +253,7 @@ void teleopIntoDS1(struct u_struct *us_t)
 		// commented debug output
 		//log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",armidx, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
 
-		// Set rotation command
+		// Set rotation commandarray
 		//log_msg("Arm %d: User desired Rotations:",armidx);
 		for (int j=0;j<3;j++)
 		{
@@ -302,10 +312,11 @@ void teleopIntoDS1(struct u_struct *us_t)
 #ifdef packetgen												// Attempt to resolve closed grasper (Samin)
 		data1.rd[i].grasp = grasp_gain * us_t->grasp[armidx]; // removed - (Samin)
 #else															// Attempt to resolve closed grasper (Samin)
-		data1.rd[i].grasp -= grasp_gain * us_t->grasp[armidx];
+		data1.rd[i].grasp -= grasp_gain * us_t->grasp[armidx]; // Removed to make it similar to packetgen (Don't remove the "-")
 #endif
 		if (data1.rd[i].grasp>graspmax) data1.rd[i].grasp=graspmax;
 		else if(data1.rd[i].grasp<graspmin) data1.rd[i].grasp=graspmin;
+
     }
     /// \question HK: why is this a hack?
     // HACK HACK HACK
@@ -697,9 +708,9 @@ void publish_joints(struct robot_device* device0){
     joint_state.name[4] ="wrist_joint_L";
     joint_state.position[4] = device0->mech[left].joint[5].jpos + offsets_l.wrist_off;
     joint_state.name[5] ="grasper_joint_1_L";
-    joint_state.position[5] = device0->mech[left].joint[6].jpos - offsets_l.grasp1_off;// + 3.14/10;
+    joint_state.position[5] = device0->mech[left].joint[6].jpos + offsets_l.grasp1_off;
     joint_state.name[6] ="grasper_joint_2_L";
-    joint_state.position[6] = device0->mech[left].joint[7].jpos * -1 - offsets_l.grasp2_off;// + 3.14/10;
+    joint_state.position[6] = device0->mech[left].joint[7].jpos * -1 + offsets_l.grasp2_off;
 
     //======================RIGHT ARM===========================
     joint_state.name[7] ="shoulder_R";
@@ -713,9 +724,9 @@ void publish_joints(struct robot_device* device0){
     joint_state.name[11] ="wrist_joint_R";
     joint_state.position[11] = device0->mech[right].joint[5].jpos * -1 + offsets_r.wrist_off;
     joint_state.name[12] ="grasper_joint_1_R";
-    joint_state.position[12] = device0->mech[right].joint[6].jpos - offsets_r.grasp1_off;// - 3.14/4;
+    joint_state.position[12] = device0->mech[right].joint[6].jpos + offsets_r.grasp1_off;
     joint_state.name[13] ="grasper_joint_2_R";
-    joint_state.position[13] = device0->mech[right].joint[7].jpos * -1 - offsets_r.grasp2_off;// - 3.14/4;
+    joint_state.position[13] = device0->mech[right].joint[7].jpos * -1 + offsets_r.grasp2_off;
 
     //======================LEFT ARM===========================
 

@@ -392,6 +392,7 @@ static void *rt_process(void* )
         runlevel = currParams.runlevel;
         packet_num = currParams.last_sequence;
 	    //Send the DACs, mvel, and mpos to the simulator
+      log_msg("packetnum %d\n",packet_num);
 		int i = 0;
 	    if (((runlevel == 3)) && (packet_num != 111))
 	    {
@@ -449,14 +450,14 @@ static void *rt_process(void* )
 					  device0.mech[i].joint[ELBOW].current_cmd,
 					  device0.mech[i].joint[Z_INS].current_cmd);
 				    write(wrfd, sim_buf, sizeof(sim_buf));
-				//printf("Packet %d: Sent:\n%s\n",currParams.last_sequence,sim_buf);
+				printf("Packet %d: Sent:\n%s\n",currParams.last_sequence,sim_buf);
 #ifdef detector
 				// Read estimates from FIFO
 				read(rdfd, sim_buf, sizeof(sim_buf));
 				// Write the results to the screen
 				std::istringstream ss(sim_buf);
 				ss >> sim_mpos[0] >> sim_mvel[0] >> sim_jpos[0] >> sim_mpos[1] >> sim_mvel[1] >> sim_jpos[1] >> sim_mpos[2] >> sim_mvel[2] >> sim_jpos[2];
-		        //printf("\nRecieved: %s\n",sim_buf);
+		                printf("\nRecieved: %s\n",sim_buf);
 #endif
 #ifndef no_logging
         printf("Estimated (mpos,mvel):(%f, %f),(%f, %f),(%f, %f)\n",

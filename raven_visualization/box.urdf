@@ -6,13 +6,13 @@
 
 <gazebo reference="box">
       <turnGravityOff>False</turnGravityOff>
-
+	<material>Gazebo/Black</material>
     </gazebo>
 <static>true</static>
   <link name="box">
     <visual>
-	<material name="black_metal">
-	<color rgba="0.1 0.1 0.1 1"/>
+	<material name="Cyan">
+	<color rgba="0.5 0.5 0.5 1"/>
       </material>
       <geometry>
 	<box size="0.1 0.005 0.005" />

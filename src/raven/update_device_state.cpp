@@ -105,61 +105,6 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
     // set desired mech position in pedal_down runlevel
     if (currParams->runlevel == RL_PEDAL_DN)
     {
-
-#ifdef simulator
-// Code added by Samin on 11/07/2018
-#ifndef packetgen
-  // Get initial joint positions from input, assign them to the desired jpos
-  float temprot [18] = {-0.975777983665,-0.207313895226,-0.069844275713,0.00283893872984,0.307242035866,-0.951627194881,0.218744635582,-0.928775131702,-0.299211472273, -0.920559287071,0.22624963522,0.318404972553,0.366252332926,0.216660767794,0.904940545559,0.135756596923,0.949667930603,-0.282313525677};
-  float cart_pose [6] = {-77507,-23265,14846,-77477,26066,13309};
-  float array [16] = {31.5444812775 DEG2RAD, 90.1361312866 DEG2RAD, 22.9244003296 DEG2RAD, 0, 10.3955860138 DEG2RAD, 19.3089828491 DEG2RAD,-2.37392711639 DEG2RAD, 4.69590997696 DEG2RAD, 29.9757232666 DEG2RAD,90.325050354 DEG2RAD,22.9270248413 DEG2RAD,0,-4.25127267838 DEG2RAD,-3.97164392471 DEG2RAD,46.3926887512 DEG2RAD,45.3422470093 DEG2RAD};
-
-  if (firstpacket ==0){
-    for (int i = 0; i < NUM_MECH; i++)
-
-      for (int j = 0; j < 8; j++)
-
-          device0->mech[i].joint[j].jpos_d = array[i*8 + j];
-    }
-  //log_msg("\nX,Y,Z -arm %d:\n%d,%d,%d\n", 0, rcvdParams->xd[0].x,rcvdParams->xd[0].y, rcvdParams->xd[0].z);
-#else
-
-		if (currParams->last_sequence == 1)
-		{
-			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
-		    for (int i = 0; i < NUM_MECH; i++)
-			{
-				for (int j = 0; j < 8; j++)
-				{
-				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
-					device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
-					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
-					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
-					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
-					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
-				}
-			}
-		}
-#endif
-#endif
-#ifdef detector
-		if (currParams->last_sequence == 1)
-		{
-			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
-		    for (int i = 0; i < NUM_MECH; i++)
-			{
-				for (int j = 0; j < 8; j++)
-				{
-				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
-					device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
-					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
-					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
-					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
-					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
-				}
-			}
-		}
-#endif
         for (int i = 0; i < NUM_MECH; i++)
         {
             device0->mech[i].pos_d.x = rcvdParams->xd[i].x;
@@ -171,6 +116,84 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
                 for (int k=0;k<3;k++)
 	           device0->mech[i].ori_d.R[j][k]  = rcvdParams->rd[i].R[j][k];
         }
+#ifdef simulator
+        // Code added by Samin on 11/07/2018
+#ifndef packetgen
+          // Get initial joint positions from input, assign them to the desired jpos
+          float temprot [18] = {-0.7449436784,	0.5636990666,	0.3567944169,	0.4884248972,	0.8251422048,	-0.2838688195,	-0.4544227123,	-0.0371990092,	-0.8900091052,	-0.7411794662,	-0.4948744476,	0.4535992742,	-0.4885991216,	0.8610370755,	0.1410179138,	-0.460351944,	-0.1171086282,	-0.8799782395};
+          float cart_pos_d [6] = {-79801,	-24978,	9941,	-79929,	27582,	13249};
+          float cart_pos [6] = {-79801,	-24978,	9940,	-79928,	27582,	13248};
+
+          float jpos_d [16] = {27.6930198669,	91.2905731201,	22.7908210754,	0,	54.7564506531,	-24.742931366,	-57.0370979309,	57.0943908691,	28.5080890656,	95.9077606201,	22.6468734741,	0,	-62.0621871948,	-36.0904693604,	57.3144111633,	-57.2571182251};
+          float jpos [16] = {27.6930217743,	91.2905654907,	22.7908210754,	0,	54.756477356,	-24.7429962158,	-57.0370407104,	57.0944061279,	28.5080890656,	95.9077529907,	22.6468734741,	0,	-62.062084198,	-36.0905532837,	57.3144950867,	-57.2571334839};
+          float mpos [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
+          float mpos_d [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
+          float mvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+          float jvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+          float grasp[2] = {0.001,	0.001};
+          if (firstpacket ==0){
+	    log_msg("Initializing joint values for dyn_sim\n");
+            for (int i = 0; i < NUM_MECH; i++){
+              device0->mech[i].pos.x = cart_pos[i*3 + 0];
+              device0->mech[i].pos.y = cart_pos[i*3 + 1];
+              device0->mech[i].pos.z = cart_pos[i*3 + 2];
+              device0->mech[i].pos_d.x = cart_pos_d[i*3 + 0];
+              device0->mech[i].pos_d.y = cart_pos_d[i*3 + 1];
+              device0->mech[i].pos_d.z = cart_pos_d[i*3 + 2];
+              device0->mech[i].ori_d.grasp  = grasp[i];
+              for (int j = 0; j < 8; j++){
+                  device0->mech[i].joint[j].jpos = jpos[i*8 + j]*M_PI/180;
+                  device0->mech[i].joint[j].jpos_d = jpos_d[i*8 + j]*M_PI/180;
+                  device0->mech[i].joint[j].jvel_d = jvel[i*8+j]*M_PI/180;
+              	  device0->mech[i].joint[j].mpos = mpos[i*8+j]*M_PI/180;
+              	  device0->mech[i].joint[j].mvel = mvel[i*8+j]*M_PI/180;
+              	  device0->mech[i].joint[j].mpos_d = mpos_d[i*8+j]*M_PI/180;
+              	  device0->mech[i].joint[j].mvel_d = mvel[i*8+j]*M_PI/180;
+                }
+              }
+            }
+
+          //log_msg("\nX,Y,Z -arm %d:\n%d,%d,%d\n", 0, rcvdParams->xd[0].x,rcvdParams->xd[0].y, rcvdParams->xd[0].z);
+#else
+        		if (currParams->last_sequence == 1)
+        		{
+        			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
+        		    for (int i = 0; i < NUM_MECH; i++)
+        			{
+        				for (int j = 0; j < 8; j++)
+        				{
+        				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
+        				    device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
+        			            device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
+        				    device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
+        				    device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
+        				    device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
+        				}
+        			}
+        		}
+#endif
+#endif
+#ifdef detector
+        		if (currPdevice0->mech[i].joint[j].mpos = mpos[i*8+j];
+              	  device0->mech[i].joint[j].mvel = mvel[i*8+j];
+              	  device0->mech[i].joint[j].mpos_d = mpos_d[i*8+j];
+              	  device0->mech[i].joint[j].mvel_d = mvel[i*8+j];arams->last_sequence == 1)
+        		{
+        			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
+        		    for (int i = 0; i < NUM_MECH; i++)
+        			{
+        				for (int j = 0; j < 8; j++)
+        				{
+        				  device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
+        					device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
+        					device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
+        					device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
+        					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
+        					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
+        				}
+        			}
+        		}
+#endif
     }
 
     // Switch control modes only in pedal up or init.
