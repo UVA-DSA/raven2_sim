@@ -102,7 +102,7 @@ void stateEstimate(struct robot_device *device0)
 				sim_jpos[2];
             //printf("\nRecieved: %s\n",sim_buf);
 #ifndef no_logging
-			printf("Estimated (mpos,mvel):(%f, %f),(%f, %f),(%f, %f)\n",
+			printf("Estimated (mpos,mvel) from the Dynsim:(%f, %f),(%f, %f),(%f, %f)\n",
 				device0->mech[i].joint[SHOULDER].mpos,
 				device0->mech[i].joint[SHOULDER].mvel,
 				device0->mech[i].joint[ELBOW].mpos,

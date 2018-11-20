@@ -70,7 +70,6 @@
 //#define SERVER_ADDR  "128.95.205.206"    // used only if the robot needs to send data to the server
 //#define SERVER_ADDR  "130.126.143.20"
 #define SERVER_ADDR  "192.168.5.19"
-
 extern int done_homing;
 #ifdef packetgen
 int first = 0;
@@ -410,15 +409,15 @@ void* network_process(void* param1)
             {
 #ifdef save_logs
                 //log_msg("NETWORK) Receieved Valid Packet # %d", u.sequence);
-      		//log_msg("Pos Arm 0 = %d, %d, %d", u.delx[0], u.dely[0], u.delz[0]);
-      		//log_msg("Pos Arm 1 = %d, %d, %d", u.delx[1], u.dely[1], u.delz[1]);
+      		      //log_msg("Pos Arm 0 = %d, %d, %d", u.delx[0], u.dely[0], u.delz[0]);
+      	      	//log_msg("Pos Arm 1 = %d, %d, %d", u.delx[1], u.dely[1], u.delz[1]);
                 //log_file("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 #endif
 
 // Remember
-		//log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
+	              //log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 
-		seq = u.sequence;
+	            	seq = u.sequence;
                 receiveUserspace(&u,uSize);   // coordinates transform from ITP frame to robot 0 frame
             }
 

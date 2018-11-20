@@ -449,7 +449,7 @@ void initDOFs(struct device *device0)
 
 
     }
-    
+
     dofs_inited=1;
 }
 
@@ -583,7 +583,6 @@ void setStartXYZ(struct device *device0)
     int i;
     static int j;
     j++;
-
     //Get the forward kinematics of this position
     fwdCableCoupling(device0, RL_INIT);
     r2_fwd_kin(device0, RL_INIT);

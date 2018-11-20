@@ -4,7 +4,7 @@
   <arg name="use_sim_time" default="true"/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
-  <arg name="debug" default="false"/>	
+  <arg name="debug" default="false"/>
 
 <env name = "GAZEBO_MODEL_PATH" value="$(find raven_visualization)/Raven_files" />
 
@@ -26,26 +26,26 @@
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
-    args="-unpause -urdf -model RavenII -z 0.2 
-	-J shoulder_L 1.52 	
-	-J tool_roll_L -0.68 
-	-J wrist_joint_L 0.61 
-	-J grasper_joint_1_L 1.15 
-	-J grasper_joint_2_L 1.15 
-	-J elbow_L 0.13 
-	-J insertion_L -0.16 
+    args="-unpause -urdf -model RavenII -z 0.2
+	-J shoulder_L 1.52
+	-J tool_roll_L -0.68
+	-J wrist_joint_L 0.61
+	-J grasper_joint_1_L 1.15
+	-J grasper_joint_2_L 1.15
+	-J elbow_L 0.13
+	-J insertion_L -0.16
 	-file '$(find raven_visualization)/ravenII_2arm.urdf'"/>
 
 
 <!-- Spawn a table. -->
-<node name= "table_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoTable -z 0.051 -file '$(find raven_visualization)/floating_table.urdf'" /> 
+<node name= "table_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoTable -z 0.051 -file '$(find raven_visualization)/floating_table.urdf'" />
   <!-- Spawn a simple box into gazebo, as well. -->
-  <node name="box_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoBox -x 0.0 -y 0.02 -z 0.1  -file '$(find raven_visualization)/box.urdf'"/> 
+  <node name="box_urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model DemoBox -x 0.0 -y 0.02 -z 0.06  -file '$(find raven_visualization)/box.urdf'"/>
 
  <node name="sor_pgs_iters" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_iters 50"/>
-  <node name="sor_pgs_w" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_w 0"/>
+  <node name="sor_pgs_w" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo sor_pgs_w 0.01"/>
 <node name="time_step" pkg="dynamic_reconfigure" type="dynparam" args="set gazebo time_step 0.001"/>
-	
+
 
   <!-- ros_control rrbot launch file -->
   <!--include file="$(find rrbot_control)/launch/rrbot_control.launch" /-->

@@ -51,10 +51,8 @@
 #include "local_io.h"
 #include "update_device_state.h"
 #include "parallel.h"
+
 extern int done_homing;
-#ifdef packetgen
-extern int done_homing;
-#endif
 extern int NUM_MECH; //Defined in rt_process_preempt.cpp																								preempt.cpp
 extern unsigned long int gTime; //Defined in rt_process_preempt.cpp
 extern struct DOF_type DOF_types[]; //Defined in DOF_type.h
@@ -106,6 +104,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
     initRobotData(device0, currParams->runlevel, currParams);
 
     //Compute Mpos & Velocities
+
     stateEstimate(device0);
 
 	// commented debug output
@@ -113,6 +112,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
                 device0->mech[0].type,  device0->mech[0].pos_d.x, device0->mech[0].pos_d.y,device0->mech[0].pos_d.z,device0->mech[1].type,  device0->mech[1].pos_d.x, device0->mech[1].pos_d.y,device0->mech[1].pos_d.z); */
 
     //Foward Cable Coupling
+
     fwdCableCoupling(device0, currParams->runlevel);
 
     //Forward kinematics
@@ -200,6 +200,7 @@ int controlRaven(struct device *device0, struct param_pass *currParams){
 		currParams->runlevel = RL_PEDAL_DN;
 	        currParams->robotControlMode = cartesian_space_control;
    	        newRobotControlMode = cartesian_space_control;
+
 #endif
 #endif
             break;
@@ -253,13 +254,12 @@ int raven_cartesian_space_command(struct device *device0, struct param_pass *cur
 
     if (currParams->runlevel < RL_PEDAL_UP)
     {
-	return -1;
+       return -1;
     }
     else if (currParams->runlevel < RL_PEDAL_DN)
     {
         set_posd_to_pos(device0);
-    	updateMasterRelativeOrigin(device0);
-
+    	  updateMasterRelativeOrigin(device0);
     }
 
 #ifndef simulator

@@ -36,7 +36,7 @@
 //#define packetgen_restart // packet generator can restart after an E-STOP
 //#define mfi // perform mfi injection
 //#define detector // runing robot and dynamic simulation together
-//#define save_logs // save trajectory logs into sim_log.txt
+#define save_logs // save trajectory logs into sim_log.txt
 //#define log_syscall // log Write system call timing
 //#define log_USB // log USB packets sent
 //#define no_logging // disable logging

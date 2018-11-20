@@ -258,7 +258,7 @@ static void *rt_process(void* )
   // TODO: Break when board becomes disconnected.
   while (ros::ok() && !r2_kill)
   {
-      //printf("RealTime @= %lx\n", gTime);
+      //log_msg("RealTime @= %lx\n", gTime);
       // Initiate USB Read
 #ifndef simulator
       initiateUSBGet(&device0);
@@ -356,49 +356,53 @@ static void *rt_process(void* )
       //////////////// SURGICAL ROBOT CODE //////////////////////////
       if (deviceType == SURGICAL_ROBOT)
       {
-  		// Calculate Raven control
-  		controlRaven(&device0, &currParams);
+  		    // Calculate Raven control
+  		    controlRaven(&device0, &currParams);
       }
       //////////////// END SURGICAL ROBOT CODE ///////////////////////////
 
       // Check for overcurrent and impose safe torque limits
       if (overdriveDetect(&device0, currParams.runlevel))
       {
-		  soft_estopped = TRUE;
-		  showInverseKinematicsSolutions(&device0, currParams.runlevel);
-		  outputRobotState();
+		      soft_estopped = TRUE;
+		      showInverseKinematicsSolutions(&device0, currParams.runlevel);
+		       outputRobotState();
 #ifdef dyn_simulator
 #ifdef save_logs
-		  logging = 1;
+		      logging = 1;
           log_file("ERROR: soft_estopped = %d\n",soft_estopped);
-		  logging = 0;
+		      logging = 0;
 #endif
-          //printf("ERROR: soft_estopped = %d\n",soft_estopped);
+          //log_msg("ERROR: soft_estopped = %d\n",soft_estopped);
           device0.runlevel = 0;
-		  //r2_kill = 1;
-		  //if (ros::ok()) ros::shutdown();
-		  //return 0;
+		      //r2_kill = 1;
+		      //if (ros::ok()) ros::shutdown();
+		      //return 0;
 #endif
        }
-
-
-
 
       //Update Atmel Output Pins
       updateAtmelOutputs(&device0, currParams.runlevel);
 
 #ifdef dyn_simulator
-		// Local variables
-        runlevel = currParams.runlevel;
-        packet_num = currParams.last_sequence;
+
+		  // Local variables
+      runlevel = currParams.runlevel;
+      packet_num = currParams.last_sequence;
+      //log_msg("Run Level = %d, First Packet = %d\n",runlevel,firstpacket);
 	    //Send the DACs, mvel, and mpos to the simulator
-      log_msg("packetnum %d\n",packet_num);
-		int i = 0;
-	    if (((runlevel == 3)) && (packet_num != 111))
+      //log_msg("packetnum %d\n",packet_num);
+		  int i = 0;
+      #ifdef packetgen
+	    if ((runlevel == 3) && (packet_num != 111))
+      #else
+      if ((runlevel == 3) && (firstpacket == 1))
+      #endif
 	    {
+
 #ifdef mfi
 /*				if ((packet_num >= 1000) && (packet_num <= 1020))
-				printf("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
+				log_msg("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
 				   packet_num,
           (float)device0.mech[0].joint[SHOULDER].mpos*180/3.14,
 				  (float)device0.mech[0].joint[ELBOW].mpos*180/3.14,
@@ -420,7 +424,7 @@ static void *rt_process(void* )
 //Physical limits:
 /*
 				if ((packet_num >= 1000) && (packet_num <= 1020))
-				printf("\nInjected = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
+				log_msg("\nInjected = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
           (float)device0.mech[0].joint[SHOULDER].mpos*180/3.14,
 				  (float)device0.mech[0].joint[ELBOW].mpos*180/3.14,
 				  (float)device0.mech[0].joint[Z_INS].mpos*180/3.14,
@@ -450,38 +454,29 @@ static void *rt_process(void* )
 					  device0.mech[i].joint[ELBOW].current_cmd,
 					  device0.mech[i].joint[Z_INS].current_cmd);
 				    write(wrfd, sim_buf, sizeof(sim_buf));
-				printf("Packet %d: Sent:\n%s\n",currParams.last_sequence,sim_buf);
+				    log_msg("Packet %d: Sent to DynSim: %s, estop = %d\n",currParams.last_sequence,sim_buf, soft_estopped);
 #ifdef detector
 				// Read estimates from FIFO
 				read(rdfd, sim_buf, sizeof(sim_buf));
 				// Write the results to the screen
 				std::istringstream ss(sim_buf);
 				ss >> sim_mpos[0] >> sim_mvel[0] >> sim_jpos[0] >> sim_mpos[1] >> sim_mvel[1] >> sim_jpos[1] >> sim_mpos[2] >> sim_mvel[2] >> sim_jpos[2];
-		                printf("\nRecieved: %s\n",sim_buf);
+		    //log_msg("\nRecieved from DynSim: %s\n",sim_buf);
 #endif
 #ifndef no_logging
-        printf("Estimated (mpos,mvel):(%f, %f),(%f, %f),(%f, %f)\n",
+        /*log_msg("Used (mpos,mvel) for this cycle:(%f, %f),(%f, %f),(%f, %f)\n",
 				device0.mech[i].joint[SHOULDER].mpos,
 				device0.mech[i].joint[SHOULDER].mvel,
 				device0.mech[i].joint[ELBOW].mpos,
 				device0.mech[i].joint[ELBOW].mvel,
 				device0.mech[i].joint[Z_INS].mpos,
-				device0.mech[i].joint[Z_INS].mvel);
-#endif
-
-#ifndef no_logging
-				    printf("\nPacket %d:\nSent DACs: %d,%d,%d, estop = %d\n",
-	 					currParams.last_sequence,
-						device0.mech[i].joint[SHOULDER].current_cmd,
-						device0.mech[i].joint[ELBOW].current_cmd,
-						device0.mech[i].joint[Z_INS].current_cmd,
-						soft_estopped);
+				device0.mech[i].joint[Z_INS].mvel);*/
 #endif
 	   }
     //For debugging
 	  /*if ((packet_num < 2991) && (packet_num > 2970))
 	  {
-				printf("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
+				log_msg("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
 				   packet_num,
           (float)device0.mech[0].joint[SHOULDER].mpos,
 				  (float)device0.mech[0].joint[ELBOW].mpos,
@@ -507,8 +502,8 @@ static void *rt_process(void* )
         int packet_num = currParams.last_sequence;
         int i = 0;
         if (((runlevel == 3)) && (packet_num != 111))
-		{
-				/*printf("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
+	    	{
+				/*log_msg("\nPacket %d = mpos/mvel/DACs \n%f,%f,%f,\n%f,%f,%f,\n%d,%d,%d\n",
 				   packet_num,
           (float)device0.mech[0].joint[SHOULDER].mpos,
 				  (float)device0.mech[0].joint[ELBOW].mpos,
@@ -527,7 +522,7 @@ static void *rt_process(void* )
 //device0.mech[i].joint[Z_INS].current_cmd => random int
 //Range of values for this trajectory: -800 to 800
 //Physical limits:
-		}
+		      }
 #endif
 #endif
 
@@ -554,7 +549,7 @@ static void *rt_process(void* )
     // Set PortF outputs
     buffer_out[OUT_LENGTH-1] = device0.mech[0].outputs;
     // write to simulated board - just a file
-    //printf("&&&& WriteSyscallfp = %d\n", WriteSyscallfp);
+    //log_msg("&&&& WriteSyscallfp = %d\n", WriteSyscallfp);
     clock_gettime(CLOCK_REALTIME,&t1);
     int ret2 = write(WriteSyscallfp, &buffer_out, OUT_LENGTH);
     clock_gettime(CLOCK_REALTIME,&t2);
@@ -668,11 +663,11 @@ int main(int argc, char **argv)
   {
      raven_path = strtok(ROS_PACKAGE_PATH,":");
      while(raven_path!= NULL){
-	 if (strstr(raven_path,"raven_2") != NULL){
-             printf("%s\n",raven_path);
-	     break;
-         }
-	 raven_path = strtok(NULL,":");
+	      if (strstr(raven_path,"raven_2") != NULL){
+           log_msg("%s\n",raven_path);
+	         break;
+        }
+	      raven_path = strtok(NULL,":");
      }
   }
   log_msg("%s\n",raven_path);

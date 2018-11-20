@@ -57,7 +57,7 @@ const static double r2d = 180/M_PI; //radians to degrees
  */
 int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdParams, struct device *device0)
 {
-    //log_file("updateDeviceState %d", currParams->runlevel);///Added
+    //log_msg("updateDeviceState %d", currParams->runlevel);
     currParams->last_sequence = rcvdParams->last_sequence;
 
 #ifdef save_logs
@@ -67,25 +67,25 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
     }
     else
     {
-	if (currParams->last_sequence != curr_pack_no)
-	{
-		if (curr_pack_no !=0)
-		{
-			log_file("______________________________________________\n");
-		}
-		// Dropped
-		if (currParams->last_sequence > (curr_pack_no+1))
-		{
-  		    for (int i=curr_pack_no+1;i<currParams->last_sequence;i++)
-                    {
-			log_file("Packet: %d\n", i);
-			log_file("Error: Packet Dropped.\n");
-			log_file ("______________________________________________\n");
-	            }
-		}
-		curr_pack_no = currParams->last_sequence;
-		log_file("Packet: %d\n", curr_pack_no);
-	}
+    	if (currParams->last_sequence != curr_pack_no)
+    	{
+    		if (curr_pack_no !=0)
+    		{
+    			log_file("______________________________________________\n");
+    		}
+    		// Dropped
+    		if (currParams->last_sequence > (curr_pack_no+1))
+    		{
+      		    for (int i=curr_pack_no+1;i<currParams->last_sequence;i++)
+                        {
+    			log_file("Packet: %d\n", i);
+    			log_file("Error: Packet Dropped.\n");
+    			log_file ("______________________________________________\n");
+    	            }
+    		}
+    		curr_pack_no = currParams->last_sequence;
+    		log_file("Packet: %d\n", curr_pack_no);
+    	}
     }
 #endif
 
@@ -120,19 +120,18 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
         // Code added by Samin on 11/07/2018
 #ifndef packetgen
           // Get initial joint positions from input, assign them to the desired jpos
-          float temprot [18] = {-0.7449436784,	0.5636990666,	0.3567944169,	0.4884248972,	0.8251422048,	-0.2838688195,	-0.4544227123,	-0.0371990092,	-0.8900091052,	-0.7411794662,	-0.4948744476,	0.4535992742,	-0.4885991216,	0.8610370755,	0.1410179138,	-0.460351944,	-0.1171086282,	-0.8799782395};
-          float cart_pos_d [6] = {-79801,	-24978,	9941,	-79929,	27582,	13249};
-          float cart_pos [6] = {-79801,	-24978,	9940,	-79928,	27582,	13248};
-
-          float jpos_d [16] = {27.6930198669,	91.2905731201,	22.7908210754,	0,	54.7564506531,	-24.742931366,	-57.0370979309,	57.0943908691,	28.5080890656,	95.9077606201,	22.6468734741,	0,	-62.0621871948,	-36.0904693604,	57.3144111633,	-57.2571182251};
-          float jpos [16] = {27.6930217743,	91.2905654907,	22.7908210754,	0,	54.756477356,	-24.7429962158,	-57.0370407104,	57.0944061279,	28.5080890656,	95.9077529907,	22.6468734741,	0,	-62.062084198,	-36.0905532837,	57.3144950867,	-57.2571334839};
-          float mpos [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
-          float mpos_d [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
-          float mvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
-          float jvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
-          float grasp[2] = {0.001,	0.001};
-          if (firstpacket ==0){
-	    log_msg("Initializing joint values for dyn_sim\n");
+          float temprot [18] = {-0.968002378941,-0.174213960767,0.180612385273,-0.219871729612,0.241933107376,-0.945052802563,0.120945267379,-0.954524934292,-0.272496551275,-0.93315243721,0.191262990236,0.304376482964,0.344187945127,0.231027543545,0.910033464432,0.103736370802,0.953962624073,-0.281414330006};
+          float cart_pos [6] = {-77452,-24161,13793,-77623,25864,13439};
+          float cart_pos_d [6]  = {-77452,-24161,13793,-77623,25864,13439};
+          float jpos [16] = {29.9492835999,90.373336792,22.9568557739,0,5.11032962799,4.20706319809,43.4555168152,51.1591072083,29.9215259552,90.3847808838,22.9222049713,0,-4.35502958298,-3.17343592644,48.013507843,42.5473213196};
+          float jpos_d [16] = {29.949464798,90.373336792,22.9568939209,0,5.11036348343,4.20723438263,43.4458198547,51.1495132446,29.9214191437,90.3846817017,22.9222240448,0,-4.35497236252,-3.17353034019,47.9966468811,42.5306816101};
+          float mpos [16] = {4078.98022461,11511.7197266,51634.2617188,0,17779.2304688,17789.4902344,-17360.9101562,18211.6816406,4075.19995117,11512.6210938,51559.1992188,0,-17749.3496094,-17754.390625,18157.5898438,-17343.2714844};
+          float mpos_d [16] = {4079.00512695,11511.7236328,51634.3476562,0,17779.2304688,17789.4921875,-17360.9980469,18211.5957031,4075.18554688,11512.6054688,51559.234375,0,-17749.3496094,-17754.390625,18157.4375,-17343.421875};
+          float mvel [16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+          float mvel_d [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+          float jvel_d [16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+          float grasp[2] = {1.65100002289,1.58000004292};
+          if (firstpacket == 0){
             for (int i = 0; i < NUM_MECH; i++){
               device0->mech[i].pos.x = cart_pos[i*3 + 0];
               device0->mech[i].pos.y = cart_pos[i*3 + 1];
@@ -144,32 +143,33 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
               for (int j = 0; j < 8; j++){
                   device0->mech[i].joint[j].jpos = jpos[i*8 + j]*M_PI/180;
                   device0->mech[i].joint[j].jpos_d = jpos_d[i*8 + j]*M_PI/180;
-                  device0->mech[i].joint[j].jvel_d = jvel[i*8+j]*M_PI/180;
+                  device0->mech[i].joint[j].jvel_d = jvel_d[i*8+j]*M_PI/180;
               	  device0->mech[i].joint[j].mpos = mpos[i*8+j]*M_PI/180;
               	  device0->mech[i].joint[j].mvel = mvel[i*8+j]*M_PI/180;
               	  device0->mech[i].joint[j].mpos_d = mpos_d[i*8+j]*M_PI/180;
-              	  device0->mech[i].joint[j].mvel_d = mvel[i*8+j]*M_PI/180;
-                }
+              	  device0->mech[i].joint[j].mvel_d = mvel_d[i*8+j]*M_PI/180;
               }
             }
+            log_msg("Initialized pos, ori, jpos, and mpos values in update_device_state\n");
+            if (rcvdParams->surgeon_mode == 1)
+              firstpacket = 1;
+         }
 
           //log_msg("\nX,Y,Z -arm %d:\n%d,%d,%d\n", 0, rcvdParams->xd[0].x,rcvdParams->xd[0].y, rcvdParams->xd[0].z);
 #else
         		if (currParams->last_sequence == 1)
         		{
-        			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
-        		    for (int i = 0; i < NUM_MECH; i++)
-        			{
-        				for (int j = 0; j < 8; j++)
-        				{
+        		   for (int i = 0; i < NUM_MECH; i++)
+        					for (int j = 0; j < 8; j++)
+        				  {
         				    device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
         				    device0->mech[i].joint[j].jvel_d = rcvdParams->jvel_d[i*8+j];
-        			            device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
+  			            device0->mech[i].joint[j].mpos = rcvdParams->mpos_d[i*8+j];
         				    device0->mech[i].joint[j].mvel = rcvdParams->mvel_d[i*8+j];
         				    device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
         				    device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
-        				}
-        			}
+        				  }
+        			 log_msg("Initialized jpos, jvel, mpos, and mvel in update_device_state\n");
         		}
 #endif
 #endif
@@ -179,9 +179,7 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
               	  device0->mech[i].joint[j].mpos_d = mpos_d[i*8+j];
               	  device0->mech[i].joint[j].mvel_d = mvel[i*8+j];arams->last_sequence == 1)
         		{
-        			log_msg("I am initizaling jpos, jvel, mpos, and mvel\n");
-        		    for (int i = 0; i < NUM_MECH; i++)
-        			{
+        			for (int i = 0; i < NUM_MECH; i++)
         				for (int j = 0; j < 8; j++)
         				{
         				  device0->mech[i].joint[j].jpos_d = rcvdParams->jpos_d[i*8+j];
@@ -191,7 +189,7 @@ int updateDeviceState(struct param_pass *currParams, struct param_pass *rcvdPara
         					device0->mech[i].joint[j].mpos_d = rcvdParams->mpos_d[i*8+j];
         					device0->mech[i].joint[j].mvel_d = rcvdParams->mvel_d[i*8+j];
         				}
-        			}
+        			log_msg("Initialized jpos, jvel, mpos, and mvel in update_device_state\n");
         		}
 #endif
     }

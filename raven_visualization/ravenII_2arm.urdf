@@ -8,7 +8,7 @@
 
 <robot name="raven_2">
 
-  <gazebo> 
+  <gazebo>
     <static value = "false"/>
    <plugin name="gazebo_JSTranslator" filename="package://raven_visualization/lib/libgazebo_JSTranslator.so"></plugin>
 
@@ -30,7 +30,7 @@
        <update_rate>4</update_rate>
        <grip_count_threshold>4</grip_count_threshold>
        <max_grip_count>8</max_grip_count>
-       <release_tolerance>0.0005</release_tolerance>
+       <release_tolerance>0.0005</release_tolerance> <!-- If we decrease it is easier to hold the grasper-->
        <disable_collisions_on_attach>false</disable_collisions_on_attach>
        <contact_topic>__default_topic__</contact_topic>
 
@@ -54,7 +54,7 @@
     </visual>
   </link>
 
- 
+
 
   <!-- LEFT ARM LINKS -->
   <link name="base_link_L">
@@ -70,7 +70,7 @@
         <pose>0 0 1 0 -0 0</pose>
         <mass value = "10"/>
         <inertia
-	  ixx = "10"
+	        ixx = "10"
           ixy = "0"
           ixz = "0"
           iyy = "10"
@@ -208,7 +208,7 @@
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/instrument_shaft.dae"/>
       </geometry>
-    </collision>    
+    </collision>
 
   </link>
 <gazebo reference="wrist_L">
@@ -240,7 +240,7 @@
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/left_arm/wrist.dae"/>
       </geometry>
-    </collision> 
+    </collision>
   </link>
 
 <gazebo reference="grasper1_L">
@@ -256,17 +256,17 @@
       </geometry>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
     </visual>
-    
+
     <inertial>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
       <mass value = "1"/>
       <inertia
-          ixx = "1"
+          ixx = "0"
           ixy = "0"
           ixz = "0"
-          iyy = "1"
+          iyy = "0"
           iyz = "0"
-          izz = "1"
+          izz = "0"
           />
     </inertial>
 
@@ -285,7 +285,7 @@
 	</contact>
 	</surface>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
-    </collision> 
+    </collision>
 
   </link>
 
@@ -306,12 +306,12 @@
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
       <mass value = "1"/>
       <inertia
-          ixx = "1"
+          ixx = "0"
           ixy = "0"
           ixz = "0"
-          iyy = "1"
+          iyy = "0"
           iyz = "0"
-          izz = "1"
+          izz = "0"
           />
     </inertial>
 
@@ -332,7 +332,7 @@
 	</contact>
 	</surface>
     <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
-    </collision> 
+    </collision>
   </link>
 
  <!-- RIGHT ARM LINKS -->
@@ -346,7 +346,7 @@
  <link name="base_link_R">
     <visual>
       <geometry>
-	<mesh filename="package://raven_visualization/Raven_files/right_arm/base_w_motors.dae"/> 
+	<mesh filename="package://raven_visualization/Raven_files/right_arm/base_w_motors.dae"/>
        <box size="0.43 0.25 0.32" />
       </geometry>
     <!--origin xyz="0 0 -1" rpy="0 1.57075 0"/-->
@@ -366,7 +366,7 @@
           />
     </inertial>
 
-   
+
   </link>
 
 
@@ -396,7 +396,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/link1_w_cover.dae"/>
       </geometry>
@@ -430,7 +430,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/link2.dae"/>
       </geometry>
@@ -464,7 +464,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/link3.dae"/>
       </geometry>
@@ -498,7 +498,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/instrument_shaft.dae"/>
       </geometry>
@@ -532,7 +532,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/wrist.dae"/>
       </geometry>
@@ -567,7 +567,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/grasper_1.dae"/>
       </geometry>
@@ -601,7 +601,7 @@
           />
     </inertial>
 
-    <collision> 
+    <collision>
       <geometry>
         <mesh filename="package://raven_visualization/Raven_files/right_arm/grasper_2.dae"/>
       </geometry>
@@ -612,7 +612,7 @@
 
   <!-- LEFT ARM JOINTS -->
   <joint name="camera_L" type="fixed">
-    
+
     <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
     <!--origin rpy="-1.57075 -1.57075 1.57075" xyz="0.0 0.00 0"/-->
     <origin rpy="-1.57075 -2.0071286 1.57075" xyz="0.0 0.00 0"/>
@@ -679,7 +679,7 @@
 
   <!-- RIGHT ARM JOINTS -->
   <joint name="camera_R" type="fixed">
-    
+
     <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
     <!--origin rpy="-1.57075 -1.57075 1.57075" xyz="-.2 0.00 0"/-->
     <origin rpy=" 1.57075 -2.0071286 1.57075" xyz="-.2 0.00 0"/>
@@ -753,7 +753,7 @@
     <child link="0_link"/>
   </joint>
 
-  
+
 
 
 </robot>

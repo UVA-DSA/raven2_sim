@@ -113,12 +113,12 @@ int initLocalioData(void)
         Q_ori[i] = Q_ori[i].getIdentity();
 #ifdef simulator
         for (int j=0;j<16;j++)
-		{
-			data1.jpos_d[j] = 0;
-			data1.jvel_d[j] = 0;
-			data1.mpos_d[j] = 0;
-			data1.mvel_d[j] = 0;
-		}
+    		{
+    			data1.jpos_d[j] = 0;
+    			data1.jvel_d[j] = 0;
+    			data1.mpos_d[j] = 0;
+    			data1.mvel_d[j] = 0;
+    		}
 #endif
     }
     data1.surgeon_mode=0;
@@ -213,34 +213,33 @@ void teleopIntoDS1(struct u_struct *us_t)
                 data1.rd[i].R[j][k] = rot_mx_temp[j][k];
 
 #ifdef simulator
-  if (data1.surgeon_mode==1)
-     firstpacket = 1;
-
-  float temprot [18] = {-0.7449436784,	0.5636990666,	0.3567944169,	0.4884248972,	0.8251422048,	-0.2838688195,	-0.4544227123,	-0.0371990092,	-0.8900091052,	-0.7411794662,	-0.4948744476,	0.4535992742,	-0.4885991216,	0.8610370755,	0.1410179138,	-0.460351944,	-0.1171086282,	-0.8799782395};
-  float cart_pose [6] = {-79801,	-24978,	9941,	-79929,	27582,	13249};
-  float array [16] = {27.6930198669,	91.2905731201,	22.7908210754,	0,	54.7564506531,	-24.742931366,	-57.0370979309,	57.0943908691,	28.5080890656,	95.9077606201,	22.6468734741,	0,	-62.0621871948,	-36.0904693604,	57.3144111633,	-57.2571182251};
-  float mpos [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
-  float mpos_d [16] = {3771.68603516,	11583.3037109,	51253.8789062,	0,	17916.3066406,	17398.3984375,	-18133.7617188,	18134.2773438,	3882.6953125,	12158.8007812,	51037.375,	0,	-17881.2890625,	-17870.9785156,	18061.8222656,	-18061.3066406};
-  float mvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
-  float jvel [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
-  float grasp[2] = {0.001,	0.001};
+   float temprot [18] = {-0.968002378941,-0.174213960767,0.180612385273,-0.219871729612,0.241933107376,-0.945052802563,0.120945267379,-0.954524934292,-0.272496551275,-0.93315243721,0.191262990236,0.304376482964,0.344187945127,0.231027543545,0.910033464432,0.103736370802,0.953962624073,-0.281414330006};
+   float cart_pos [6] = {-77452,-24161,13793,-77623,25864,13439};
+   float cart_pos_d [6]  = {-77452,-24161,13793,-77623,25864,13439};
+   float jpos [16] = {29.9492835999,90.373336792,22.9568557739,0,5.11032962799,4.20706319809,43.4555168152,51.1591072083,29.9215259552,90.3847808838,22.9222049713,0,-4.35502958298,-3.17343592644,48.013507843,42.5473213196};
+   float jpos_d [16] = {29.949464798,90.373336792,22.9568939209,0,5.11036348343,4.20723438263,43.4458198547,51.1495132446,29.9214191437,90.3846817017,22.9222240448,0,-4.35497236252,-3.17353034019,47.9966468811,42.5306816101};
+   float mpos [16] = {4078.98022461,11511.7197266,51634.2617188,0,17779.2304688,17789.4902344,-17360.9101562,18211.6816406,4075.19995117,11512.6210938,51559.1992188,0,-17749.3496094,-17754.390625,18157.5898438,-17343.2714844};
+   float mpos_d [16] = {4079.00512695,11511.7236328,51634.3476562,0,17779.2304688,17789.4921875,-17360.9980469,18211.5957031,4075.18554688,11512.6054688,51559.234375,0,-17749.3496094,-17754.390625,18157.4375,-17343.421875};
+   float mvel [16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+   float mvel_d [16] = {0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+   float jvel_d [16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+   float grasp[2] = {1.65100002289,1.58000004292};
 
   if (firstpacket == 0){
     for (int j = 0; j < 16; j++){
-        data1.jpos_d[j] = array[j]*M_PI/180;
-				data1.mvel_d[j] = mvel[j]*M_PI/180;
+        data1.jpos_d[j] = jpos_d[j]*M_PI/180;
         data1.mpos_d[j] = mpos_d[j]*M_PI/180;
-        data1.mvel_d[j] = mvel[j]*M_PI/180;
-      }
-    data1.xd[i].x = cart_pose[i*3 + 0];
-    data1.xd[i].y = cart_pose[i*3 + 1];
-    data1.xd[i].z = cart_pose[i*3 + 2];
-    //ddata1.rd[i].grasp   = grasp[i];ata1.rd[i].grasp   = grasp[i];
-    for (int j=0;j<3;j++){
-      for (int k=0;k<3;k++){
-        data1.rd[i].R[j][k] = temprot[i*9 + j*3 + k];
-      }
+        data1.mvel_d[j] = mvel_d[j]*M_PI/180;
+        data1.jvel_d[j] = jvel_d[j]*M_PI/180;
     }
+    data1.xd[i].x = cart_pos_d[i*3 + 0];
+    data1.xd[i].y = cart_pos_d[i*3 + 1];
+    data1.xd[i].z = cart_pos_d[i*3 + 2];
+    data1.rd[i].grasp = grasp[i];
+    for (int j=0;j<3;j++)
+      for (int k=0;k<3;k++)
+        data1.rd[i].R[j][k] = temprot[i*9 + j*3 + k];
+    //log_msg("Initialized pos, rd, jpos, and mpos values in local_io\n");
   }
 #endif
         //log_msg("Arm %d : User desired end-effector positions: (%d,%d,%d)",i, data1.xd[i].x, data1.xd[i].y, data1.xd[i].z);
@@ -269,7 +268,7 @@ void teleopIntoDS1(struct u_struct *us_t)
 		// Get initial joint positions from input, assign them to the desired jpos
 		if (us_t->sequence == 1)
 		{
-		    for (int j=0;j<16;j++)
+		  for (int j=0;j<16;j++)
 			{
 				data1.jpos_d[j] = (us_t->jpos[j])*M_PI/180;
 				data1.jvel_d[j] = (us_t->jvel[j])*M_PI/180;
@@ -392,7 +391,7 @@ struct param_pass * getRcvdParams(struct param_pass* d1)
     isUpdated = 0;
     pthread_mutex_unlock(&data1Mutex);
 #ifdef simulator
-        //log_file("RT_PROCESS) Copied recieved packet to local data structure.\n");
+    log_file("RT_PROCESS) Copied recieved packet to local data structure.\n");
 #endif
     return d1;
 }
@@ -409,10 +408,10 @@ struct param_pass * getRcvdParams(struct param_pass* d1)
 */
 void updateMasterRelativeOrigin(struct device *device0)
 {
+
 	int armidx;
     struct orientation *_ori;
     tf::Matrix3x3 tmpmx;
-
     // update data1 (network position desired) to device0.position_desired (device position desired)
     //   This eliminates accumulation of deltas from network while robot is idle.
     pthread_mutex_lock(&data1Mutex);

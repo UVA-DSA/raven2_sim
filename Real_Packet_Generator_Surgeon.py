@@ -83,6 +83,7 @@ sock2 = socket.socket(socket.AF_INET, # Internet
 def readSignals():
     global robot_state
     while(1):
+	print robot_state
         data = sock1.recvfrom(100)
         if (robot_state == 0):
             print "\rRaven is stopped..."       
@@ -131,6 +132,7 @@ def sendPackets():
     packet_num = 111;
     line_no = 0;
     line = [];
+    print "before while (runlevel <3) .. "
     while (runlevel < 3) or (packet_num == 111) or (packet_num == 0):
         try:
             line = reader.next()
