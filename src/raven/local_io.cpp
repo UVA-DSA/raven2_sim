@@ -550,7 +550,6 @@ void autoincrCallback(raven_2::raven_automove msg)
 }
 
 
-
 /**
 * \brief Publishes the raven_state message from the robot and currParams structures
 *

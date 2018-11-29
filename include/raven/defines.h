@@ -51,9 +51,9 @@
 
 //~~~~~~~~~ tool adapter definition ~~~~~~~~~~~~~~~~
 
-#define RAVEN_TOOLS 	 // uncomment this when switching to raven
-//#define DV_ADAPTER  // uncomment this when switching to dv_adapter
-//#define RICKS_TOOLS   //skips tool initialization //not supported since switch to tools.h?
+#define RAVEN_TOOLS
+//#define DV_ADAPTER			1
+//#define RICKS_TOOLS     //skips tool initialization //not supported since switch to tools.h?
 //#define SCISSOR_RIGHT
 #define OPPOSE_GRIP
 
@@ -65,7 +65,7 @@
 #define GOLD_ARM_SERIAL  25
 
 //~~~~~~~~ Other settings, experts only ~~~~~~~~~~~~
-//#define NO_LPF    // This setting short circuits the Low Pass Filter in state_estimate.cpp
+#define NO_LPF    // This setting short circuits the Low Pass Filter in state_estimate.cpp
 //#define OMNI_GAIN  2  // Get a little more oomph out of the omni grasping button - sets a gain in local__io.cpp
 //#define ORIENTATION_V
 
@@ -273,7 +273,7 @@
 
 // Current limits
 #ifdef RAVEN_II_SQUARE
-#define MAX_INST_DAC 13000//12000//12000 //20000 //32000
+#define MAX_INST_DAC 13000//12000 //20000 //32000
 
 // Doubled position joints 4-Apr-2013 by HK
 #define SHOULDER_MAX_DAC   5000   // 2000 usually moves 1000 doesn't
@@ -287,7 +287,7 @@
 #else
 
 //everything but square RAVEN
-#define MAX_INST_DAC 13500//12000//20000 //32000 //Increased the MAX_INST_DAC  to 12500 from 12000-Samin
+#define MAX_INST_DAC 13000//12000//20000 //32000 //Increased the MAX_INST_DAC  to 12500 from 12000-Samin
 
 // Doubled position joints 4-Apr-2013 by HK
 #define SHOULDER_MAX_DAC   5000   // 2000 usually moves 1000 doesn't

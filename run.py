@@ -37,6 +37,7 @@ import matplotlib.pyplot as plt
 import math
 import time
 import shelve
+import glob#added by samin for mfi3
 
 def rsp_func():
     """ Get response from user to check if raven_home directory is correct"""
@@ -89,10 +90,10 @@ class Raven():
         self.mfi_changed = 0
         self.return_code = 0 #0 is normal, 1 is error
         self.curr_inj = -1
-        self.rviz_enabled = 1
+        self.viz_enabled = 1
         self.result_folder = ''
         self.exp_status = '' # expriment status: 'running' or 'done'
-        self.vision = 0 #added by Samin for camera data
+        self.vision = 1 #added by Samin for camera data
         inj = injection.split(':')
         self.injection = inj[0]
         self.starting_inj_num = 0
@@ -284,7 +285,7 @@ class Raven():
         os.system("killall rostopic > /dev/null 2>&1")
         os.system("killall roscore > /dev/null 2>&1")
         os.system("killall rosmaster > /dev/null 2>&1")
-        if self.rviz_enabled:
+        if self.viz_enabled:
             os.system("killall rviz > /dev/null 2>&1")
         os.system("killall xterm > /dev/null 2>&1")
         #os.system("killall python") # Don't work with run_mfi_experiment()
@@ -324,28 +325,27 @@ class Raven():
         sock.bind((UDP_IP,UDP_PORT))
 
         # Setup Variables
-        kinectTask = "xterm -e roslaunch openni_launch openni.launch" #added by Samin for vision data
-        recordTask = "rosrun image_view video_recorder image:=/camera/rgb/image_raw" #added by Samin for vision data
+        recordTask = 'rostopic echo -p raven_2arm/camera1/image_raw/header >'+'/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/timestamps'+'/timestamps{}.csv'.format(self.traj.replace("traj",""))
+        kinectTask = 'rosrun image_view video_recorder image:=/raven_2arm/camera1/image_raw _image_transport:=compressed _filename:=/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/video/video{}.avi'.format(self.traj.replace(".csv",""))
         #recordTask = "python rec.py" #added by Samin for vision data using ZED
         ravenTask = "roslaunch raven_2 raven_2.launch > raven.output"
         #ravenTask = "xterm -hold -e 'LD_PRELOAD=/home/raven/homa_wksp/malicious_wrapper/malicious_wrapper.so roslaunch raven_2 raven_2.launch'"
-        visTask = 'xterm -e roslaunch raven_visualization raven_visualization.launch'
+        #visTask = 'xterm -e roslaunch raven_visualization raven_visualization.launch'
+        visTask = 'xterm -e roslaunch raven_2arm raven_2arm.launch'
         pubTask = 'roslaunch raven_visualization raven_state_publisher.launch'
         dynSimTask = 'xterm -e "cd ./Li_DYN && make -j && ./two_arm_dyn"'
-        rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv'
+        rostopicTask = 'rostopic echo -p ravenstate >'+'/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/latest_runs'+'/latest_run{}.csv'.format(self.traj.replace("traj","")) #changed by Samin for recording latest_runs for analysis
+        #rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv' #originial one
 
-        if (self.vision == 1): #added by Samin for vision data
-			visionProc = subprocess.Popen(kinectTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
-			time.sleep(0.2)
-			recordProc = subprocess.Popen(recordTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
-			time.sleep(0.2)
+
         if (self.surgeon_simulator == 1):
+            print "running trajectory {} in mode {}".format(self.traj, self.mode)
             packetTask = 'python '+self.raven_home+'/Real_Packet_Generator_Surgeon.py '+ self.mode + ' '+ self.traj + '> packet_gen.output'
         else:
             packetTask = 'python '+self.raven_home+'/Packet_Generator.py > packet_gen.output'
 
         # Call publisher, visualization, packet generator, and Raven II software
-        if self.rviz_enabled:
+        if self.viz_enabled:
         	vis_proc = subprocess.Popen(visTask, shell=True, preexec_fn=os.setsid)
         	time.sleep(2)
         else:
@@ -359,12 +359,19 @@ class Raven():
         else:
             print usage
             sys.exit(2)
-        # changed by Yongming. In this way we can have a separate terminal window for raven_2.launch.
-        self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
-        #os.system("gnome-terminal -x roslaunch raven_2 raven_2.launch > raven.output")
-        # Call rostopic to log the data from this RAVEN into latest_run.csv
-        self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
-        time.sleep(0.2);
+        if (self.vision == 1): #added by Samin for vision data
+            self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
+            self.visionProc = subprocess.Popen(kinectTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
+            self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
+            self.recordProc = subprocess.Popen(recordTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
+            time.sleep(0.2)
+        else:
+            # changed by Yongming. In this way we can have a separate terminal window for raven_2.launch.
+            self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
+            #os.system("gnome-terminal -x roslaunch raven_2 raven_2.launch > raven.output")
+            # Call rostopic to log the data from this RAVEN into latest_run.csv
+            self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
+            time.sleep(0.2);
 
         # Call Dynamic Simulator
         if self.mode == "dyn_sim" or self.mode == "detect":
@@ -546,6 +553,27 @@ class Raven():
         except OSError as ex:
             pass
 
+    def _run_mfi3_experiment(self):
+        """
+        Supposed to iterate over all the trajectories in teleop_data and run the raven for each
+        """
+        teleop_dataPath = csvPath = "{}{}".format(os.path.abspath(os.path.dirname(sys.argv[0])), "/teleop_data/*.csv")
+        for name in glob.glob(teleop_dataPath):
+            fileName = name.replace(".csv","")
+            fileName = fileName.split("/")[5]
+            try:
+                inj_num = fileName.split("_")[2]
+                print "glob output :{} ".format(inj_num)
+
+                if int(inj_num)>10:
+                    self.traj = "traj" + inj_num
+                    print "running trajectory {}".format(self.traj)
+                    self._compile_raven()
+                    self._run_experiment()
+                    time.sleep(10)
+            except IndexError:
+                print "skipping file :{}".format(fileName)
+
     def signal_handler(self, signal, frame):
         """ Signal handler to catch Ctrl+C to shutdown everything"""
         print "Ctrl+C Pressed!"
@@ -558,6 +586,8 @@ class Raven():
             self._run_mfi_experiment()
         elif self.injection == 'mfi2':
             self._run_mfi2_experiment()
+        elif self.injection == 'mfi3':
+            self._run_mfi3_experiment()
         else:
             self._compile_raven()  #comment out any time you change mode from rob to sim
             self._run_experiment()
