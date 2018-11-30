@@ -1,0 +1,8 @@
+prefix=/home/homa/auto_sim/install
+
+Name: my_urdf
+Description: Description of my_urdf
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/homa/auto_sim/install/lib 
+Requires: 

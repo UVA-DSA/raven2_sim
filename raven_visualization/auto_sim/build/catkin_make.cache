@@ -1,0 +1,2 @@
+my_urdf:raven_2arm
+-DCATKIN_DEVEL_PREFIX=/home/homa/auto_sim/devel -DCMAKE_INSTALL_PREFIX=/home/homa/auto_sim/install -G Unix Makefiles

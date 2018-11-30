@@ -1,0 +1,9 @@
+upload original, full detail filename.dae to blender
+export as .dae (some weird but necessary conversion here)
+import into meshlab
+    Filters->Remeshing, Simplification, ...->Quadratic Edge Collapse Decimation
+        set target # of faces (1/4th of original for cases in this folder)
+        keep defaults except
+            Quality threshold->1.0
+            set all checkboxes except "Simiplify only selected faces"
+        Apply

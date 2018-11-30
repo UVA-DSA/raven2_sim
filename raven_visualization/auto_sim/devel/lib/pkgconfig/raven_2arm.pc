@@ -1,0 +1,8 @@
+prefix=/home/homa/auto_sim/devel
+
+Name: raven_2arm
+Description: Description of raven_2arm
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/homa/auto_sim/devel/lib 
+Requires: message_runtime
