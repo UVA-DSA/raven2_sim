@@ -34,7 +34,7 @@ Setting up the repository:
 2. Change the ROS_PACKAGE_PATH environment variable to the location of raven_2 folder. For example:
    "export ROS_PACKAGE_PATH=/home/raven/raven_2:/home/raven/raven_2/raven_visualization:/opt/ros/kinetic/share:/opt/ros/kinetic/stacks"
    To test if the change was made successfully, run "roscd raven_2" and you should be relocated to the raven_2 folder.
-4. Run "tar zxvf ./teleop_data/new_test_data.tgz" to unzip the datafiles used by the packet generator
+4. Run "tar zxvf ./teleop_data/new_test_data.tgz -C ./teleop_data/" to unzip the datafiles used by the packet generator
 
 Running RAVEN simulator using trajectory 2:
 1. Goto raven_2 folder:  "roscd raven_2"
