@@ -9,7 +9,7 @@ import genpy
 import std_msgs.msg
 
 class raven_state(genpy.Message):
-  _md5sum = "8cfa3eaa599c3f37ad2f9a9d1469687d"
+  _md5sum = "e050a2a1ceadba2f611cf9225edd9d8d"
   _type = "raven_2/raven_state"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """Header      hdr
@@ -40,6 +40,7 @@ float32[3] sim_mpos
 float32[3] sim_mvel
 float32[3] sim_jpos
 
+int32 seg_label
 
 ================================================================================
 MSG: std_msgs/Header
@@ -59,8 +60,8 @@ time stamp
 # 1: global frame
 string frame_id
 """
-  __slots__ = ['hdr','runlevel','sublevel','last_seq','type','pos','ori','ori_d','pos_d','dt','encVals','dac_val','tau','mpos','jpos','mvel','mvel_d','jvel','mpos_d','jpos_d','grasp_d','encoffsets','current_cmd','err_msg','sim_mpos','sim_mvel','sim_jpos']
-  _slot_types = ['std_msgs/Header','int32','int32','int32','int32[2]','int32[6]','float32[18]','float32[18]','int32[6]','duration','int32[16]','int32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[2]','float32[16]','int32[16]','char[1024]','float32[3]','float32[3]','float32[3]']
+  __slots__ = ['hdr','runlevel','sublevel','last_seq','type','pos','ori','ori_d','pos_d','dt','encVals','dac_val','tau','mpos','jpos','mvel','mvel_d','jvel','mpos_d','jpos_d','grasp_d','encoffsets','current_cmd','err_msg','sim_mpos','sim_mvel','sim_jpos','seg_label']
+  _slot_types = ['std_msgs/Header','int32','int32','int32','int32[2]','int32[6]','float32[18]','float32[18]','int32[6]','duration','int32[16]','int32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[16]','float32[2]','float32[16]','int32[16]','char[1024]','float32[3]','float32[3]','float32[3]','int32']
 
   def __init__(self, *args, **kwds):
     """
@@ -70,7 +71,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       hdr,runlevel,sublevel,last_seq,type,pos,ori,ori_d,pos_d,dt,encVals,dac_val,tau,mpos,jpos,mvel,mvel_d,jvel,mpos_d,jpos_d,grasp_d,encoffsets,current_cmd,err_msg,sim_mpos,sim_mvel,sim_jpos
+       hdr,runlevel,sublevel,last_seq,type,pos,ori,ori_d,pos_d,dt,encVals,dac_val,tau,mpos,jpos,mvel,mvel_d,jvel,mpos_d,jpos_d,grasp_d,encoffsets,current_cmd,err_msg,sim_mpos,sim_mvel,sim_jpos,seg_label
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -133,6 +134,8 @@ string frame_id
         self.sim_mvel = [0.] * 3
       if self.sim_jpos is None:
         self.sim_jpos = [0.] * 3
+      if self.seg_label is None:
+        self.seg_label = 0
     else:
       self.hdr = std_msgs.msg.Header()
       self.runlevel = 0
@@ -161,6 +164,7 @@ string frame_id
       self.sim_mpos = [0.] * 3
       self.sim_mvel = [0.] * 3
       self.sim_jpos = [0.] * 3
+      self.seg_label = 0
 
   def _get_types(self):
     """
@@ -213,6 +217,7 @@ string frame_id
       buff.write(_get_struct_3f().pack(*self.sim_mpos))
       buff.write(_get_struct_3f().pack(*self.sim_mvel))
       buff.write(_get_struct_3f().pack(*self.sim_jpos))
+      buff.write(_get_struct_i().pack(self.seg_label))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -314,6 +319,9 @@ string frame_id
       start = end
       end += 12
       self.sim_jpos = _get_struct_3f().unpack(str[start:end])
+      start = end
+      end += 4
+      (self.seg_label,) = _get_struct_i().unpack(str[start:end])
       self.dt.canon()
       return self
     except struct.error as e:
@@ -366,6 +374,7 @@ string frame_id
       buff.write(self.sim_mpos.tostring())
       buff.write(self.sim_mvel.tostring())
       buff.write(self.sim_jpos.tostring())
+      buff.write(_get_struct_i().pack(self.seg_label))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -468,6 +477,9 @@ string frame_id
       start = end
       end += 12
       self.sim_jpos = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=3)
+      start = end
+      end += 4
+      (self.seg_label,) = _get_struct_i().unpack(str[start:end])
       self.dt.canon()
       return self
     except struct.error as e:
@@ -519,6 +531,12 @@ def _get_struct_3f():
     if _struct_3f is None:
         _struct_3f = struct.Struct("<3f")
     return _struct_3f
+_struct_i = None
+def _get_struct_i():
+    global _struct_i
+    if _struct_i is None:
+        _struct_i = struct.Struct("<i")
+    return _struct_i
 _struct_3I = None
 def _get_struct_3I():
     global _struct_3I

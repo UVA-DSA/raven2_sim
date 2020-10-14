@@ -56,10 +56,11 @@ struct param_pass {
   int    torque_vals[MAX_MECH_PER_DEV * MAX_DOF_PER_MECH];// desired force/torque
   float	 grav_mag;	    //gravity magnitude
   struct position grav_dir; //gravity direction
-  char   cmdStr[200];          
+  char   cmdStr[200];
   int    surgeon_mode;
   int    robotControlMode;
   int 	 last_sequence;
+  int seg_label; //added by samin for recording segment labels when in packetgen and sim
 };
 
 #endif

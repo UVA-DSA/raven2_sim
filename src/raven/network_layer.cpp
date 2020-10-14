@@ -418,6 +418,7 @@ void* network_process(void* param1)
 	              //log_msg("NETWORK) Receieved Valid Packet # %d\n", u.sequence);
 
 	            	seq = u.sequence;
+
                 receiveUserspace(&u,uSize);   // coordinates transform from ITP frame to robot 0 frame
             }
 

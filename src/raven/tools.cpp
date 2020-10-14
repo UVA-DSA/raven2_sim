@@ -560,4 +560,3 @@ void tool::set_max_opening_angle() {
 		break;
 	}
 }
-

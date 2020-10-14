@@ -26,3 +26,4 @@ float32[3] sim_mpos
 float32[3] sim_mvel
 float32[3] sim_jpos
 
+int32 seg_label
