@@ -37,7 +37,7 @@
 #define TELEOPERATION_H
 #define SURGEON_ENGAGED       1
 #define SURGEON_DISENGAGED    0
-#include "defines.h" 
+#include "defines.h"
 
 /*
 u_struct : structure passed from master to slave.
@@ -75,6 +75,7 @@ struct u_struct {
 	double jvel[16];
 	double mpos[16];
 	double mvel[16];
+	int seg_label;
 #endif
 #ifdef detector
 	double jpos[16];
@@ -120,5 +121,3 @@ struct v_struct {
 }__attribute__((__packed__));
 
 #endif //teleoperation_h
-
-

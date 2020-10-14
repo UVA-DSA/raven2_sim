@@ -86,11 +86,11 @@ class Raven():
         self.master_file = './selected_injection.txt'
         self.inj_line = ''
         self.trj_name = ''
-        self.defines_changed = 0
-        self.mfi_changed = 0
+        self.defines_changed = 0 # why two of self.defines_changed? samin
+        self.mfi_changed = 0 # why two of self.defines_changed? samin
         self.return_code = 0 #0 is normal, 1 is error
         self.curr_inj = -1
-        self.viz_enabled = 1
+        self.viz_enabled = 1 #used to enable or disable gazebo
         self.result_folder = ''
         self.exp_status = '' # expriment status: 'running' or 'done'
         self.vision = 1 #added by Samin for camera data
@@ -325,8 +325,8 @@ class Raven():
         sock.bind((UDP_IP,UDP_PORT))
 
         # Setup Variables
-        recordTask = 'rostopic echo -p raven_2arm/camera1/image_raw/header >'+'/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/timestamps'+'/timestamps{}.csv'.format(self.traj.replace("traj",""))
-        kinectTask = 'rosrun image_view video_recorder image:=/raven_2arm/camera1/image_raw _image_transport:=compressed _filename:=/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/video/video{}.avi'.format(self.traj.replace(".csv",""))
+        recordTask = 'rostopic echo -p raven_2arm/camera1/image_raw/header >'+'./video'+'/timestamps{}.csv'.format(self.traj.replace("traj",""))
+        kinectTask = 'rosrun image_view video_recorder image:=/raven_2arm/camera1/image_raw _image_transport:=compressed _filename:=./video/video{}.avi'.format(self.traj.replace(".csv",""))
         #recordTask = "python rec.py" #added by Samin for vision data using ZED
         ravenTask = "roslaunch raven_2 raven_2.launch > raven.output"
         #ravenTask = "xterm -hold -e 'LD_PRELOAD=/home/raven/homa_wksp/malicious_wrapper/malicious_wrapper.so roslaunch raven_2 raven_2.launch'"
@@ -334,8 +334,9 @@ class Raven():
         visTask = 'xterm -e roslaunch raven_2arm raven_2arm.launch'
         pubTask = 'roslaunch raven_visualization raven_state_publisher.launch'
         dynSimTask = 'xterm -e "cd ./Li_DYN && make -j && ./two_arm_dyn"'
-        rostopicTask = 'rostopic echo -p ravenstate >'+'/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/latest_runs'+'/latest_run{}.csv'.format(self.traj.replace("traj","")) #changed by Samin for recording latest_runs for analysis
-        #rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv' #originial one
+        #rostopicTask = 'rostopic echo -p ravenstate >'+'/media/homa/3e794a7c-2331-46fc-8d8c-0e8dde7cf49f/home/homa/dsn_experiments/latest_runs_nd'+'/latest_run%s.csv'%(self.traj.replace("traj","")) #originial one
+
+        rostopicTask = 'rostopic echo -p ravenstate >'+self.raven_home+'/latest_run.csv' #originial one
 
 
         if (self.surgeon_simulator == 1):
@@ -360,6 +361,9 @@ class Raven():
             print usage
             sys.exit(2)
         if (self.vision == 1): #added by Samin for vision data
+            print ("Video recording enabled..")
+            cmd = 'mkdir -p ' + raven_home+'/video' + '& rm '+raven_home+'/video/*'
+            os.system(cmd)
             self.raven_proc = subprocess.Popen(ravenTask, env=env, shell=True, preexec_fn=os.setsid)
             self.visionProc = subprocess.Popen(kinectTask, env=env, shell=True, preexec_fn=os.setsid) #added by Samin for vision data
             self.rostopic_proc = subprocess.Popen(rostopicTask, env=env, shell=True, preexec_fn=os.setsid)
@@ -565,12 +569,15 @@ class Raven():
                 inj_num = fileName.split("_")[2]
                 print "glob output :{} ".format(inj_num)
 
-                if int(inj_num)>10:
+                if int(inj_num)>60 :
                     self.traj = "traj" + inj_num
-                    print "running trajectory {}".format(self.traj)
-                    self._compile_raven()
-                    self._run_experiment()
-                    time.sleep(10)
+                    if not os.path.isfile('./video'+'/videotraj{}.avi'.format(self.traj.replace("traj",""))):
+                        print "running trajectory {}".format(self.traj)
+                        self._compile_raven()
+                        self._run_experiment()
+                        time.sleep(10)
+                    else:
+                        print "already injected faults {}".format(self.traj)
             except IndexError:
                 print "skipping file :{}".format(fileName)
 

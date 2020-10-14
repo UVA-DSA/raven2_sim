@@ -51,8 +51,8 @@
 
 //~~~~~~~~~ tool adapter definition ~~~~~~~~~~~~~~~~
 
-#define RAVEN_TOOLS
-//#define DV_ADAPTER			1
+//#define RAVEN_TOOLS
+#define DV_ADAPTER			1
 //#define RICKS_TOOLS     //skips tool initialization //not supported since switch to tools.h?
 //#define SCISSOR_RIGHT
 #define OPPOSE_GRIP
@@ -325,7 +325,7 @@
 
 // Our choice of the safety level and policy for RAVEN teleoperation
 #define SAFETY_POLICY	SOFT_REGULATION // User can change this! (this value is used in overdrive_detect.cpp)
-#define SAFETY_LEVEL	BEGINNER_MODE 	// User can change this! (this value is used in init.cpp)
+#define SAFETY_LEVEL	ADVANCED_MODE 	// User can change this! (this value is used in init.cpp)
 
 
 
