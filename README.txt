@@ -1,7 +1,7 @@
 ======================================
 Summary and licensing information
 ======================================
-This respitory contains the code for RAVEN II surgical simulator. It is based on the open-source RAVEN II control software, developed by the University of Washington Biorobotics lab at: https://github.com/uw-biorobotics/raven2/tree/indigo and the first version of simulator developed by Homa Alemzadeh, Daniel Chen, and Xiao Li, at the University of Illinois at: https://github.com/CSLDepend/raven2_sim.
+This respitory contains the code for RAVEN II surgical simulator. It is based on the open-source RAVEN II control software, developed by the University of Washington Biorobotics lab at: https://github.com/uw-biorobotics/raven2 and the first version of simulator developed by Homa Alemzadeh, Daniel Chen, and Xiao Li, at the University of Illinois at: https://github.com/CSLDepend/raven2_sim.
 
 It enables running RAVEN control software with no robotic hardware attached. A Python script (Real_Packet_Generator_Surgeon.py) mimicks the network packets sent from the surgeon console based on a previously collected data from the trajectory of a basic surgical task. ROS  visualization packages (rviz and Gazebo) are used for 3D animation of the robotic motions and the interactions with environment. Different modes enable the simulator to work with or without the surgeon console or in parallel with the actual robot. The fault injection mode enables testing the resilience of the robot to accidental faults and malicious attacks by artificially inserting faults into the control software. 
 For more information, see the following papers: 
