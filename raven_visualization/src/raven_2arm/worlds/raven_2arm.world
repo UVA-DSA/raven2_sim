@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+    <!-- We use a custom world for the ravenII so that the camera angle is launched correctly -->
+
+    <world name="default">
+        <include>
+            <uri>model://ground_plane</uri>
+        </include>
+
+        <!-- Global light source -->
+        <include>
+            <uri>model://sun</uri>
+        </include>
+
+        <include>
+            <uri>model://grasp_object2</uri>
+        </include>
+
+        <include>
+            <uri>model://plate</uri>
+        </include>
+
+        <include>
+            <uri>model://container_bowl</uri>
+        </include>
+
+
+        <!-- Focus camera on tall pendulum -->
+        <gui fullscreen='0'>
+            <camera name='user_camera'>
+                <!-- <pose>-0.128730 0.897619 0.770832 0.00 0.379643 -1.414171</pose> -->
+                <pose>-0.7 2 0.5 0 0 -1.57</pose>
+                <view_controller>orbit</view_controller>
+            </camera>
+        </gui>
+
+        <!-- <spherical_coordinates> -->
+            <!-- <world_frame_orientation>NED</world_frame_orientation> -->
+            <!-- <heading_deg>180.0</heading_deg> -->
+            <!-- <latitude_deg>180</latitude_deg> -->
+            <!-- <longitude_deg>180</longitude_deg> -->
+        <!-- </spherical_coordinates> -->
+
+
+
+    </world>
+</sdf>

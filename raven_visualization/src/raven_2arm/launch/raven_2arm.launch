@@ -1,0 +1,63 @@
+<launch>
+
+    <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+    <arg name="pid" default="true"/>
+    <arg name="abs" default="false"/>
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="false"/>
+    <arg name="gui" default="true"/>
+    <arg name="debug" default="false"/>
+    <arg name="physics" default="ode"/>
+
+    <!-- an object for grasping, a desk, a container are included in raven_2arm.world
+        To make gazebo find the models, below path should be added -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <env name="GAZEBO_MODEL_PATH" value="$(find raven_2arm)/models" />
+        <arg name="world_name" value="$(find raven_2arm)/worlds/raven_2arm.world"/>
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="physics" value="$(arg physics)"/>
+    </include>
+
+    <!-- Load the URDF into the ROS Parameter Server -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find raven_2arm)/urdf/raven_2arm.xacro'" />
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model raven_2arm -param robot_description">
+    </node>
+     <!-- Notthis argument input for spawn_model
+        -J shoulder_L 0.52
+        -J elbow_L 1.57
+        -J insertion_L -0.07
+        -J tool_roll_L -0.7
+        -J wrist_joint_L 0.047
+        -J grasper_joint_1_L -0.006
+        -J grasper_joint_2_L 0.006
+        -J shoulder_R 0.52
+        -J elbow_R 1.57
+        -J insertion_R -0.07
+        -J tool_roll_R -0.7
+        -J wrist_joint_R 0.047
+        -J grasper_joint_1_R -0.006
+        -J grasper_joint_2_R 0.006 -->
+    <!-- 0.5219423770904541, 1.5778145790100098, -0.0695327830314636, -0.704855569203036, 0.047629814594984055, -0.005959832109510899, 0.005959832109510899, 0.5227462649345398, 1.5772970914840698, -0.06990847110748288, 0.710763909418719 -->
+
+
+
+    <!-- if pid, use pid controller -->
+    <group if="$(arg pid)">
+        <!-- ros_control launch file for pid controller -->
+        <include file="$(find raven_2arm)/launch/raven_2arm_control.launch"/>
+        <node pkg="raven_2arm" name="msg_converter_pid" type="msg_bridge_pid.py" output="screen" />
+    </group>
+
+    <!-- if abs, use absolute joint control -->
+    <group if="$(arg abs)">
+        <node pkg="raven_2arm" name="msg_converter_abs"
+            type="msg_bridge_abs.py" output="screen" unless="$(arg pid)"/>
+    </group>
+
+</launch>

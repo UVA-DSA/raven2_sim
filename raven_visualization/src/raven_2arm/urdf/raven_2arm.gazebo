@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<robot>
+
+    <!-- ros_control plugin -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/raven_2arm</robotNamespace>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_joint_pose_trajectory"
+                filename="libgazebo_ros_joint_pose_trajectory.so">
+            <robotNamespace>/raven_2arm</robotNamespace>
+            <!-- <serviceName/> -->
+            <topicName>/raven_2arm/set_joint_trajectory</topicName>
+            <updateRate>0.0</updateRate>
+        </plugin>
+    </gazebo>
+
+    <!-- for more stable grasping. Jennifer's repository -->
+    <gazebo>
+        <plugin name="gazebo_grasp_fix" filename="$(find raven_2arm)/lib/libgazebo_grasp_fix.so">
+            <arm>
+                <arm_name>left_arm</arm_name>
+                <palm_link>wrist_L</palm_link>
+                <gripper_link>grasper1_L</gripper_link>
+                <gripper_link>grasper2_L</gripper_link>
+            </arm>
+            <arm>
+                <arm_name>right_arm</arm_name>
+                <palm_link>wrist_R</palm_link>
+                <gripper_link>grasper1_R</gripper_link>
+                <gripper_link>grasper2_R</gripper_link>
+            </arm>
+
+            <forces_angle_tolerance>100</forces_angle_tolerance>
+            <update_rate>10</update_rate>
+            <grip_count_threshold>4</grip_count_threshold>
+            <max_grip_count>10</max_grip_count>
+            <release_tolerance>0.005</release_tolerance>
+            <disable_collisions_on_attach>false</disable_collisions_on_attach>
+            <contact_topic>__default_topic__</contact_topic>
+        </plugin>
+    </gazebo>
+
+    <!-- let gazebo 'see' joints -->
+    <gazebo reference="shoulder_L"/>
+    <gazebo reference="elbow_L"/>
+    <gazebo reference="insertion_L"/>
+    <gazebo reference="tool_roll_L"/>
+    <gazebo reference="wrist_joint_L"/>
+    <gazebo reference="grasper_joint_1_L"/>
+    <gazebo reference="grasper_joint_2_L"/>
+
+    <gazebo reference="shoulder_R"/>
+    <gazebo reference="elbow_R"/>
+    <gazebo reference="insertion_R"/>
+    <gazebo reference="tool_roll_R"/>
+    <gazebo reference="wrist_joint_R"/>
+    <gazebo reference="grasper_joint_1_R"/>
+    <gazebo reference="grasper_joint_2_R"/>
+
+
+
+    <!-- Link1 -->
+    <gazebo reference="base_link_L">
+        <!-- <material>Gazebo/White</material> -->
+    </gazebo>
+
+    <!-- Link2 -->
+    <gazebo reference="link1_L">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Black</material> -->
+    </gazebo>
+
+    <!-- Link3 -->
+    <gazebo reference="link2_L">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Blue</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="link3_L">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Red</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="instrument_shaft_L">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Orange</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="wrist_L">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Black</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="grasper1_L">
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+        <!-- <material>Gazebo/Blue</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="grasper2_L">
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+        <!-- <material>Gazebo/Blue</material> -->
+    </gazebo>
+
+    <!-- Link8 -->
+    <gazebo reference="base_link_R">
+        <!-- <material>Gazebo/White</material> -->
+    </gazebo>
+
+    <!-- Link9 -->
+    <gazebo reference="link1_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Black</material> -->
+    </gazebo>
+
+    <!-- Link10 -->
+    <gazebo reference="link2_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Blue</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="link3_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Red</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="instrument_shaft_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Orange</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="wrist_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Black</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="grasper1_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Blue</material> -->
+    </gazebo>
+
+    <!--  -->
+    <gazebo reference="grasper2_R">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <!-- <material>Gazebo/Blue</material> -->
+    </gazebo>
+
+    <!-- camera -->
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="camera1">
+      <update_rate>100.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>raven_2arm/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

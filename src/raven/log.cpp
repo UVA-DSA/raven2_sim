@@ -58,7 +58,7 @@ int log_file(const char* fmt,...)
   if (logging == 1)
 	{
  		std::ofstream logfile;
-    static char buff[50];
+    static char buff[100];
 		if (inject_mode == 0)
         sprintf(buff,"%s/sim_log.txt", raven_path);
     else

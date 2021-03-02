@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<!--RavenII Surgical Robot 2-Arm urdf File -->
+<!--Author: Sina Nia Kosari & Lee White-->
+<!--kosari@uw.edu & leewhite@uw.edu-->
+<!--Date: 01-Dec-2011 -->
+<!--Biorobotics Laboratory -->
+<!--University of Washington -->
+
+<!--Changed by Yongming-->
+<!--03-2018-->
+
+<robot name="raven_2">
+
+  <!-- This is like the base -->
+  <link name="0_link">
+   <visual>
+     <origin xyz="0 0 0" rpy="0 0 0" />
+     <geometry>
+       <box size=".001 .001 .001" />
+     </geometry>
+     <material name="Cyan">
+       <color rgba="0 255 255 1.0"/>
+     </material>
+   </visual>
+  </link>
+
+  <!-- This is the steel frame. There is a joint setting in joint part -->
+  <link name="frame">
+    <visual>
+      <geometry>
+        <mesh scale="0.01 0.01 0.01" filename="package://my_urdf/Raven_files/steel_frame.STL"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.57075 0 3.1415"/>
+      <material name="white">
+       <color rgba="1 1 1 1"/>
+     </material>
+    </visual>
+  </link>
+
+  <!-- LEFT ARM LINKS -->
+  <link name="base_link_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/base_w_motors.dae"/>
+      </geometry>
+    <origin xyz="0 0 0" rpy="-1.57075 1.57075 -1.57075"/>
+    </visual>
+  </link>
+
+  <link name="link1_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/link1_w_cover.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="link2_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/link2.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="link3_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/link3.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="instrument_shaft_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/instrument_shaft.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="wrist_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/wrist.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="grasper1_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/grasper_1.dae"/>
+      </geometry>
+    <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
+    </visual>
+  </link>
+
+  <link name="grasper2_L">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/left_arm/grasper_2.dae"/>
+      </geometry>
+    <origin rpy="0 0 0" xyz="-0.00680 -0.00904 0.00452"/>
+    </visual>
+  </link>
+
+
+ <!-- RIGHT ARM LINKS -->
+ <link name="base_link_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/base_w_motors.dae"/>
+      </geometry>
+    <!--origin xyz="0 0 -1" rpy="0 1.57075 0"/-->
+    <origin xyz="0 0 1" rpy="3.1415 -1.57075 0"/>
+    </visual>
+  </link>
+
+  <link name="link1_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/link1_w_cover.dae"/>
+      </geometry>
+    <origin xyz="1 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="link2_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/link2.dae"/>
+      </geometry>
+    <origin xyz="1 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="link3_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/link3.dae"/>
+      </geometry>
+    <origin xyz="1 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="instrument_shaft_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/instrument_shaft.dae"/>
+      </geometry>
+    <origin xyz="1 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="wrist_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/wrist.dae"/>
+      </geometry>
+    <origin xyz="1 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="grasper1_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/grasper_1.dae"/>
+      </geometry>
+    <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
+    </visual>
+  </link>
+
+  <link name="grasper2_R">
+    <visual>
+      <geometry>
+        <mesh filename="package://my_urdf/Raven_files/right_arm/grasper_2.dae"/>
+      </geometry>
+    <origin rpy="0 0 0" xyz="1.00680 -0.00904 0.00452"/>
+    </visual>
+  </link>
+
+  <!-- joint for frame -->
+  <joint name="frame_joint_setting" type="fixed">
+  <!-- the values of z are all reassigned to avoid collision after small movement -->
+    <origin rpy="0 0 0" xyz="0.245 -0.265 -0.235"/>
+    <parent link="0_link"/>
+    <child link="frame"/>
+  </joint>
+  
+  <!-- LEFT ARM JOINTS -->
+  <joint name="camera_L" type="fixed">
+    <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    <!-- original file has this two option and chooses the second one. ming-->
+    <origin rpy="-1.57075 -1.57075 1.57075" xyz="-0.2 0.00 0.00"/>
+    <!-- origin rpy="-1.57075 -2.0071286 1.57075" xyz="0.0 0.00 0"/-->
+    <parent link="0_link"/>
+    <child link="base_link_L"/>
+  </joint>
+
+  <joint name="shoulder_L" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.1" upper="1.396" velocity="0.1"/> <!-- 15tb 80 degree -->
+    <origin rpy="0 1.5705 0" xyz="0.0 0.0 0"/>
+    <parent link="base_link_L"/>
+    <child link="link1_L"/>
+  </joint>
+
+  <joint name="elbow_L" type="revolute">
+    <axis xyz="-0.2590   0.9014    -0.3471"/>
+    <limit effort="1000.0" lower="0.1745" upper="2.0944" velocity="0.1"/> <!-- 10 120 degree -->
+    <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
+    <parent link="link1_L"/>
+    <child link="link2_L"/>
+  </joint>
+
+  <joint name="insertion_L" type="prismatic">
+    <axis xyz="-0.6012   -0.7460    0.2864"/>
+    <limit effort="1000.0" lower="-0.2" upper="0.05" velocity="0.01"/> <!-- -.17 .1 original -->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="link2_L"/>
+    <child link="link3_L"/>
+  </joint>
+
+  <joint name="tool_roll_L" type="revolute">
+    <axis xyz="-0.6012   -0.7460    0.2864"/>
+    <limit effort="1000.0" lower="-3.1415" upper="3.1415" velocity="0.5"/> <!-- -180 180 degree -->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="link3_L"/>
+    <child link="instrument_shaft_L"/>
+  </joint>
+
+  <joint name="wrist_joint_L" type="revolute">
+    <axis xyz=" -0.5637    0.6523    0.5067"/>
+    <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity="0.5"/> <!-- -80 80 degree -->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="instrument_shaft_L"/>
+    <child link="wrist_L"/>
+  </joint>
+
+  <joint name="grasper_joint_1_L" type="fixed">
+    <axis xyz="-0.5648    0.1427   -0.8128"/>
+    <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity=".5"/> <!-- -80 80 degree -->
+    <origin rpy="0 0 0" xyz="0.00680 0.00904 -0.00452"/>
+    <parent link="wrist_L"/>
+    <child link="grasper1_L"/>
+  </joint>
+
+  <joint name="grasper_joint_2_L" type="fixed">
+    <axis xyz="0.5648    -0.1427   0.8128"/>
+    <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity=".5"/> <!-- -80 80 degree -->
+    <origin rpy="0 0 0" xyz="0.00680 0.00904 -0.00452"/>
+    <parent link="wrist_L"/>
+    <child link="grasper2_L"/>
+  </joint>
+
+
+  <!-- RIGHT ARM JOINTS -->
+  <joint name="camera_R" type="fixed">
+    <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    <!-- original file has this two option and chooses the second one. ming-->
+    <origin rpy="3.1415 -1.57075 0" xyz="-0.33 0.00 0.00"/>
+    <!--origin rpy="-1.57075 -1.57075 1.57075" xyz="-.2 0.00 0"/-->
+    <!-- origin rpy=" 1.57075 -2.0071286 1.57075" xyz="-.2 0.00 0"/-->
+    <parent link="0_link"/>
+    <child link="base_link_R"/>
+  </joint>
+
+  <joint name="shoulder_R" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort="1000.0" lower="0.1" upper="1.5708" velocity="0.5"/> <!-- 25tb 90 degree -->
+    <!--origin rpy="0 1.5705 0" xyz="0 0.0 0"/-->
+    <origin rpy="3.1415 -1.57075 0" xyz="0 0.0 0"/>
+    <parent link="base_link_R"/>
+    <child link="link1_R"/>
+  </joint>
+
+  <joint name="elbow_R" type="revolute">
+    <axis xyz="-0.2590   -0.9014    0.3471"/>
+    <limit effort="1000.0" lower="0.1745" upper="2.0944" velocity="0.5"/> <!-- 10 120 degree -->
+    <origin rpy="0 0 0" xyz="0.0 0.0 0"/>
+    <parent link="link1_R"/>
+    <child link="link2_R"/>
+  </joint>
+
+  <joint name="insertion_R" type="prismatic">
+    <axis xyz="0.6012   -0.7460    0.2864"/>
+    <limit effort="1000.0" lower="-.15" upper=".08" velocity="0.5"/> <!-- -.17 .1 original -->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="link2_R"/>
+    <child link="link3_R"/>
+  </joint>
+
+  <joint name="tool_roll_R" type="revolute">
+    <axis xyz="-0.6012   0.7460    -0.2864"/>
+    <limit effort="1000.0" lower="-3.1415" upper="3.1415" velocity="0.5"/> <!-- -180 180 degree -->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="link3_R"/>
+    <child link="instrument_shaft_R"/>
+  </joint>
+
+  <joint name="wrist_joint_R" type="revolute">
+    <axis xyz=" 0.5637    0.6523    0.5067"/>
+    <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity="0.5"/> <!-- -80 80 degree -->
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="instrument_shaft_R"/>
+    <child link="wrist_R"/>
+  </joint>
+
+  <joint name="grasper_joint_1_R" type="fixed">
+    <axis xyz="-0.5648    +0.1427   0.8128"/>
+    <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity=".5"/> <!-- -80 80 degree -->
+    <origin rpy="0 0 0" xyz="-0.00680 0.00904 -0.00452"/>
+    <parent link="wrist_R"/>
+    <child link="grasper1_R"/>
+  </joint>
+
+  <joint name="grasper_joint_2_R" type="fixed">
+    <axis xyz="0.5648    0.1427   -0.8128"/>
+    <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity=".5"/> <!-- -80 80 degree -->
+    <origin rpy="0 0 0" xyz="-0.00680 0.00904 -0.00452"/>
+    <parent link="wrist_R"/>
+    <child link="grasper2_R"/>
+  </joint>
+
+
+</robot>

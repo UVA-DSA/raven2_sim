@@ -1,0 +1,366 @@
+<?xml version="1.0"?>
+<!--RavenII Surgical Robot 2-Arm urdf File -->
+<!--Author: Sina Nia Kosari & Lee White-->
+<!--kosari@uw.edu & leewhite@uw.edu-->
+<!--Date: 01-Dec-2011 -->
+<!--Biorobotics Laboratory -->
+<!--University of Washington -->
+
+<!--Changed by Yongming-->
+<!--03-2018-->
+<!-- For gazebo. Yongming. 2018/11/15 -->
+
+<robot name="right_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Constants for robot dimensions -->
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="mass" value="0.25" /> <!-- arbitrary value for mass -->
+    <xacro:property name="width" value="1" /> <!-- Square dimensions (widthxwidth) of beams -->
+    <xacro:property name="height1" value="1" /> <!-- Link 1 -->
+    <xacro:property name="height2" value="2" /> <!-- Link 2 -->
+    <xacro:property name="height3" value="3" /> <!-- Link 3 -->
+    <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
+    <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
+    <xacro:property name="damping" value="0.7" /> <!-- damping factor -->
+
+    <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+    <xacro:include filename="$(find raven_2arm)/urdf/raven_2arm.gazebo" />
+    <!-- Import Rviz colors -->
+    <xacro:include filename="$(find raven_2arm)/urdf/materials.xacro" />
+
+
+    
+    <!--This is a virtual link, both robot bases are attached to this link -->
+    <link name="world"/>
+
+
+    <!-- RIGHT ARM LINKS -->
+    <link name="base_link_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/base_w_motors.dae"/>
+            </geometry>
+            <origin xyz="0 0 1" rpy="3.1415 -1.57075 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/base_w_motors.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+    <joint name="camera_R" type="fixed">
+        <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+        <origin xyz="-0.33 0.00 0.00" rpy="3.1415 -1.57075 0"/>
+        <parent link="world"/>
+        <child link="base_link_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="link1_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/link1_w_cover.dae"/>
+            </geometry>
+            <origin xyz="1 0 0" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/link1_w_cover.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.503"/>
+            <inertia
+                ixx="0.0" ixy="0.0" ixz="0.0"
+                iyy="0.000001" iyz="0.0"
+                izz="0"/>
+        </inertial>
+    </link>
+    <joint name="shoulder_R" type="revolute">
+        <axis xyz="-1 0 0"/>
+        <limit effort="1000.0" lower="0.1" upper="1.5708" velocity="0.5"/> <!-- 25tb 90 degree -->
+        <!--origin rpy="0 1.5705 0" xyz="0 0.0 0"/-->
+        <origin xyz="0 0.0 0" rpy="3.1415 -1.57075 0"/>
+        <parent link="base_link_R"/>
+        <child link="link1_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="link2_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/link2.dae"/>
+            </geometry>
+            <origin xyz="1 0 0" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/link2.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass}"/>
+            <inertia
+                ixx="${mass / 12.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 12.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 12.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+    <joint name="elbow_R" type="revolute">
+        <axis xyz="-0.2590 -0.9014 0.3471"/>
+        <limit effort="1000.0" lower="0.1745" upper="2.0944" velocity="0.5"/> <!-- 10 120 degree -->
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="link1_R"/>
+        <child link="link2_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="link3_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/link3.dae"/>
+            </geometry>
+            <origin xyz="1 0 0" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/link3.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass / 10.0}"/>
+            <inertia
+                ixx="${mass / 24.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 24.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 24.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+    <joint name="insertion_R" type="prismatic">
+        <axis xyz="0.6012   -0.7460    0.2864"/>
+        <limit effort="1000.0" lower="-.15" upper=".08" velocity="0.5"/> <!-- -.17 .1 original -->
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="link2_R"/>
+        <child link="link3_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="instrument_shaft_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/instrument_shaft.dae"/>
+            </geometry>
+            <origin xyz="1 0 0" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/instrument_shaft.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass / 20.0}"/>
+            <inertia
+                ixx="${mass / 48.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 48.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 48.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+    <joint name="tool_roll_R" type="revolute">
+        <axis xyz="-0.6012 0.7460 -0.2864"/>
+        <limit effort="1000.0" lower="-3.1415" upper="3.1415" velocity="0.5"/> <!-- -180 180 degree -->
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="link3_R"/>
+        <child link="instrument_shaft_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="wrist_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/wrist.dae"/>
+            </geometry>
+            <origin xyz="1 0 0" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/wrist.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass / 100.0}"/>
+            <inertia
+                ixx="${mass / 96.0 * (width*width + height1*height1)}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 96.0 * (height1*height1 + width*width)}" iyz="0.0"
+                izz="${mass / 96.0 * (width*width + width*width)}"/>
+        </inertial>
+    </link>
+    <joint name="wrist_joint_R" type="revolute">
+        <axis xyz=" 0.5637    0.6523    0.5067"/>
+        <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity="0.5"/> <!-- -80 80 degree -->
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="instrument_shaft_R"/>
+        <child link="wrist_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="grasper1_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/grasper_1.dae"/>
+            </geometry>
+            <origin xyz="1.00680 -0.00904 0.00452" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <origin xyz="1.00680 -0.00904 0.00452" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/grasper_1.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="1.00680 -0.00904 0.00452" rpy="0 0 0"/>
+            <mass value="${mass / 100}"/>
+            <inertia
+                ixx="${mass / 96.0}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 96.0}" iyz="0.0"
+                izz="${mass / 96.0}"/>
+        </inertial>
+    </link>
+    <joint name="grasper_joint_1_R" type="revolute">
+        <axis xyz="-0.5648    +0.1427   0.8128"/>
+        <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity=".5"/> <!-- -80 80 degree -->
+        <origin rpy="0 0 0" xyz="-0.00680 0.00904 -0.00452"/>
+        <parent link="wrist_R"/>
+        <child link="grasper1_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+
+    <link name="grasper2_R">
+        <visual>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/grasper_2.dae"/>
+            </geometry>
+            <origin xyz="1.00680 -0.00904 0.00452" rpy="0 0 0"/>
+        </visual>
+        <collision>
+            <origin xyz="1.00680 -0.00904 0.00452" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://my_urdf/Raven_files/right_arm/grasper_2.dae"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="1.00680 -0.00904 0.00452" rpy="0 0 0"/>
+            <mass value="${mass / 100}"/>
+            <inertia
+                ixx="${mass / 96.0}" ixy="0.0" ixz="0.0"
+                iyy="${mass / 96.0}" iyz="0.0"
+                izz="${mass / 96.0}"/>
+        </inertial>
+    </link>
+    <joint name="grasper_joint_2_R" type="revolute">
+        <axis xyz="0.5648    0.1427   -0.8128"/>
+        <limit effort="1000.0" lower="-1.39626" upper="1.39626" velocity=".5"/> <!-- -80 80 degree -->
+        <origin rpy="0 0 0" xyz="-0.00680 0.00904 -0.00452"/>
+        <parent link="wrist_R"/>
+        <child link="grasper2_R"/>
+        <dynamics damping="${damping}"/>
+    </joint>
+
+    
+
+    
+    <transmission name="tran8">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="shoulder_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor8">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="tran9">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="elbow_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor9">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="tran10">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="insertion_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor10">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="tran11">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="tool_roll_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor11">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="tran12">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="wrist_joint_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor12">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="tran13">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="grasper_joint_1_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor13">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="tran14">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="grasper_joint_2_R">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="motor14">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+
+
+
+
+
+</robot>

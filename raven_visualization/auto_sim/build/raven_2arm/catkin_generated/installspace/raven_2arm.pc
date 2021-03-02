@@ -1,8 +1,0 @@
-prefix=/home/homa/auto_sim/install
-
-Name: raven_2arm
-Description: Description of raven_2arm
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/homa/auto_sim/install/lib 
-Requires: message_runtime

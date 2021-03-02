@@ -1,0 +1,30 @@
+<launch>
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find raven_2arm)/config/raven_2arm_control.yaml" command="load"/>
+
+    <!-- load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/raven_2arm" args="joint_state_controller
+        shoulder_L_position_controller
+        elbow_L_position_controller
+        insertion_L_position_controller
+        tool_roll_L_position_controller
+        wrist_joint_L_position_controller
+        grasper_joint_1_L_position_controller
+        grasper_joint_2_L_position_controller
+        shoulder_R_position_controller
+        elbow_R_position_controller
+        insertion_R_position_controller
+        tool_roll_R_position_controller
+        wrist_joint_R_position_controller
+        grasper_joint_1_R_position_controller
+        grasper_joint_2_R_position_controller" />
+        
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen">
+        <remap from="/joint_states" to="/raven_2arm/joint_states" />
+    </node>
+
+</launch>
