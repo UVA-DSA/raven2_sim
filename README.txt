@@ -31,17 +31,18 @@ Setting up the repository:
 0. Clone the repository:
    "git clone https://github.com/UVA-DSA/raven2_sim.git"
 1. Rename the folder name from "raven2_sim" to "raven_2"
-2. Change the ROS_PACKAGE_PATH environment variable to the location of raven_2 folder. For example:
+2. Change the ROS_PACKAGE_PATH environment variable to the location of raven_2 folder. For example for ROS Kinetic:
    "export ROS_PACKAGE_PATH=/home/raven/raven_2:/home/raven/raven_2/raven_visualization:/opt/ros/kinetic/share:/opt/ros/kinetic/stacks"
+   You can run "source run.sh" from command line to setup the ROS_PACKAGE_PATH environment variable.
    To test if the change was made successfully, run "roscd raven_2" and you should be relocated to the raven_2 folder.
-4. Run "tar zxvf ./teleop_data/new_test_data.tgz" to unzip the datafiles used by the packet generator
+4. Run "tar zxvf ./teleop_data/new_test_data.tar.gz" to unzip the datafiles used by the packet generator
 
 Running RAVEN simulator using trajectory 2:
 1. Goto raven_2 folder:  "roscd raven_2"
-2. Simple  simulator /w packet-gen: "python run.py sim 1 none traj2"
-   Dynamic simulator /w packet-gen: "python run.py dyn_sim 1 none traj2"
-   Robot /w packet-gen:  "python run.py rob 1 none traj2"
-   Robot /w surgeon-gui: "python run.py rob 0 none traj2" 
+2. Simple  simulator /w packet-gen: "python run.py sim 1 none traj61"
+   Dynamic simulator /w packet-gen: "python run.py dyn_sim 1 none traj61"
+   Robot /w packet-gen:  "python run.py rob 1 none traj61"
+   Robot /w surgeon-gui: "python run.py rob 0 none traj61" 
 
 Branches:
 - simulator:  Simple simulator with no fault injection capabilities
