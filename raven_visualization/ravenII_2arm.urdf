@@ -12,7 +12,7 @@
     <static value = "false"/>
    <plugin name="gazebo_JSTranslator" filename="package://raven_visualization/lib/libgazebo_JSTranslator.so"></plugin>
 
-    <plugin name="gazebo_GraspFix" filename="/home/homa/raven_2/raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib/libgazebo_grasp_fix.so">
+    <plugin name="gazebo_GraspFix" filename="package://raven_visualization/src/gazebo_plugins/gazebo_grasp_plugin/devel/lib/libgazebo_grasp_fix.so">
 
       <arm>
            <arm_name>left_arm</arm_name>
